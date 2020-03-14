@@ -44,6 +44,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			}
 		}
 		
+		Conexion.getConexion().cerrarConexion();
 		return isInsertExitoso;
 	}
 	
@@ -66,6 +67,8 @@ public class PersonaDAOSQL implements PersonaDAO
 		{
 			e.printStackTrace();
 		}
+		
+		Conexion.getConexion().cerrarConexion();
 		return isdeleteExitoso;
 	}
 	
@@ -88,6 +91,8 @@ public class PersonaDAOSQL implements PersonaDAO
 		{
 			e.printStackTrace();
 		}
+		
+		conexion.cerrarConexion();
 		return personas;
 	}
 	
