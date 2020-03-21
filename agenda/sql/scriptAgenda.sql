@@ -13,3 +13,9 @@ CREATE TABLE `localidades`
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idLocalidad`)
 );
+CREATE TABLE `tipos_de_contacto`
+(
+  `idTipoContacto` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,
+  PRIMARY KEY (`idTipoContacto`)
+);

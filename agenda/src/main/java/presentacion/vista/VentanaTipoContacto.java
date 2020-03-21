@@ -22,34 +22,35 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
 
 import dto.LocalidadDTO;
 import dto.PersonaDTO;
+import dto.TipoContactoDTO;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.List;
 
-public class VentanaLocalidad extends JFrame {
+public class VentanaTipoContacto extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private JTextField textFieldNombre;
-	private JButton btnAgregarLocalidad;
-	private JButton btnEliminarLocalidad;
-	private JButton btnEditarLocalidad;
-	private JList listaLocalidades;
-	private DefaultListModel modelLocalidades;
-	private static VentanaLocalidad INSTANCE;
+	private JButton btnAgregarTipoContacto;
+	private JButton btnEliminarTipoContacto;
+	private JButton btnEditarTipoContacto;
+	private JList listaTipoContactos;
+	private DefaultListModel modelTipoContactos;
+	private static VentanaTipoContacto INSTANCE;
 	
 	private JSplitPane splitPane;
 	
-	public static VentanaLocalidad getInstance()
+	public static VentanaTipoContacto getInstance()
 	{
 		if(INSTANCE == null)
-			INSTANCE = new VentanaLocalidad();
+			INSTANCE = new VentanaTipoContacto();
 		
 		return INSTANCE;
 	}
 	
-	private VentanaLocalidad() 
+	private VentanaTipoContacto() 
 	{
 		super();
 		
@@ -59,22 +60,21 @@ public class VentanaLocalidad extends JFrame {
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		splitPane = new JSplitPane();
-//		splitPane.setDividerLocation(0.4); No anda bien
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 		
-		JScrollPane scrollPaneLocalidades = new JScrollPane();
-		splitPane.setLeftComponent(scrollPaneLocalidades);
+		JScrollPane scrollPaneTipoContactos = new JScrollPane();
+		splitPane.setLeftComponent(scrollPaneTipoContactos);
 		
-		modelLocalidades = new DefaultListModel();
-		listaLocalidades = new JList(modelLocalidades);
-		listaLocalidades.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPaneLocalidades.setViewportView(listaLocalidades);
+		modelTipoContactos = new DefaultListModel();
+		listaTipoContactos = new JList(modelTipoContactos);
+		listaTipoContactos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPaneTipoContactos.setViewportView(listaTipoContactos);
 		
-		JLabel lblLocalidades = new JLabel("Localidades");
-		lblLocalidades.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lblLocalidades.setOpaque(true);
-		lblLocalidades.setBackground(Color.LIGHT_GRAY);
-		scrollPaneLocalidades.setColumnHeaderView(lblLocalidades);
+		JLabel lblTipoContactos = new JLabel("Tipos de Contactos");
+		lblTipoContactos.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblTipoContactos.setOpaque(true);
+		lblTipoContactos.setBackground(Color.LIGHT_GRAY);
+		scrollPaneTipoContactos.setColumnHeaderView(lblTipoContactos);
 		
 		JPanel panelForm = new JPanel();
 		splitPane.setRightComponent(panelForm);
@@ -107,14 +107,14 @@ public class VentanaLocalidad extends JFrame {
 		panelForm.add(panelOperaciones, gbc_panelOperaciones);
 		panelOperaciones.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		btnAgregarLocalidad = new JButton("Agregar");
-		panelOperaciones.add(btnAgregarLocalidad);
+		btnAgregarTipoContacto = new JButton("Agregar");
+		panelOperaciones.add(btnAgregarTipoContacto);
 		
-		btnEliminarLocalidad = new JButton("Eliminar");
-		panelOperaciones.add(btnEliminarLocalidad);
+		btnEliminarTipoContacto = new JButton("Eliminar");
+		panelOperaciones.add(btnEliminarTipoContacto);
 		
-		btnEditarLocalidad = new JButton("Editar");
-		panelOperaciones.add(btnEditarLocalidad);
+		btnEditarTipoContacto = new JButton("Editar");
+		panelOperaciones.add(btnEditarTipoContacto);
 				
 		this.setVisible(false);
 		
@@ -142,37 +142,37 @@ public class VentanaLocalidad extends JFrame {
 		return textFieldNombre;
 	}
 
-	public JButton getBtnAgregarLocalidad() 
+	public JButton getBtnAgregarTipoContacto() 
 	{
-		return btnAgregarLocalidad;
+		return btnAgregarTipoContacto;
 	}
 	
-	public JButton getBtnEliminarLocalidad() 
+	public JButton getBtnEliminarTipoContacto() 
 	{
-		return btnEliminarLocalidad;
+		return btnEliminarTipoContacto;
 	}
 	
-	public JButton getBtnEditarLocalidad() 
+	public JButton getBtnEditarTipoContacto() 
 	{
-		return btnEditarLocalidad;
+		return btnEditarTipoContacto;
 	}
 	
-	public JList getListaLocalidades() {
-		return listaLocalidades;
+	public JList getListaTiposContacto() {
+		return listaTipoContactos;
 	}
 	
-	public void llenarLista(List<LocalidadDTO> localidadesEnLista) {
-		this.modelLocalidades.clear();
+	public void llenarLista(List<TipoContactoDTO> tipoContactosEnLista) {
+		this.modelTipoContactos.clear();
 
-		for (LocalidadDTO l : localidadesEnLista)
+		for (TipoContactoDTO l : tipoContactosEnLista)
 		{
 			String nombre = l.getNombre();
-			this.modelLocalidades.addElement(nombre);
+			this.modelTipoContactos.addElement(nombre);
 		}
 		
 	}
 	
-	public void limpiarFormulario() {		
+	public void limpiarFormulario() {
 		this.textFieldNombre.setText(null);
 	}
 	

@@ -12,17 +12,21 @@ import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPersona;
+import presentacion.vista.VentanaTipoContacto;
 import presentacion.vista.Vista;
 import dto.LocalidadDTO;
 import dto.PersonaDTO;
+import dto.TipoContactoDTO;
 
 public class Controlador implements ActionListener
 {
 		private Vista vista;
 		private List<PersonaDTO> personasEnTabla;
 		private List<LocalidadDTO> localidadesEnLista;
+		private List<TipoContactoDTO> tiposContactoEnLista;
 		private VentanaPersona ventanaPersona;
 		private VentanaLocalidad ventanaLocalidad;
+		private VentanaTipoContacto ventanaTipoContacto;
 		private Agenda agenda;
 		
 		public Controlador(Vista vista, Agenda agenda)
@@ -32,12 +36,17 @@ public class Controlador implements ActionListener
 			this.vista.getBtnBorrar().addActionListener(s->borrarPersona(s));
 			this.vista.getBtnReporte().addActionListener(r->mostrarReporte(r));
 			this.vista.getMenuLocalidad().addActionListener(a->ventanaAgregarLocalidad(a));
+			this.vista.getMenuTipoContacto().addActionListener(a->ventanaAgregarTipoContacto(a));
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
 			this.ventanaLocalidad = VentanaLocalidad.getInstance();
 			this.ventanaLocalidad.getBtnAgregarLocalidad().addActionListener(l->guardarLocalidad(l));
 			this.ventanaLocalidad.getBtnEliminarLocalidad().addActionListener(l->borrarLocalidad(l));
 			this.ventanaLocalidad.getBtnEditarLocalidad().addActionListener(l->editarLocalidad(l));
+			this.ventanaTipoContacto = VentanaTipoContacto.getInstance();
+			this.ventanaTipoContacto.getBtnAgregarTipoContacto().addActionListener(l->guardarTipoContacto(l));
+			this.ventanaTipoContacto.getBtnEliminarTipoContacto().addActionListener(l->borrarTipoContacto(l));
+			this.ventanaTipoContacto.getBtnEditarTipoContacto().addActionListener(l->editarTipoContacto(l));
 			this.agenda = agenda;
 		}
 		
@@ -47,6 +56,10 @@ public class Controlador implements ActionListener
 		
 		private void ventanaAgregarLocalidad(ActionEvent a) {
 			this.ventanaLocalidad.mostrarVentana();
+		}
+		
+		private void ventanaAgregarTipoContacto(ActionEvent a) {
+			this.ventanaTipoContacto.mostrarVentana();
 		}
 
 		private void guardarPersona(ActionEvent p) {
@@ -60,14 +73,41 @@ public class Controlador implements ActionListener
 		
 		private void guardarLocalidad(ActionEvent l) {
 			String nombre = this.ventanaLocalidad.getTxtNombre().getText();
+			
+			if (nombre.equals("")) {
+				JOptionPane.showMessageDialog(this.ventanaLocalidad, "No puede ingresar un nombre en blanco.");	
+				return;
+			}
+			
 			boolean exists = localidadesEnLista.stream().anyMatch(e -> e.getNombre().equals(nombre));
 			if (exists) {
 				JOptionPane.showMessageDialog(this.ventanaLocalidad, "Ya existe una localidad con ese nombre.");
 				return;
 			}
+			
 			LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre);
 			this.agenda.agregarLocalidad(nuevaLocalidad);
 			this.refrescarLista();
+			this.ventanaLocalidad.limpiarFormulario();
+		}
+		
+		private void guardarTipoContacto(ActionEvent l) {
+			String nombre = this.ventanaTipoContacto.getTxtNombre().getText();
+			
+			if (nombre.equals("")) {
+				JOptionPane.showMessageDialog(this.ventanaTipoContacto, "No puede ingresar un nombre en blanco.");	
+				return;
+			}
+			
+			boolean exists = tiposContactoEnLista.stream().anyMatch(e -> e.getNombre().equals(nombre));
+			if (exists) {
+				JOptionPane.showMessageDialog(this.ventanaTipoContacto, "Ya existe un tipo de contacto con ese nombre.");
+				return;
+			}
+			TipoContactoDTO nuevoTipoContacto = new TipoContactoDTO(0, nombre);
+			this.agenda.agregarTipoContacto(nuevoTipoContacto);
+			this.refrescarListaTipoContacto();
+			this.ventanaTipoContacto.limpiarFormulario();
 		}
 
 		private void mostrarReporte(ActionEvent r) {
@@ -97,31 +137,76 @@ public class Controlador implements ActionListener
 			this.refrescarLista();
 		}
 		
+		public void borrarTipoContacto(ActionEvent s)
+		{
+			int[] elementosSeleccionados = this.ventanaTipoContacto.getListaTiposContacto().getSelectedIndices();
+			for (int index : elementosSeleccionados)
+			{
+				this.agenda.borrarTipoContacto(this.tiposContactoEnLista.get(index));
+			}
+			
+			this.refrescarListaTipoContacto();
+		}
+		
 		public void editarLocalidad(ActionEvent s)
 		{
 			int[] elementosSeleccionados = this.ventanaLocalidad.getListaLocalidades().getSelectedIndices();
 			
 			if (elementosSeleccionados.length == 0) {
-				JOptionPane.showMessageDialog(ventanaLocalidad, "Debe seleccionar una localidad de la lista para poder editarla.");
+				JOptionPane.showMessageDialog(this.ventanaLocalidad, "Debe seleccionar una localidad de la lista para poder editarla.");
 				return;
 			}
 			
 			for (int index : elementosSeleccionados)
 			{
 				String nuevoNombre = this.ventanaLocalidad.getTxtNombre().getText();
+				
+				if (nuevoNombre.equals("")) {
+					JOptionPane.showMessageDialog(this.ventanaLocalidad, "No puede ingresar un nombre en blanco.");	
+					return;
+				}
+				
 				LocalidadDTO localidad_a_modificar = this.localidadesEnLista.get(index);
-				System.out.println(nuevoNombre);
 				localidad_a_modificar.setNombre(nuevoNombre);
 				this.agenda.modificarLocalidad(localidad_a_modificar);
 			}
 			
 			this.refrescarLista();
+			this.ventanaLocalidad.limpiarFormulario();
+		}
+		
+		public void editarTipoContacto(ActionEvent s)
+		{
+			int[] elementosSeleccionados = this.ventanaTipoContacto.getListaTiposContacto().getSelectedIndices();
+			
+			if (elementosSeleccionados.length == 0) {
+				JOptionPane.showMessageDialog(this.ventanaTipoContacto, "Debe seleccionar un tipo de contacto de la lista para poder editarlo.");
+				return;
+			}
+			
+			for (int index : elementosSeleccionados)
+			{
+				String nuevoNombre = this.ventanaTipoContacto.getTxtNombre().getText();
+				
+				if (nuevoNombre.equals("")) {
+					JOptionPane.showMessageDialog(this.ventanaTipoContacto, "No puede ingresar un nombre en blanco.");	
+					return;
+				}
+				
+				TipoContactoDTO tipo_de_contacto_a_modificar = this.tiposContactoEnLista.get(index);
+				tipo_de_contacto_a_modificar.setNombre(nuevoNombre);
+				this.agenda.modificarTipoContacto(tipo_de_contacto_a_modificar);
+			}
+			
+			this.refrescarListaTipoContacto();
+			this.ventanaTipoContacto.limpiarFormulario();
 		}
 		
 		public void inicializar()
 		{
 			this.refrescarTabla();
 			this.refrescarLista();
+			this.refrescarListaTipoContacto();
 			this.vista.show();
 		}
 		
@@ -135,6 +220,12 @@ public class Controlador implements ActionListener
 		{
 			this.localidadesEnLista = agenda.obtenerLocalidades();
 			this.ventanaLocalidad.llenarLista(this.localidadesEnLista);
+		}
+		
+		private void refrescarListaTipoContacto()
+		{
+			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
+			this.ventanaTipoContacto.llenarLista(this.tiposContactoEnLista);
 		}
 
 		@Override

@@ -1,7 +1,5 @@
 package presentacion.vista;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -36,6 +34,7 @@ public class Vista
 		private JMenuItem mnItemAgregarLocalidad;
 		private JMenuItem mnItemEliminarLocalidad;
 		private JMenuItem mnItemEditarLocalidad;
+	private JMenuItem menuTipoContacto;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono"};
 
@@ -112,8 +111,10 @@ public class Vista
 //				menuLocalidad.add(mnItemEditarLocalidad);
 				
 			// Add ABM Tipo de Contacto
-			JMenu menuContactos = new JMenu("Contactos");
-			menu.add(menuContactos);
+//			JMenu menuContactos = new JMenu("Contactos");
+//			menu.add(menuContactos);
+			menuTipoContacto = new JMenuItem("Tipos de Contactos");
+			menu.add(menuTipoContacto);
 			
 //				JMenuItem mnItemContactosAgregar = new JMenuItem("Agregar");
 //				menuContactos.add(mnItemContactosAgregar);
@@ -161,19 +162,23 @@ public class Vista
 		return menuLocalidad;
 	}
 	
-	public JMenuItem getMnItemAgregarLocalidad() 
+	public JMenuItem getMnItemAgregarLocalidad() // TODO: Delete
 	{
 		return mnItemAgregarLocalidad;
 	}
 	
-	public JMenuItem getMnItemEliminarLocalidad() 
+	public JMenuItem getMnItemEliminarLocalidad() // TODO: Delete
 	{
 		return mnItemEliminarLocalidad;
 	}
 	
-	public JMenuItem getMnItemEditarLocalidad() 
+	public JMenuItem getMnItemEditarLocalidad() // TODO: Delete
 	{
 		return mnItemEditarLocalidad;
+	}
+	
+	public JMenuItem getMenuTipoContacto() {
+		return menuTipoContacto;
 	}
 	
 	public JButton getBtnReporte() 
