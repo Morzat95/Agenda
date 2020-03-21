@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaLocalidad;
@@ -98,6 +100,12 @@ public class Controlador implements ActionListener
 		public void editarLocalidad(ActionEvent s)
 		{
 			int[] elementosSeleccionados = this.ventanaLocalidad.getListaLocalidades().getSelectedIndices();
+			
+			if (elementosSeleccionados.length == 0) {
+				JOptionPane.showMessageDialog(ventanaLocalidad, "Debe seleccionar una localidad de la lista para poder editarla.");
+				return;
+			}
+			
 			for (int index : elementosSeleccionados)
 			{
 				String nuevoNombre = this.ventanaLocalidad.getTxtNombre().getText();
