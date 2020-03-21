@@ -99,6 +99,19 @@ public class Vista
 				
 				JMenuItem mnItemLocalidadEditar = new JMenuItem("Editar");
 				menuLocalidad.add(mnItemLocalidadEditar);
+				
+			// Add ABM Tipo de Contacto
+			JMenu menuContactos = new JMenu("Contactos");
+			menu.add(menuContactos);
+			
+				JMenuItem mnItemContactosAgregar = new JMenuItem("Agregar");
+				menuContactos.add(mnItemContactosAgregar);
+				
+				JMenuItem mnItemContactosEliminar = new JMenuItem("Eliminar");
+				menuContactos.add(mnItemContactosEliminar);
+				
+				JMenuItem mnItemContactosEditar = new JMenuItem("Editar");
+				menuContactos.add(mnItemContactosEditar);
 	}
 	
 	public void show()
