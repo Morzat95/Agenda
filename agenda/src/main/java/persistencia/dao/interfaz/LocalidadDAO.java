@@ -2,14 +2,16 @@ package persistencia.dao.interfaz;
 
 import java.util.List;
 
+import dto.LocalidadDTO;
+
 public interface LocalidadDAO {
 	
-	public boolean insert(LocalidadDAO localidad);
+	public boolean insert(LocalidadDTO localidad);
 
-	public boolean delete(LocalidadDAO localidad_a_eliminar);
+	public boolean delete(LocalidadDTO localidad_a_eliminar);
 	
-	public boolean update(LocalidadDAO localidad_a_modificar);
+	public boolean update(LocalidadDTO localidad_a_modificar);
 	
-	public List<LocalidadDAO> readAll();
+	public List<LocalidadDTO> readAll();
 
 }
