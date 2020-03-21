@@ -34,11 +34,13 @@ public class Controlador implements ActionListener
 			this.vista = vista;
 			this.vista.getBtnAgregar().addActionListener(a->ventanaAgregarPersona(a));
 			this.vista.getBtnBorrar().addActionListener(s->borrarPersona(s));
+			this.vista.getBtnEditar().addActionListener(a->ventanaEditarPersona(a));
 			this.vista.getBtnReporte().addActionListener(r->mostrarReporte(r));
 			this.vista.getMenuLocalidad().addActionListener(a->ventanaAgregarLocalidad(a));
 			this.vista.getMenuTipoContacto().addActionListener(a->ventanaAgregarTipoContacto(a));
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
+			this.ventanaPersona.getBtnEditarPersona().addActionListener(p->editarPersona(p));
 			this.ventanaLocalidad = VentanaLocalidad.getInstance();
 			this.ventanaLocalidad.getBtnAgregarLocalidad().addActionListener(l->guardarLocalidad(l));
 			this.ventanaLocalidad.getBtnEliminarLocalidad().addActionListener(l->borrarLocalidad(l));
@@ -54,6 +56,30 @@ public class Controlador implements ActionListener
 			this.ventanaPersona.mostrarVentana();
 		}
 		
+		public void ventanaEditarPersona(ActionEvent a)
+		{
+			int[] filasSeleccionadas = this.vista.getTablaPersonas().getSelectedRows();
+			
+			if (filasSeleccionadas.length == 0) {
+				JOptionPane.showMessageDialog(null, "Debe serleccionar un contacto de la tabla para poder editarlo.");
+				return;
+			}
+			
+			if (filasSeleccionadas.length > 1) {
+				JOptionPane.showMessageDialog(null, "Solo puede editar un contacto a la vez.");
+				return;
+			}
+			
+			int index = filasSeleccionadas[0];
+			
+			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
+			this.ventanaPersona.llenarFormulario(persona_a_editar);
+			this.ventanaPersona.mostrarVentana();
+			
+			this.refrescarListaTipoContacto();
+			this.ventanaTipoContacto.limpiarFormulario();
+		}
+		
 		private void ventanaAgregarLocalidad(ActionEvent a) {
 			this.ventanaLocalidad.mostrarVentana();
 		}
@@ -67,6 +93,18 @@ public class Controlador implements ActionListener
 			String tel = ventanaPersona.getTxtTelefono().getText();
 			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel);
 			this.agenda.agregarPersona(nuevaPersona);
+			this.refrescarTabla();
+			this.ventanaPersona.cerrar();
+		}
+		
+		private void editarPersona(ActionEvent p) {
+			String nombre = this.ventanaPersona.getTxtNombre().getText();
+			String tel = ventanaPersona.getTxtTelefono().getText();
+			int index = this.vista.getTablaPersonas().getSelectedRow();
+			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
+			persona_a_editar.setNombre(nombre);
+			persona_a_editar.setTelefono(tel);
+			this.agenda.editarPersona(persona_a_editar);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
 		}
@@ -201,6 +239,7 @@ public class Controlador implements ActionListener
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
 		}
+
 		
 		public void inicializar()
 		{

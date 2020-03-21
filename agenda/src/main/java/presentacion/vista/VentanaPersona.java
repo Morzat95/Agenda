@@ -1,11 +1,16 @@
 package presentacion.vista;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import dto.PersonaDTO;
 
 public class VentanaPersona extends JFrame 
 {
@@ -14,6 +19,7 @@ public class VentanaPersona extends JFrame
 	private JTextField txtNombre;
 	private JTextField txtTelefono;
 	private JButton btnAgregarPersona;
+	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
 	
 	public static VentanaPersona getInstance()
@@ -29,6 +35,15 @@ public class VentanaPersona extends JFrame
 		super();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				
+				restoreDefaultForm();
+			}
+		});
+		
 		setBounds(100, 100, 343, 183);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -62,6 +77,10 @@ public class VentanaPersona extends JFrame
 		btnAgregarPersona.setBounds(208, 92, 89, 23);
 		panel.add(btnAgregarPersona);
 		
+		btnEditarPersona = new JButton("Editar");
+		btnEditarPersona.setBounds(208, 92, 89, 23);
+		panel.add(btnEditarPersona);
+		
 		this.setVisible(false);
 	}
 	
@@ -84,11 +103,30 @@ public class VentanaPersona extends JFrame
 	{
 		return btnAgregarPersona;
 	}
+	
+	public JButton getBtnEditarPersona() 
+	{
+		return btnEditarPersona;
+	}
+	
+	public void llenarFormulario(PersonaDTO persona_a_editar) {
+		this.txtNombre.setText(persona_a_editar.getNombre());
+		this.txtTelefono.setText(persona_a_editar.getTelefono());
+		
+		this.btnAgregarPersona.setVisible(false);
+		this.btnEditarPersona.setVisible(true);
+	}
+	
+	private void restoreDefaultForm() {
+		this.btnAgregarPersona.setVisible(true);
+		this.btnEditarPersona.setVisible(false);
+	}
 
 	public void cerrar()
 	{
 		this.txtNombre.setText(null);
 		this.txtTelefono.setText(null);
+		restoreDefaultForm();
 		this.dispose();
 	}
 	
