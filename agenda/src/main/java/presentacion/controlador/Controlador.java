@@ -4,17 +4,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
+import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPersona;
 import presentacion.vista.Vista;
+import dto.LocalidadDTO;
 import dto.PersonaDTO;
 
 public class Controlador implements ActionListener
 {
 		private Vista vista;
 		private List<PersonaDTO> personasEnTabla;
-		private VentanaPersona ventanaPersona; 
+		private List<LocalidadDTO> localidadesEnLista;
+		private VentanaPersona ventanaPersona;
+		private VentanaLocalidad ventanaLocalidad;
 		private Agenda agenda;
 		
 		public Controlador(Vista vista, Agenda agenda)
@@ -23,13 +29,22 @@ public class Controlador implements ActionListener
 			this.vista.getBtnAgregar().addActionListener(a->ventanaAgregarPersona(a));
 			this.vista.getBtnBorrar().addActionListener(s->borrarPersona(s));
 			this.vista.getBtnReporte().addActionListener(r->mostrarReporte(r));
+			this.vista.getMenuLocalidad().addActionListener(a->ventanaAgregarLocalidad(a));
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
+			this.ventanaLocalidad = VentanaLocalidad.getInstance();
+			this.ventanaLocalidad.getBtnAgregarLocalidad().addActionListener(l->guardarLocalidad(l));
+			this.ventanaLocalidad.getBtnEliminarLocalidad().addActionListener(l->borrarLocalidad(l));
+			this.ventanaLocalidad.getBtnEditarLocalidad().addActionListener(l->editarLocalidad(l));
 			this.agenda = agenda;
 		}
 		
 		private void ventanaAgregarPersona(ActionEvent a) {
 			this.ventanaPersona.mostrarVentana();
+		}
+		
+		private void ventanaAgregarLocalidad(ActionEvent a) {
+			this.ventanaLocalidad.mostrarVentana();
 		}
 
 		private void guardarPersona(ActionEvent p) {
@@ -39,6 +54,18 @@ public class Controlador implements ActionListener
 			this.agenda.agregarPersona(nuevaPersona);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
+		}
+		
+		private void guardarLocalidad(ActionEvent l) {
+			String nombre = this.ventanaLocalidad.getTxtNombre().getText();
+			boolean exists = localidadesEnLista.stream().anyMatch(e -> e.getNombre().equals(nombre));
+			if (exists) {
+				JOptionPane.showMessageDialog(this.ventanaLocalidad, "Ya existe una localidad con ese nombre.");
+				return;
+			}
+			LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre);
+			this.agenda.agregarLocalidad(nuevaLocalidad);
+			this.refrescarLista();
 		}
 
 		private void mostrarReporte(ActionEvent r) {
@@ -57,9 +84,36 @@ public class Controlador implements ActionListener
 			this.refrescarTabla();
 		}
 		
+		public void borrarLocalidad(ActionEvent s)
+		{
+			int[] elementosSeleccionados = this.ventanaLocalidad.getListaLocalidades().getSelectedIndices();
+			for (int index : elementosSeleccionados)
+			{
+				this.agenda.borrarLocalidad(this.localidadesEnLista.get(index));
+			}
+			
+			this.refrescarLista();
+		}
+		
+		public void editarLocalidad(ActionEvent s)
+		{
+			int[] elementosSeleccionados = this.ventanaLocalidad.getListaLocalidades().getSelectedIndices();
+			for (int index : elementosSeleccionados)
+			{
+				String nuevoNombre = this.ventanaLocalidad.getTxtNombre().getText();
+				LocalidadDTO localidad_a_modificar = this.localidadesEnLista.get(index);
+				System.out.println(nuevoNombre);
+				localidad_a_modificar.setNombre(nuevoNombre);
+				this.agenda.modificarLocalidad(localidad_a_modificar);
+			}
+			
+			this.refrescarLista();
+		}
+		
 		public void inicializar()
 		{
 			this.refrescarTabla();
+			this.refrescarLista();
 			this.vista.show();
 		}
 		
@@ -67,6 +121,12 @@ public class Controlador implements ActionListener
 		{
 			this.personasEnTabla = agenda.obtenerPersonas();
 			this.vista.llenarTabla(this.personasEnTabla);
+		}
+		
+		private void refrescarLista()
+		{
+			this.localidadesEnLista = agenda.obtenerLocalidades();
+			this.ventanaLocalidad.llenarLista(this.localidadesEnLista);
 		}
 
 		@Override

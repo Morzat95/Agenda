@@ -1,5 +1,7 @@
 package presentacion.vista;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -14,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import dto.PersonaDTO;
 
 import javax.swing.JButton;
@@ -27,6 +31,11 @@ public class Vista
 	private JButton btnAgregar;
 	private JButton btnBorrar;
 	private JButton btnReporte;
+//	private JMenu menuLocalidad;
+	private JMenuItem menuLocalidad;
+		private JMenuItem mnItemAgregarLocalidad;
+		private JMenuItem mnItemEliminarLocalidad;
+		private JMenuItem mnItemEditarLocalidad;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono"};
 
@@ -88,30 +97,33 @@ public class Vista
 		menuBar.add(menu);
 		
 			// Add ABM Localidad
-			JMenu menuLocalidad = new JMenu("Localidad");
+//			menuLocalidad = new JMenu("Localidad");
+//			menu.add(menuLocalidad);
+			menuLocalidad = new JMenuItem("Localidad");
 			menu.add(menuLocalidad);
 			
-				JMenuItem mnItemLocalidadAgregar = new JMenuItem("Agregar");
-				menuLocalidad.add(mnItemLocalidadAgregar);
-				
-				JMenuItem mnItemLocalidadEliminar = new JMenuItem("Eliminar");
-				menuLocalidad.add(mnItemLocalidadEliminar);
-				
-				JMenuItem mnItemLocalidadEditar = new JMenuItem("Editar");
-				menuLocalidad.add(mnItemLocalidadEditar);
+//				mnItemAgregarLocalidad = new JMenuItem("Agregar");
+//				menuLocalidad.add(mnItemAgregarLocalidad);
+//				
+//				mnItemEliminarLocalidad = new JMenuItem("Eliminar");
+//				menuLocalidad.add(mnItemEliminarLocalidad);
+//				
+//				mnItemEditarLocalidad = new JMenuItem("Editar");
+//				menuLocalidad.add(mnItemEditarLocalidad);
 				
 			// Add ABM Tipo de Contacto
 			JMenu menuContactos = new JMenu("Contactos");
 			menu.add(menuContactos);
 			
-				JMenuItem mnItemContactosAgregar = new JMenuItem("Agregar");
-				menuContactos.add(mnItemContactosAgregar);
-				
-				JMenuItem mnItemContactosEliminar = new JMenuItem("Eliminar");
-				menuContactos.add(mnItemContactosEliminar);
-				
-				JMenuItem mnItemContactosEditar = new JMenuItem("Editar");
-				menuContactos.add(mnItemContactosEditar);
+//				JMenuItem mnItemContactosAgregar = new JMenuItem("Agregar");
+//				menuContactos.add(mnItemContactosAgregar);
+//				
+//				JMenuItem mnItemContactosEliminar = new JMenuItem("Eliminar");
+//				menuContactos.add(mnItemContactosEliminar);
+//				
+//				JMenuItem mnItemContactosEditar = new JMenuItem("Editar");
+//				menuContactos.add(mnItemContactosEditar);
+
 	}
 	
 	public void show()
@@ -142,6 +154,26 @@ public class Vista
 	public JButton getBtnBorrar() 
 	{
 		return btnBorrar;
+	}
+	
+//	public JMenu getMenuLocalidad() {
+	public JMenuItem getMenuLocalidad() {
+		return menuLocalidad;
+	}
+	
+	public JMenuItem getMnItemAgregarLocalidad() 
+	{
+		return mnItemAgregarLocalidad;
+	}
+	
+	public JMenuItem getMnItemEliminarLocalidad() 
+	{
+		return mnItemEliminarLocalidad;
+	}
+	
+	public JMenuItem getMnItemEditarLocalidad() 
+	{
+		return mnItemEditarLocalidad;
 	}
 	
 	public JButton getBtnReporte() 
