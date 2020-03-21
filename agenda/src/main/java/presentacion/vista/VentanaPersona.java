@@ -19,12 +19,9 @@ public class VentanaPersona extends JFrame
 	public static VentanaPersona getInstance()
 	{
 		if(INSTANCE == null)
-		{
-			INSTANCE = new VentanaPersona(); 	
-			return new VentanaPersona();
-		}
-		else
-			return INSTANCE;
+			INSTANCE = new VentanaPersona();
+		
+		return INSTANCE;
 	}
 
 	private VentanaPersona() 
