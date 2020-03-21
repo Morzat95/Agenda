@@ -7,3 +7,9 @@ CREATE TABLE `personas`
   `Telefono` varchar(20) NOT NULL,
   PRIMARY KEY (`idPersona`)
 );
+CREATE TABLE `localidades`
+(
+  `idLocalidad` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,
+  PRIMARY KEY (`idLocalidad`)
+);
