@@ -37,7 +37,7 @@ public class Vista
 		private JMenuItem mnItemEditarLocalidad;
 	private JMenuItem menuTipoContacto;
 	private DefaultTableModel modelPersonas;
-	private  String[] nombreColumnas = {"Nombre y apellido","Telefono"};
+	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email"};
 
 	public Vista() 
 	{
@@ -69,6 +69,8 @@ public class Vista
 		tablaPersonas.getColumnModel().getColumn(0).setResizable(false);
 		tablaPersonas.getColumnModel().getColumn(1).setPreferredWidth(100);
 		tablaPersonas.getColumnModel().getColumn(1).setResizable(false);
+		tablaPersonas.getColumnModel().getColumn(2).setPreferredWidth(103);
+		tablaPersonas.getColumnModel().getColumn(2).setResizable(false);
 		
 		spPersonas.setViewportView(tablaPersonas);
 		
@@ -217,7 +219,8 @@ public class Vista
 		{
 			String nombre = p.getNombre();
 			String tel = p.getTelefono();
-			Object[] fila = {nombre, tel};
+			String email = p.getEmail();
+			Object[] fila = {nombre, tel, email};
 			this.getModelPersonas().addRow(fila);
 		}
 		

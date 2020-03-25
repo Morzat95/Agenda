@@ -91,7 +91,8 @@ public class Controlador implements ActionListener
 		private void guardarPersona(ActionEvent p) {
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel);
+			String email = ventanaPersona.getTxtEmail().getText();
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email);
 			this.agenda.agregarPersona(nuevaPersona);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
@@ -100,10 +101,12 @@ public class Controlador implements ActionListener
 		private void editarPersona(ActionEvent p) {
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
+			String email = ventanaPersona.getTxtEmail().getText();
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			persona_a_editar.setNombre(nombre);
 			persona_a_editar.setTelefono(tel);
+			persona_a_editar.setEmail(email);
 			this.agenda.editarPersona(persona_a_editar);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();

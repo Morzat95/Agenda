@@ -18,6 +18,7 @@ public class VentanaPersona extends JFrame
 	private JPanel contentPane;
 	private JTextField txtNombre;
 	private JTextField txtTelefono;
+	private JTextField txtEmail;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
@@ -44,14 +45,14 @@ public class VentanaPersona extends JFrame
 			}
 		});
 		
-		setBounds(100, 100, 343, 183);
+		setBounds(100, 100, 343, 226);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 307, 123);
+		panel.setBounds(10, 11, 307, 166);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -63,6 +64,10 @@ public class VentanaPersona extends JFrame
 		lblTelfono.setBounds(10, 52, 113, 14);
 		panel.add(lblTelfono);
 		
+		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setBounds(10, 93, 113, 14);
+		panel.add(lblEmail);
+		
 		txtNombre = new JTextField();
 		txtNombre.setBounds(133, 8, 164, 20);
 		panel.add(txtNombre);
@@ -73,12 +78,18 @@ public class VentanaPersona extends JFrame
 		panel.add(txtTelefono);
 		txtTelefono.setColumns(10);
 		
+		txtEmail = new JTextField();
+		txtEmail.setBounds(133, 90, 164, 20);
+		panel.add(txtEmail);
+		txtEmail.setColumns(10);
+		
+		
 		btnAgregarPersona = new JButton("Agregar");
-		btnAgregarPersona.setBounds(208, 92, 89, 23);
+		btnAgregarPersona.setBounds(208, 133, 89, 23);
 		panel.add(btnAgregarPersona);
 		
 		btnEditarPersona = new JButton("Editar");
-		btnEditarPersona.setBounds(208, 92, 89, 23);
+		btnEditarPersona.setBounds(208, 133, 89, 23);
 		panel.add(btnEditarPersona);
 		
 		this.setVisible(false);
@@ -98,6 +109,11 @@ public class VentanaPersona extends JFrame
 	{
 		return txtTelefono;
 	}
+	
+	public JTextField getTxtEmail()
+	{
+		return txtEmail;
+	}
 
 	public JButton getBtnAgregarPersona() 
 	{
@@ -112,6 +128,7 @@ public class VentanaPersona extends JFrame
 	public void llenarFormulario(PersonaDTO persona_a_editar) {
 		this.txtNombre.setText(persona_a_editar.getNombre());
 		this.txtTelefono.setText(persona_a_editar.getTelefono());
+		this.txtEmail.setText(persona_a_editar.getEmail());
 		
 		this.btnAgregarPersona.setVisible(false);
 		this.btnEditarPersona.setVisible(true);
@@ -126,6 +143,7 @@ public class VentanaPersona extends JFrame
 	{
 		this.txtNombre.setText(null);
 		this.txtTelefono.setText(null);
+		this.txtEmail.setText(null);
 		restoreDefaultForm();
 		this.dispose();
 	}

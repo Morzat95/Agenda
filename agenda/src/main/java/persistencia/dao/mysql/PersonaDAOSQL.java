@@ -13,9 +13,9 @@ import dto.PersonaDTO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono) VALUES(?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email) VALUES(?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
-	private static final String update = "UPDATE personas SET nombre = ?, telefono = ? WHERE idPersona = ?";
+	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas";
 		
 	public boolean insert(PersonaDTO persona)
@@ -29,6 +29,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setInt(1, persona.getIdPersona());
 			statement.setString(2, persona.getNombre());
 			statement.setString(3, persona.getTelefono());
+			statement.setString(4, persona.getEmail());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -79,7 +80,8 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement = conexion.prepareStatement(update);
 			statement.setString(1, persona_a_editar.getNombre());
 			statement.setString(2, persona_a_editar.getTelefono());
-			statement.setInt(3, persona_a_editar.getIdPersona());
+			statement.setString(3, persona_a_editar.getEmail());
+			statement.setInt(4, persona_a_editar.getIdPersona());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -126,7 +128,8 @@ public class PersonaDAOSQL implements PersonaDAO
 		int id = resultSet.getInt("idPersona");
 		String nombre = resultSet.getString("Nombre");
 		String tel = resultSet.getString("Telefono");
-		return new PersonaDTO(id, nombre, tel);
+		String email = resultSet.getString("Email");
+		return new PersonaDTO(id, nombre, tel, email);
 	}
 
 }
