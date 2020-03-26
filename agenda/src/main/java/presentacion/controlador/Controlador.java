@@ -2,6 +2,7 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -92,7 +93,8 @@ public class Controlador implements ActionListener
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
 			String email = ventanaPersona.getTxtEmail().getText();
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email);
+			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio);
 			this.agenda.agregarPersona(nuevaPersona);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
@@ -102,11 +104,13 @@ public class Controlador implements ActionListener
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
 			String email = ventanaPersona.getTxtEmail().getText();
+			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			persona_a_editar.setNombre(nombre);
 			persona_a_editar.setTelefono(tel);
 			persona_a_editar.setEmail(email);
+			persona_a_editar.setFechaCumpleanio(fechaCumpleanio);
 			this.agenda.editarPersona(persona_a_editar);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();

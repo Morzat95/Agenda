@@ -1,14 +1,20 @@
 package presentacion.vista;
 
+import java.awt.Choice;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import com.itextpdf.text.log.SysoCounter;
+import com.toedter.calendar.JDateChooser;
 
 import dto.PersonaDTO;
 
@@ -19,6 +25,8 @@ public class VentanaPersona extends JFrame
 	private JTextField txtNombre;
 	private JTextField txtTelefono;
 	private JTextField txtEmail;
+	private JDateChooser fechaCumpleanios;
+	private JComboBox listTipoDeContacto;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
@@ -45,14 +53,14 @@ public class VentanaPersona extends JFrame
 			}
 		});
 		
-		setBounds(100, 100, 343, 226);
+		setBounds(100, 100, 384, 352);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 307, 166);
+		panel.setBounds(10, 11, 380, 350);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -68,28 +76,43 @@ public class VentanaPersona extends JFrame
 		lblEmail.setBounds(10, 93, 113, 14);
 		panel.add(lblEmail);
 		
+		JLabel lblFechaCumpleanios = new JLabel("Fecha de Nacimiento");
+		lblFechaCumpleanios.setBounds(10, 134, 125, 14);
+		panel.add(lblFechaCumpleanios);
+		
+		JLabel lblTipoDeContacto = new JLabel("Tipo de Contacto");
+		lblTipoDeContacto.setBounds(10, 175, 125, 14);
+		panel.add(lblTipoDeContacto);
+		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(133, 8, 164, 20);
+		txtNombre.setBounds(140, 8, 164, 20);
 		panel.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		txtTelefono = new JTextField();
-		txtTelefono.setBounds(133, 49, 164, 20);
+		txtTelefono.setBounds(140, 49, 164, 20);
 		panel.add(txtTelefono);
 		txtTelefono.setColumns(10);
 		
 		txtEmail = new JTextField();
-		txtEmail.setBounds(133, 90, 164, 20);
+		txtEmail.setBounds(140, 90, 164, 20);
 		panel.add(txtEmail);
 		txtEmail.setColumns(10);
 		
+		fechaCumpleanios = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
+		fechaCumpleanios.setBounds(204, 131, 100, 20);
+		panel.add(fechaCumpleanios);
+		
+		listTipoDeContacto = new JComboBox();
+		listTipoDeContacto.setBounds(140, 171, 164, 20);
+		panel.add(listTipoDeContacto);
 		
 		btnAgregarPersona = new JButton("Agregar");
-		btnAgregarPersona.setBounds(208, 133, 89, 23);
+		btnAgregarPersona.setBounds(208, 212, 89, 23);
 		panel.add(btnAgregarPersona);
 		
 		btnEditarPersona = new JButton("Editar");
-		btnEditarPersona.setBounds(208, 133, 89, 23);
+		btnEditarPersona.setBounds(208, 212, 89, 23);
 		panel.add(btnEditarPersona);
 		
 		this.setVisible(false);
@@ -115,6 +138,16 @@ public class VentanaPersona extends JFrame
 		return txtEmail;
 	}
 
+	public Date getFechaCumpleanio()
+	{
+		return this.fechaCumpleanios.getDate(); //Sun Mar 01 01:34:24 ART 2020
+	}
+	
+	public JComboBox getListTipoDeTrabajo()
+	{
+		return this.listTipoDeContacto;
+	}
+	
 	public JButton getBtnAgregarPersona() 
 	{
 		return btnAgregarPersona;
@@ -129,7 +162,7 @@ public class VentanaPersona extends JFrame
 		this.txtNombre.setText(persona_a_editar.getNombre());
 		this.txtTelefono.setText(persona_a_editar.getTelefono());
 		this.txtEmail.setText(persona_a_editar.getEmail());
-		
+		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));	
 		this.btnAgregarPersona.setVisible(false);
 		this.btnEditarPersona.setVisible(true);
 	}
@@ -144,6 +177,7 @@ public class VentanaPersona extends JFrame
 		this.txtNombre.setText(null);
 		this.txtTelefono.setText(null);
 		this.txtEmail.setText(null);
+		this.fechaCumpleanios.setDate(null);
 		restoreDefaultForm();
 		this.dispose();
 	}

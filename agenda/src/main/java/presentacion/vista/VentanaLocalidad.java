@@ -54,7 +54,7 @@ public class VentanaLocalidad extends JFrame {
 		super();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setBounds(100, 100, 450, 350);
+		this.setBounds(100, 100, 500, 350);
 		
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		

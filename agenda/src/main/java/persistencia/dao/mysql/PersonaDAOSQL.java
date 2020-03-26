@@ -1,11 +1,16 @@
 package persistencia.dao.mysql;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.itextpdf.text.log.SysoCounter;
 
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PersonaDAO;
@@ -13,9 +18,9 @@ import dto.PersonaDTO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email) VALUES(?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños) VALUES(?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
-	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ? WHERE idPersona = ?";
+	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas";
 		
 	public boolean insert(PersonaDTO persona)
@@ -30,6 +35,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(2, persona.getNombre());
 			statement.setString(3, persona.getTelefono());
 			statement.setString(4, persona.getEmail());
+			statement.setDate(5, new Date(persona.getFechaCumpleanio().getTime()));
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -81,7 +87,8 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(1, persona_a_editar.getNombre());
 			statement.setString(2, persona_a_editar.getTelefono());
 			statement.setString(3, persona_a_editar.getEmail());
-			statement.setInt(4, persona_a_editar.getIdPersona());
+			statement.setDate(4, new Date(persona_a_editar.getFechaCumpleanio().getTime()));
+			statement.setInt(5, persona_a_editar.getIdPersona());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -129,7 +136,16 @@ public class PersonaDAOSQL implements PersonaDAO
 		String nombre = resultSet.getString("Nombre");
 		String tel = resultSet.getString("Telefono");
 		String email = resultSet.getString("Email");
-		return new PersonaDTO(id, nombre, tel, email);
+		
+		String stringFecha = resultSet.getString("FechaCumpleaños");
+		java.util.Date fechaCumpleanio = null;
+		try {
+			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio);
 	}
 
 }

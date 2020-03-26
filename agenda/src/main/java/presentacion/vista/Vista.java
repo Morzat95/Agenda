@@ -2,6 +2,7 @@ package presentacion.vista;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -37,7 +38,7 @@ public class Vista
 		private JMenuItem mnItemEditarLocalidad;
 	private JMenuItem menuTipoContacto;
 	private DefaultTableModel modelPersonas;
-	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email"};
+	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
 
 	public Vista() 
 	{
@@ -49,17 +50,17 @@ public class Vista
 	private void initialize() 
 	{
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 350);
+		frame.setBounds(100, 100, 800, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 434, 295);
+		panel.setBounds(0, 0, 800, 295);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		JScrollPane spPersonas = new JScrollPane();
-		spPersonas.setBounds(10, 51, 414, 182);
+		spPersonas.setBounds(10, 51, 770, 182);
 		panel.add(spPersonas);
 		
 		modelPersonas = new DefaultTableModel(null,nombreColumnas);
@@ -71,28 +72,34 @@ public class Vista
 		tablaPersonas.getColumnModel().getColumn(1).setResizable(false);
 		tablaPersonas.getColumnModel().getColumn(2).setPreferredWidth(103);
 		tablaPersonas.getColumnModel().getColumn(2).setResizable(false);
+		tablaPersonas.getColumnModel().getColumn(3).setPreferredWidth(100);
+		tablaPersonas.getColumnModel().getColumn(3).setResizable(false);
+		tablaPersonas.getColumnModel().getColumn(4).setPreferredWidth(103);
+		tablaPersonas.getColumnModel().getColumn(4).setResizable(false);
+		tablaPersonas.getColumnModel().getColumn(5).setPreferredWidth(100);
+		tablaPersonas.getColumnModel().getColumn(5).setResizable(false);
 		
 		spPersonas.setViewportView(tablaPersonas);
 		
 		btnAgregar = new JButton("Agregar");
-		btnAgregar.setBounds(10, 268, 89, 23);
+		btnAgregar.setBounds(120, 268, 89, 23);
 		panel.add(btnAgregar);
 		
 		btnEditar = new JButton("Editar");
-		btnEditar.setBounds(109, 268, 89, 23);
+		btnEditar.setBounds(229, 268, 89, 23);
 		panel.add(btnEditar);
 		
 		btnBorrar = new JButton("Borrar");
-		btnBorrar.setBounds(208, 268, 89, 23);
+		btnBorrar.setBounds(338, 268, 89, 23);
 		panel.add(btnBorrar);
 		
 		btnReporte = new JButton("Reporte");
-		btnReporte.setBounds(307, 268, 89, 23);
+		btnReporte.setBounds(447, 268, 89, 23);
 		panel.add(btnReporte);
 		
 		// Add Menu	
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 450, 25);
+		menuBar.setBounds(0, 0, 800, 25);
 		panel.add(menuBar);
 		
 		JMenu menu = new JMenu("ABM");
@@ -220,7 +227,8 @@ public class Vista
 			String nombre = p.getNombre();
 			String tel = p.getTelefono();
 			String email = p.getEmail();
-			Object[] fila = {nombre, tel, email};
+			String fechaCumpleanio = new SimpleDateFormat("dd/MM").format(p.getFechaCumpleanio());
+			Object[] fila = {nombre, tel, email, fechaCumpleanio};
 			this.getModelPersonas().addRow(fila);
 		}
 		
