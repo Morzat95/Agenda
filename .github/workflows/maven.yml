@@ -23,6 +23,7 @@ jobs:
     - name: Display the path
       run: |
         echo $PATH
+        cd agenda
         ls
       shell: bash
     - name: Build with Maven
