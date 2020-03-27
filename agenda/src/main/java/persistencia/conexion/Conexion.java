@@ -17,7 +17,7 @@ public class Conexion
 		{
 //			Class.forName("com.mysql.jdbc.Driver"); // quitar si no es necesario
 			Class.forName("com.mysql.cj.jdbc.Driver"); // quitar si no es necesario
-			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/agenda?serverTimezone=UTC","root","root");
+			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grupo_G14?serverTimezone=UTC","root","root");
 			this.connection.setAutoCommit(false);
 			log.info("Conexión exitosa");
 		}
