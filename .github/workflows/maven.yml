@@ -21,7 +21,9 @@ jobs:
       with:
         java-version: 1.8
     - name: Display the path
-      run: echo $PATH
+      run: |
+        echo $PATH
+        echo ls
       shell: bash
     - name: Build with Maven
       run: mvn -B package --file pom.xml
