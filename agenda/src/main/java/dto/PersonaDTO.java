@@ -10,9 +10,9 @@ public class PersonaDTO
 	private String email;
 	private Date fechaCumpleanio; 
 	private TipoContactoDTO tipoDeContacto;
-	//private DomicilioDTO domicilio;
+	private DomicilioDTO domicilio;
 	
-	public PersonaDTO(int idPersona, String nombre, String telefono, String email, Date fechaCumpleanio, TipoContactoDTO tipoDeContacto)
+	public PersonaDTO(int idPersona, String nombre, String telefono, String email, Date fechaCumpleanio, TipoContactoDTO tipoDeContacto, DomicilioDTO domicilio)
 	{
 		this.idPersona = idPersona;
 		this.nombre = nombre;
@@ -20,6 +20,7 @@ public class PersonaDTO
 		this.email = email;
 		this.fechaCumpleanio = fechaCumpleanio;
 		this.tipoDeContacto = tipoDeContacto;
+		this.domicilio = domicilio;
 	}	
 	
 	public int getIdPersona() 
@@ -81,4 +82,16 @@ public class PersonaDTO
 	{
 		this.tipoDeContacto = tipoDeContacto;
 	}
+	
+	public DomicilioDTO getDomicilio() 
+	{
+		return this.domicilio;
+	}
+	
+	public void setDomicilio(DomicilioDTO domicilio)
+	{
+		this.domicilio = domicilio;
+	}
+	
+	
 }

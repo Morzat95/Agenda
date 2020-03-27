@@ -28,6 +28,12 @@ public class VentanaPersona extends JFrame
 	private JTextField txtEmail;
 	private JDateChooser fechaCumpleanios;
 	private JComboBox<Object> listTipoDeContacto;
+	private JTextField txtCalle;
+	private JTextField txtAltura;
+	private JTextField txtPiso;
+	private JTextField txtDepartamento;
+	private JComboBox<Object> listLocalidad;	
+	
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
@@ -54,14 +60,14 @@ public class VentanaPersona extends JFrame
 			}
 		});
 		
-		setBounds(100, 100, 384, 352);
+		setBounds(100, 100, 410, 352);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 380, 350);
+		panel.setBounds(10, 11, 390, 350);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -85,6 +91,26 @@ public class VentanaPersona extends JFrame
 		lblTipoDeContacto.setBounds(10, 175, 125, 14);
 		panel.add(lblTipoDeContacto);
 		
+		JLabel lblCalle = new JLabel("Calle");
+		lblCalle.setBounds(10, 216, 125, 14);
+		panel.add(lblCalle);
+		
+		JLabel lblAltura = new JLabel("Altura");
+		lblAltura.setBounds(10, 257, 125, 14);
+		panel.add(lblAltura);
+		
+		JLabel lblPiso = new JLabel("Piso");
+		lblPiso.setBounds(10, 298, 125, 14);
+		panel.add(lblPiso);
+		
+		JLabel lblDepartamento = new JLabel("Departamento");
+		lblDepartamento.setBounds(10, 339, 125, 14);
+		panel.add(lblDepartamento);
+		
+		JLabel lblLocalidad = new JLabel("Localidad");
+		lblLocalidad.setBounds(10, 380, 125, 14);
+		panel.add(lblLocalidad);
+			
 		txtNombre = new JTextField();
 		txtNombre.setBounds(140, 8, 164, 20);
 		panel.add(txtNombre);
@@ -108,12 +134,36 @@ public class VentanaPersona extends JFrame
 		listTipoDeContacto.setBounds(140, 171, 164, 20);
 		panel.add(listTipoDeContacto);
 		
+		txtCalle = new JTextField();
+		txtCalle.setBounds(140, 90, 164, 20);
+		panel.add(txtEmail);
+		txtCalle.setColumns(10);
+		
+		txtAltura = new JTextField();
+		txtAltura.setBounds(140, 90, 164, 20);
+		panel.add(txtEmail);
+		txtAltura.setColumns(10);
+		
+		txtPiso = new JTextField();
+		txtPiso.setBounds(140, 90, 164, 20);
+		panel.add(txtPiso);
+		txtPiso.setColumns(10);
+		
+		txtDepartamento = new JTextField();
+		txtDepartamento.setBounds(140, 90, 164, 20);
+		panel.add(txtDepartamento);
+		txtDepartamento.setColumns(10);
+		
+		listLocalidad = new JComboBox<Object>();
+		listLocalidad.setBounds(140, 380, 164, 20);
+		panel.add(listLocalidad);
+		
 		btnAgregarPersona = new JButton("Agregar");
-		btnAgregarPersona.setBounds(208, 212, 89, 23);
+		btnAgregarPersona.setBounds(208, 780, 89, 23);
 		panel.add(btnAgregarPersona);
 		
 		btnEditarPersona = new JButton("Editar");
-		btnEditarPersona.setBounds(208, 212, 89, 23);
+		btnEditarPersona.setBounds(208, 780, 89, 23);
 		panel.add(btnEditarPersona);
 		
 		this.setVisible(false);
@@ -149,6 +199,26 @@ public class VentanaPersona extends JFrame
 		return this.listTipoDeContacto;
 	}
 	
+	public JTextField getTxtCalle() {
+		return txtCalle;
+	}
+
+	public JTextField getTxtAltura() {
+		return txtAltura;
+	}
+
+	public JTextField getTxtPiso() {
+		return txtPiso;
+	}
+
+	public JTextField getTxtDepartamento() {
+		return txtDepartamento;
+	}
+
+	public JComboBox<Object> getListLocalidad() {
+		return listLocalidad;
+	}
+
 	public JButton getBtnAgregarPersona() 
 	{
 		return btnAgregarPersona;

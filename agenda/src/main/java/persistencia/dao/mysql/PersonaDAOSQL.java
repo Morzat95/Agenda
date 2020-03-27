@@ -14,14 +14,15 @@ import com.itextpdf.text.log.SysoCounter;
 
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PersonaDAO;
+import dto.DomicilioDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto) VALUES(?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto, idDomicilio) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
-	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ? WHERE idPersona = ?";
+	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ?, idDomicilio = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas";
 	
 		
@@ -39,6 +40,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(4, persona.getEmail());
 			statement.setDate(5, new Date(persona.getFechaCumpleanio().getTime()));
 			statement.setInt(6, persona.getTipoDeContacto().getIdTipoContacto());
+			statement.setInt(7, persona.getDomicilio().getIdDomicilio());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -92,7 +94,8 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(3, persona_a_editar.getEmail());
 			statement.setDate(4, new Date(persona_a_editar.getFechaCumpleanio().getTime()));
 			statement.setInt(5, persona_a_editar.getTipoDeContacto().getIdTipoContacto());
-			statement.setInt(6, persona_a_editar.getIdPersona());
+			statement.setInt(6, persona_a_editar.getDomicilio().getIdDomicilio());
+			statement.setInt(7, persona_a_editar.getIdPersona());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -137,11 +140,9 @@ public class PersonaDAOSQL implements PersonaDAO
 	public String getTipoContacto(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
-		Conexion conexion = Conexion.getConexion();
-		
+		Conexion conexion = Conexion.getConexion();	
 		String nombre = "";
 		String name = "SELECT nombre FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
-
 		try
 		{
 			statement = conexion.getSQLConexion().prepareStatement(name);
@@ -156,6 +157,37 @@ public class PersonaDAOSQL implements PersonaDAO
 		}
 	
 		return nombre;
+	}
+	
+	public DomicilioDTO getDomicilio(int id) throws SQLException {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		
+		String calle = "";
+		int altura = 0;
+		String piso = "";
+		String departamento = "";
+		int idLocalidad = 0;
+		
+		String name = "SELECT * FROM domicilio WHERE idDomicilio = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(name);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				calle = resultSet.getString("calle");
+				altura = resultSet.getInt("altura");
+				piso = resultSet.getString("piso");
+				departamento = resultSet.getString("departamento");
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new DomicilioDTO(id, calle, altura, piso, departamento, idLocalidad);
 	}
 	
 	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
@@ -173,8 +205,20 @@ public class PersonaDAOSQL implements PersonaDAO
 		
 		int idContacto = resultSet.getInt("idTipoDeContacto");
 		TipoContactoDTO tipoContacto = new TipoContactoDTO(idContacto, getTipoContacto(idContacto));
-		
-		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto);
+		DomicilioDTO domicilio = getDomicilio(resultSet);
+		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio);
 	}
+	
+	public DomicilioDTO getDomicilio(ResultSet resultSet) throws SQLException {
+		int idDomicilio = 0;
+		String calle = resultSet.getString("calle");
+		int altura = resultSet.getInt("altura");
+		String piso = resultSet.getString("piso");
+		String departamento = resultSet.getString("departamento");
+		int idLocalidad = 0;
+		DomicilioDTO domicilio = new DomicilioDTO(idDomicilio, calle, altura, piso, departamento, idLocalidad);
+		return domicilio;
+	}
+
 
 }

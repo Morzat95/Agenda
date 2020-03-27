@@ -15,6 +15,7 @@ import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPersona;
 import presentacion.vista.VentanaTipoContacto;
 import presentacion.vista.Vista;
+import dto.DomicilioDTO;
 import dto.LocalidadDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
@@ -101,10 +102,21 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto);
+			DomicilioDTO domicilioDTO = getDomicilio();
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO);
 			this.agenda.agregarPersona(nuevaPersona);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
+		}
+		
+		private DomicilioDTO getDomicilio() {
+			int idDomicilio = 0;
+			String calle = ventanaPersona.getTxtCalle().getText();
+			int altura = Integer.valueOf(ventanaPersona.getTxtAltura().getText());
+			String piso = ventanaPersona.getTxtPiso().getText();
+			String departamento = ventanaPersona.getTxtDepartamento().getText();
+			int idLocalidad = 0;
+			return new DomicilioDTO(idDomicilio, calle, altura, piso, departamento, idLocalidad);
 		}
 		
 		private void editarPersona(ActionEvent p) {
