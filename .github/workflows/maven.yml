@@ -20,11 +20,5 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Display the path
-      run: |
-        echo $PATH
-        cd agenda
-        ls
-      shell: bash
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file agenda/pom.xml
