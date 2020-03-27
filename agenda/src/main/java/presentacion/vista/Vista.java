@@ -228,7 +228,8 @@ public class Vista
 			String tel = p.getTelefono();
 			String email = p.getEmail();
 			String fechaCumpleanio = new SimpleDateFormat("dd/MM").format(p.getFechaCumpleanio());
-			Object[] fila = {nombre, tel, email, fechaCumpleanio};
+			String tipoContacto = p.getTipoDeContacto().getNombre();
+			Object[] fila = {nombre, tel, email, fechaCumpleanio, tipoContacto};
 			this.getModelPersonas().addRow(fila);
 		}
 		

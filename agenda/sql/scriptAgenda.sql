@@ -7,6 +7,7 @@ CREATE TABLE `personas`
   `Telefono` varchar(20) NOT NULL,
   `Email` varchar(20) NOT NULL,
   `FechaCumpleaños` DATE NOT NULL,
+  `idTipoDeContacto` int(11) NOT NULL,
   PRIMARY KEY (`idPersona`)
 );
 CREATE TABLE `localidades`

@@ -55,8 +55,14 @@ public class Controlador implements ActionListener
 		
 		private void ventanaAgregarPersona(ActionEvent a) {
 			this.ventanaPersona.mostrarVentana();
+			this.llenarListaTipoContacto();
 		}
 		
+		private void llenarListaTipoContacto() {
+			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
+			this.ventanaPersona.llenarListaTipoContacto(this.tiposContactoEnLista);
+		}
+
 		public void ventanaEditarPersona(ActionEvent a)
 		{
 			int[] filasSeleccionadas = this.vista.getTablaPersonas().getSelectedRows();
@@ -94,7 +100,8 @@ public class Controlador implements ActionListener
 			String tel = ventanaPersona.getTxtTelefono().getText();
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio);
+			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto);
 			this.agenda.agregarPersona(nuevaPersona);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
@@ -105,12 +112,14 @@ public class Controlador implements ActionListener
 			String tel = ventanaPersona.getTxtTelefono().getText();
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
+			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			persona_a_editar.setNombre(nombre);
 			persona_a_editar.setTelefono(tel);
 			persona_a_editar.setEmail(email);
 			persona_a_editar.setFechaCumpleanio(fechaCumpleanio);
+			persona_a_editar.setTipoDeContacto(tipoContacto);
 			this.agenda.editarPersona(persona_a_editar);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();

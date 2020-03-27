@@ -15,13 +15,15 @@ import com.itextpdf.text.log.SysoCounter;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PersonaDAO;
 import dto.PersonaDTO;
+import dto.TipoContactoDTO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños) VALUES(?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto) VALUES(?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
-	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ? WHERE idPersona = ?";
+	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas";
+	
 		
 	public boolean insert(PersonaDTO persona)
 	{
@@ -36,6 +38,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(3, persona.getTelefono());
 			statement.setString(4, persona.getEmail());
 			statement.setDate(5, new Date(persona.getFechaCumpleanio().getTime()));
+			statement.setInt(6, persona.getTipoDeContacto().getIdTipoContacto());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -88,7 +91,8 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(2, persona_a_editar.getTelefono());
 			statement.setString(3, persona_a_editar.getEmail());
 			statement.setDate(4, new Date(persona_a_editar.getFechaCumpleanio().getTime()));
-			statement.setInt(5, persona_a_editar.getIdPersona());
+			statement.setInt(5, persona_a_editar.getTipoDeContacto().getIdTipoContacto());
+			statement.setInt(6, persona_a_editar.getIdPersona());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -129,6 +133,30 @@ public class PersonaDAOSQL implements PersonaDAO
 		}
 		return personas;
 	}
+
+	public String getTipoContacto(int id) throws SQLException {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();
+		
+		String nombre = "";
+		String name = "SELECT nombre FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
+
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(name);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return nombre;
+	}
 	
 	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
 	{
@@ -141,11 +169,12 @@ public class PersonaDAOSQL implements PersonaDAO
 		java.util.Date fechaCumpleanio = null;
 		try {
 			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio);
+		} catch (ParseException e) { e.printStackTrace(); }
+		
+		int idContacto = resultSet.getInt("idTipoDeContacto");
+		TipoContactoDTO tipoContacto = new TipoContactoDTO(idContacto, getTipoContacto(idContacto));
+		
+		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto);
 	}
 
 }

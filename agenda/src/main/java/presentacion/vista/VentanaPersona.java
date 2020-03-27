@@ -1,9 +1,9 @@
 package presentacion.vista;
 
-import java.awt.Choice;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,6 +17,7 @@ import com.itextpdf.text.log.SysoCounter;
 import com.toedter.calendar.JDateChooser;
 
 import dto.PersonaDTO;
+import dto.TipoContactoDTO;
 
 public class VentanaPersona extends JFrame 
 {
@@ -26,7 +27,7 @@ public class VentanaPersona extends JFrame
 	private JTextField txtTelefono;
 	private JTextField txtEmail;
 	private JDateChooser fechaCumpleanios;
-	private JComboBox listTipoDeContacto;
+	private JComboBox<Object> listTipoDeContacto;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
@@ -103,7 +104,7 @@ public class VentanaPersona extends JFrame
 		fechaCumpleanios.setBounds(204, 131, 100, 20);
 		panel.add(fechaCumpleanios);
 		
-		listTipoDeContacto = new JComboBox();
+		listTipoDeContacto = new JComboBox<Object>();
 		listTipoDeContacto.setBounds(140, 171, 164, 20);
 		panel.add(listTipoDeContacto);
 		
@@ -143,7 +144,7 @@ public class VentanaPersona extends JFrame
 		return this.fechaCumpleanios.getDate(); //Sun Mar 01 01:34:24 ART 2020
 	}
 	
-	public JComboBox getListTipoDeTrabajo()
+	public JComboBox<Object> getListTipoDeContacto()
 	{
 		return this.listTipoDeContacto;
 	}
@@ -167,6 +168,14 @@ public class VentanaPersona extends JFrame
 		this.btnEditarPersona.setVisible(true);
 	}
 	
+	public void llenarListaTipoContacto(List<TipoContactoDTO> tipoContactosEnLista) {
+		this.listTipoDeContacto.removeAllItems();
+		for (TipoContactoDTO tipoContacto : tipoContactosEnLista)
+		{
+			this.listTipoDeContacto.addItem(tipoContacto);
+		}
+	}
+	
 	private void restoreDefaultForm() {
 		this.btnAgregarPersona.setVisible(true);
 		this.btnEditarPersona.setVisible(false);
@@ -177,7 +186,6 @@ public class VentanaPersona extends JFrame
 		this.txtNombre.setText(null);
 		this.txtTelefono.setText(null);
 		this.txtEmail.setText(null);
-		this.fechaCumpleanios.setDate(null);
 		restoreDefaultForm();
 		this.dispose();
 	}
