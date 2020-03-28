@@ -229,7 +229,8 @@ public class Vista
 			String email = p.getEmail();
 			String fechaCumpleanio = new SimpleDateFormat("dd/MM").format(p.getFechaCumpleanio());
 			String tipoContacto = p.getTipoDeContacto().getNombre();
-			String domicilio = p.getDomicilio().getCalle(); 
+			String domicilio = p.getDomicilio().getCalle();
+			System.out.println("Domicilio " + p.getDomicilio().getCalle());
 			Object[] fila = {nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio};
 			this.getModelPersonas().addRow(fila);
 		}

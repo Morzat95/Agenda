@@ -26,4 +26,7 @@ public class LocalidadDTO {
 		this.nombre = nombre;
 	}
 
+	public String toString() {
+		return nombre;
+	}
 }

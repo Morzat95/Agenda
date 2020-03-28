@@ -2,23 +2,25 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
+import dto.DomicilioDTO;
+import dto.LocalidadDTO;
+import dto.PersonaDTO;
+import dto.TipoContactoDTO;
 import modelo.Agenda;
+import persistencia.conexion.Conexion;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPersona;
 import presentacion.vista.VentanaTipoContacto;
 import presentacion.vista.Vista;
-import dto.DomicilioDTO;
-import dto.LocalidadDTO;
-import dto.PersonaDTO;
-import dto.TipoContactoDTO;
 
 public class Controlador implements ActionListener
 {
@@ -55,13 +57,19 @@ public class Controlador implements ActionListener
 		}
 		
 		private void ventanaAgregarPersona(ActionEvent a) {
-			this.ventanaPersona.mostrarVentana();
 			this.llenarListaTipoContacto();
+			this.llenarListaLocalidades();
+			this.ventanaPersona.mostrarVentana();
 		}
 		
 		private void llenarListaTipoContacto() {
 			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
 			this.ventanaPersona.llenarListaTipoContacto(this.tiposContactoEnLista);
+		}
+		
+		private void llenarListaLocalidades() {
+			this.localidadesEnLista = agenda.obtenerLocalidades();
+			this.ventanaPersona.llenarListaLocalidad(this.localidadesEnLista);
 		}
 
 		public void ventanaEditarPersona(ActionEvent a)
@@ -83,6 +91,8 @@ public class Controlador implements ActionListener
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
 			this.ventanaPersona.mostrarVentana();
+			this.llenarListaTipoContacto();
+			this.llenarListaLocalidades();
 			
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
@@ -102,21 +112,42 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
-			DomicilioDTO domicilioDTO = getDomicilio();
+			DomicilioDTO domicilioDTO = getDomicilio(tipoContacto.getIdTipoContacto());
 			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO);
 			this.agenda.agregarPersona(nuevaPersona);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
 		}
 		
-		private DomicilioDTO getDomicilio() {
-			int idDomicilio = 0;
-			String calle = ventanaPersona.getTxtCalle().getText();
-			int altura = Integer.valueOf(ventanaPersona.getTxtAltura().getText());
-			String piso = ventanaPersona.getTxtPiso().getText();
-			String departamento = ventanaPersona.getTxtDepartamento().getText();
-			int idLocalidad = 0;
-			return new DomicilioDTO(idDomicilio, calle, altura, piso, departamento, idLocalidad);
+		public DomicilioDTO getDomicilio(int id) {
+			PreparedStatement statement;
+			ResultSet resultSet = null;
+			Conexion conexion = Conexion.getConexion();	
+			
+			String calle = "";
+			int altura = 0;
+			String piso = "";
+			String departamento = "";
+			int idLocalidad = 1;
+			
+			String name = "SELECT * FROM domicilio WHERE idDomicilio = " + id + ";";
+			try
+			{
+				statement = conexion.getSQLConexion().prepareStatement(name);
+				resultSet = statement.executeQuery();
+				while(resultSet.next()) {
+					calle = resultSet.getString("calle");
+					altura = resultSet.getInt("altura");
+					piso = resultSet.getString("piso");
+					departamento = resultSet.getString("departamento");
+				}
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		
+			return new DomicilioDTO(id, calle, altura, piso, departamento, idLocalidad);
 		}
 		
 		private void editarPersona(ActionEvent p) {
@@ -125,6 +156,9 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			DomicilioDTO domicilio_persona = new DomicilioDTO(0, ventanaPersona.getTxtCalle().getText(), 
+					Integer.valueOf(ventanaPersona.getTxtAltura().getText()), ventanaPersona.getTxtPiso().getText(), 
+					ventanaPersona.getTxtDepartamento().getText(), 0);
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			persona_a_editar.setNombre(nombre);
@@ -132,6 +166,7 @@ public class Controlador implements ActionListener
 			persona_a_editar.setEmail(email);
 			persona_a_editar.setFechaCumpleanio(fechaCumpleanio);
 			persona_a_editar.setTipoDeContacto(tipoContacto);
+			persona_a_editar.setDomicilio(domicilio_persona);
 			this.agenda.editarPersona(persona_a_editar);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();

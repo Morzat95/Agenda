@@ -10,13 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.itextpdf.text.log.SysoCounter;
-
-import persistencia.conexion.Conexion;
-import persistencia.dao.interfaz.PersonaDAO;
 import dto.DomicilioDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
+import persistencia.conexion.Conexion;
+import persistencia.dao.interfaz.PersonaDAO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
@@ -169,7 +167,7 @@ public class PersonaDAOSQL implements PersonaDAO
 		String piso = "";
 		String departamento = "";
 		int idLocalidad = 0;
-		
+
 		String name = "SELECT * FROM domicilio WHERE idDomicilio = " + id + ";";
 		try
 		{
@@ -180,6 +178,8 @@ public class PersonaDAOSQL implements PersonaDAO
 				altura = resultSet.getInt("altura");
 				piso = resultSet.getString("piso");
 				departamento = resultSet.getString("departamento");
+				idLocalidad = resultSet.getInt("idLocalidad");
+				
 			}
 		} 
 		catch (SQLException e) 
@@ -205,20 +205,9 @@ public class PersonaDAOSQL implements PersonaDAO
 		
 		int idContacto = resultSet.getInt("idTipoDeContacto");
 		TipoContactoDTO tipoContacto = new TipoContactoDTO(idContacto, getTipoContacto(idContacto));
-		DomicilioDTO domicilio = getDomicilio(resultSet);
+		
+		DomicilioDTO domicilio = getDomicilio(resultSet.getInt("idDomicilio"));
 		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio);
 	}
-	
-	public DomicilioDTO getDomicilio(ResultSet resultSet) throws SQLException {
-		int idDomicilio = 0;
-		String calle = resultSet.getString("calle");
-		int altura = resultSet.getInt("altura");
-		String piso = resultSet.getString("piso");
-		String departamento = resultSet.getString("departamento");
-		int idLocalidad = 0;
-		DomicilioDTO domicilio = new DomicilioDTO(idDomicilio, calle, altura, piso, departamento, idLocalidad);
-		return domicilio;
-	}
-
 
 }

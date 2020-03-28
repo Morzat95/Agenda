@@ -15,6 +15,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
 
+import dto.DomicilioDTO;
+import dto.LocalidadDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 
@@ -31,11 +33,10 @@ public class VentanaPersona extends JFrame
 	private JTextField txtAltura;
 	private JTextField txtPiso;
 	private JTextField txtDepartamento;
+	private JComboBox<Object> listLocalidades;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
-	
-	
 	
 	public static VentanaPersona getInstance()
 	{
@@ -59,14 +60,14 @@ public class VentanaPersona extends JFrame
 			}
 		});
 		
-		setBounds(100, 100, 430, 500);
+		setBounds(100, 100, 475, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 430, 500);
+		panel.setBounds(10, 11, 470, 500);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -106,6 +107,10 @@ public class VentanaPersona extends JFrame
 		lblDepartamento.setBounds(10, 339, 113, 14);
 		panel.add(lblDepartamento);
 		
+		JLabel lblLocalidad = new JLabel("Localidad");
+		lblLocalidad.setBounds(10, 380, 113, 14);
+		panel.add(lblLocalidad);
+		
 		txtNombre = new JTextField();
 		txtNombre.setBounds(140, 8, 164, 20);
 		panel.add(txtNombre);
@@ -142,19 +147,21 @@ public class VentanaPersona extends JFrame
 		txtPiso = new JTextField();
 		txtPiso.setBounds(140, 295, 164, 20);
 		panel.add(txtPiso);
-		txtPiso.setColumns(10);
 		
 		txtDepartamento = new JTextField();
 		txtDepartamento.setBounds(140, 336, 164, 20);
 		panel.add(txtDepartamento);
-		txtDepartamento.setColumns(10);
+		
+		listLocalidades = new JComboBox<Object>();
+		listLocalidades.setBounds(140, 377, 164, 20);
+		panel.add(listLocalidades);
 		
 		btnAgregarPersona = new JButton("Agregar");
-		btnAgregarPersona.setBounds(208, 376, 89, 23);
+		btnAgregarPersona.setBounds(208, 417, 89, 23);
 		panel.add(btnAgregarPersona);
 		
 		btnEditarPersona = new JButton("Editar");
-		btnEditarPersona.setBounds(208, 376, 89, 23);
+		btnEditarPersona.setBounds(208, 417, 89, 23);
 		panel.add(btnEditarPersona);
 		
 		this.setVisible(false);
@@ -206,6 +213,10 @@ public class VentanaPersona extends JFrame
 		return txtDepartamento;
 	}
 
+	public JComboBox<Object> getListLocalidades() {
+		return listLocalidades;
+	}
+
 	public JButton getBtnAgregarPersona() 
 	{
 		return btnAgregarPersona;
@@ -220,7 +231,13 @@ public class VentanaPersona extends JFrame
 		this.txtNombre.setText(persona_a_editar.getNombre());
 		this.txtTelefono.setText(persona_a_editar.getTelefono());
 		this.txtEmail.setText(persona_a_editar.getEmail());
-		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));	
+		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));
+		this.listTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto().getNombre());
+		DomicilioDTO domicilio_persona = persona_a_editar.getDomicilio();
+		this.txtCalle.setText(domicilio_persona.getCalle());
+		this.txtAltura.setText(String.valueOf(domicilio_persona.getAltura()));
+		this.txtPiso.setText(domicilio_persona.getPiso());
+		this.txtDepartamento.setText(domicilio_persona.getDepartamento());
 		this.btnAgregarPersona.setVisible(false);
 		this.btnEditarPersona.setVisible(true);
 	}
@@ -230,6 +247,14 @@ public class VentanaPersona extends JFrame
 		for (TipoContactoDTO tipoContacto : tipoContactosEnLista)
 		{
 			this.listTipoDeContacto.addItem(tipoContacto);
+		}
+	}
+	
+	public void llenarListaLocalidad(List<LocalidadDTO> localidadesEnLista) {
+		this.listLocalidades.removeAllItems();
+		for (LocalidadDTO localidad : localidadesEnLista)
+		{
+			this.listLocalidades.addItem(localidad);
 		}
 	}
 	
@@ -243,6 +268,11 @@ public class VentanaPersona extends JFrame
 		this.txtNombre.setText(null);
 		this.txtTelefono.setText(null);
 		this.txtEmail.setText(null);
+		this.fechaCumpleanios.setDate(null);
+		this.txtCalle.setText(null);
+		this.txtAltura.setText(null);
+		this.txtPiso.setText(null);
+		this.txtDepartamento.setText(null);
 		restoreDefaultForm();
 		this.dispose();
 	}
