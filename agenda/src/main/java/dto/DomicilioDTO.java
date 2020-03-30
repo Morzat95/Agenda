@@ -10,7 +10,6 @@ public class DomicilioDTO {
 	private int idLocalidad;
 	
 	public DomicilioDTO(int idDomicilio, String calle, int altura, String piso, String departamento, int idLocalidad) {
-		super();
 		this.idDomicilio = idDomicilio;
 		this.calle = calle;
 		this.altura = altura;

@@ -15,8 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
 import dto.PersonaDTO;
 
 import javax.swing.JButton;
@@ -229,8 +227,7 @@ public class Vista
 			String email = p.getEmail();
 			String fechaCumpleanio = new SimpleDateFormat("dd/MM").format(p.getFechaCumpleanio());
 			String tipoContacto = p.getTipoDeContacto().getNombre();
-			String domicilio = p.getDomicilio().getCalle();
-			System.out.println("Domicilio " + p.getDomicilio().getCalle());
+			String domicilio = p.getDomicilio().getCalle() + " - Nro " + p.getDomicilio().getAltura();
 			Object[] fila = {nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio};
 			this.getModelPersonas().addRow(fila);
 		}

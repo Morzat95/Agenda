@@ -2,9 +2,6 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +12,6 @@ import dto.LocalidadDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 import modelo.Agenda;
-import persistencia.conexion.Conexion;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPersona;
@@ -91,6 +87,7 @@ public class Controlador implements ActionListener
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
 			this.ventanaPersona.mostrarVentana();
+			
 			this.llenarListaTipoContacto();
 			this.llenarListaLocalidades();
 			
@@ -112,53 +109,39 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
-			DomicilioDTO domicilioDTO = getDomicilio(tipoContacto.getIdTipoContacto());
+			
+			String calle = ventanaPersona.getTxtCalle().getText();
+			String altura_string = ventanaPersona.getTxtAltura().getText();
+			int altura = Integer.parseInt(altura_string);
+			String piso = ventanaPersona.getTxtPiso().getText();
+			String departamento = ventanaPersona.getTxtDepartamento().getText();
+			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
+			int idLocalidad = localidad.getIdLocalidad();
+			
+			DomicilioDTO domicilioDTO = new DomicilioDTO(0, calle, altura, piso, departamento, idLocalidad);
 			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO);
+				
 			this.agenda.agregarPersona(nuevaPersona);
+			this.agenda.agregarDomicilio(domicilioDTO);
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
 		}
-		
-		public DomicilioDTO getDomicilio(int id) {
-			PreparedStatement statement;
-			ResultSet resultSet = null;
-			Conexion conexion = Conexion.getConexion();	
-			
-			String calle = "";
-			int altura = 0;
-			String piso = "";
-			String departamento = "";
-			int idLocalidad = 1;
-			
-			String name = "SELECT * FROM domicilio WHERE idDomicilio = " + id + ";";
-			try
-			{
-				statement = conexion.getSQLConexion().prepareStatement(name);
-				resultSet = statement.executeQuery();
-				while(resultSet.next()) {
-					calle = resultSet.getString("calle");
-					altura = resultSet.getInt("altura");
-					piso = resultSet.getString("piso");
-					departamento = resultSet.getString("departamento");
-				}
-			} 
-			catch (SQLException e) 
-			{
-				e.printStackTrace();
-			}
-		
-			return new DomicilioDTO(id, calle, altura, piso, departamento, idLocalidad);
-		}
-		
+
 		private void editarPersona(ActionEvent p) {
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
-			DomicilioDTO domicilio_persona = new DomicilioDTO(0, ventanaPersona.getTxtCalle().getText(), 
-					Integer.valueOf(ventanaPersona.getTxtAltura().getText()), ventanaPersona.getTxtPiso().getText(), 
-					ventanaPersona.getTxtDepartamento().getText(), 0);
+			
+			String calle = ventanaPersona.getTxtCalle().getText();
+			int altura = Integer.valueOf(ventanaPersona.getTxtAltura().getText());
+			String piso = ventanaPersona.getTxtPiso().getText();
+			String departamento = ventanaPersona.getTxtDepartamento().getText();
+			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
+			int idLocalidad = localidad.getIdLocalidad();	
+			DomicilioDTO domicilio_persona = new DomicilioDTO(0, calle, altura, piso, departamento, idLocalidad);
+			
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			persona_a_editar.setNombre(nombre);

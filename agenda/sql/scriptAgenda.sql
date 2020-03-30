@@ -30,6 +30,6 @@ CREATE TABLE `domicilio`
   `altura` varchar(45) NOT NULL,
   `piso` varchar(45) NOT NULL,
   `departamento` varchar(45) NOT NULL,
-   `idLocalidad` int(11) NOT NULL AUTO_INCREMENT,
+   `idLocalidad` int(11) NOT NULL,
   PRIMARY KEY (`idDomicilio`)
 );

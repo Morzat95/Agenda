@@ -1,27 +1,22 @@
 package persistencia.dao.mysql;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import dto.DomicilioDTO;
-import dto.PersonaDTO;
-import dto.TipoContactoDTO;
 import persistencia.conexion.Conexion;
+import persistencia.dao.interfaz.DomicilioDAO;
 
-public class DomicilioDAOSQL {
+public class DomicilioDAOSQL implements DomicilioDAO {
 
 	private static final String insert = "INSERT INTO domicilio (idDomicilio, calle, altura, piso, departamento, idLocalidad) VALUES(?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM domicilio WHERE idDomicilio = ?";
 	private static final String update = "UPDATE domicilio SET calle = ?, altura = ?, piso = ?, departamento = ?, idLocalidad = ? WHERE idDomicilio = ?";
-	private static final String readall = "SELECT * FROM personas";
-	
+	private static final String readall = "SELECT * FROM domicilio";
 		
 	public boolean insert(DomicilioDTO domicilio)
 	{
@@ -132,84 +127,15 @@ public class DomicilioDAOSQL {
 		return domicilios;
 	}
 
-	private DomicilioDTO getDomicilioDTO(ResultSet resultSet) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getTipoContacto(int id) throws SQLException {
-		PreparedStatement statement;
-		ResultSet resultSet = null;
-		Conexion conexion = Conexion.getConexion();	
-		String nombre = "";
-		String name = "SELECT nombre FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
-		try
-		{
-			statement = conexion.getSQLConexion().prepareStatement(name);
-			resultSet = statement.executeQuery();
-			while(resultSet.next()) {
-				nombre = resultSet.getString("nombre");
-			}
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-	
-		return nombre;
-	}
-	
-	public DomicilioDTO getDomicilio(int id) throws SQLException {
-		PreparedStatement statement;
-		ResultSet resultSet = null;
-		Conexion conexion = Conexion.getConexion();	
-		
-		String calle = "";
-		int altura = 0;
-		String piso = "";
-		String departamento = "";
-		int idLocalidad = 0;
-
-		String name = "SELECT * FROM domicilio WHERE idDomicilio = " + id + ";";
-		try
-		{
-			statement = conexion.getSQLConexion().prepareStatement(name);
-			resultSet = statement.executeQuery();
-			while(resultSet.next()) {
-				calle = resultSet.getString("calle");
-				altura = resultSet.getInt("altura");
-				piso = resultSet.getString("piso");
-				departamento = resultSet.getString("departamento");
-				idLocalidad = resultSet.getInt("idLocalidad");
-				
-			}
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
+	private DomicilioDTO getDomicilioDTO(ResultSet resultSet) throws SQLException {
+		int id = resultSet.getInt("idDomicilio");
+		String calle = resultSet.getString("calle");
+		int altura = resultSet.getInt("altura");
+		String piso = resultSet.getString("piso");
+		String departamento = resultSet.getString("departamento");
+		int idLocalidad = resultSet.getInt("idLocalidad");
 	
 		return new DomicilioDTO(id, calle, altura, piso, departamento, idLocalidad);
-	}
-	
-	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
-	{
-		int id = resultSet.getInt("idPersona");
-		String nombre = resultSet.getString("Nombre");
-		String tel = resultSet.getString("Telefono");
-		String email = resultSet.getString("Email");
-		
-		String stringFecha = resultSet.getString("FechaCumpleaños");
-		java.util.Date fechaCumpleanio = null;
-		try {
-			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
-		} catch (ParseException e) { e.printStackTrace(); }
-		
-		int idContacto = resultSet.getInt("idTipoDeContacto");
-		TipoContactoDTO tipoContacto = new TipoContactoDTO(idContacto, getTipoContacto(idContacto));
-		
-		DomicilioDTO domicilio = getDomicilio(resultSet.getInt("idDomicilio"));
-		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio);
 	}
 
 }

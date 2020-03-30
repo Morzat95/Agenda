@@ -233,11 +233,13 @@ public class VentanaPersona extends JFrame
 		this.txtEmail.setText(persona_a_editar.getEmail());
 		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));
 		this.listTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto().getNombre());
+		
 		DomicilioDTO domicilio_persona = persona_a_editar.getDomicilio();
 		this.txtCalle.setText(domicilio_persona.getCalle());
 		this.txtAltura.setText(String.valueOf(domicilio_persona.getAltura()));
 		this.txtPiso.setText(domicilio_persona.getPiso());
 		this.txtDepartamento.setText(domicilio_persona.getDepartamento());
+		
 		this.btnAgregarPersona.setVisible(false);
 		this.btnEditarPersona.setVisible(true);
 	}
