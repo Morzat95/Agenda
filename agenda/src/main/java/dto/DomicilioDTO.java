@@ -7,15 +7,23 @@ public class DomicilioDTO {
 	private int altura;
 	private String piso;
 	private String departamento;
-	private int idLocalidad;
+	private LocalidadDTO localidad;
 	
-	public DomicilioDTO(int idDomicilio, String calle, int altura, String piso, String departamento, int idLocalidad) {
+	public DomicilioDTO(int idDomicilio, String calle, int altura, String piso, String departamento, LocalidadDTO localidad) {
 		this.idDomicilio = idDomicilio;
 		this.calle = calle;
 		this.altura = altura;
 		this.piso = piso;
 		this.departamento = departamento;
-		this.idLocalidad = idLocalidad;
+		this.localidad = localidad;
+	}
+	
+	public DomicilioDTO(String calle, int altura, String piso, String departamento, LocalidadDTO localidad) {
+		this.calle = calle;
+		this.altura = altura;
+		this.piso = piso;
+		this.departamento = departamento;
+		this.localidad = localidad;
 	}
 
 	public int getIdDomicilio() {
@@ -58,12 +66,12 @@ public class DomicilioDTO {
 		this.departamento = departamento;
 	}
 
-	public int getIdLocalidad() {
-		return idLocalidad;
+	public LocalidadDTO getLocalidad() {
+		return localidad;
 	}
 
-	public void setIdLocalidad(int idLocalidad) {
-		this.idLocalidad = idLocalidad;
+	public void setLocalidad(LocalidadDTO localidad) {
+		this.localidad = localidad;
 	}
 	
 }

@@ -8,15 +8,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.DomicilioDTO;
+import dto.LocalidadDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.DomicilioDAO;
 
 public class DomicilioDAOSQL implements DomicilioDAO {
+	
+	private static int lastId = 1;
 
 	private static final String insert = "INSERT INTO domicilio (idDomicilio, calle, altura, piso, departamento, idLocalidad) VALUES(?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM domicilio WHERE idDomicilio = ?";
 	private static final String update = "UPDATE domicilio SET calle = ?, altura = ?, piso = ?, departamento = ?, idLocalidad = ? WHERE idDomicilio = ?";
 	private static final String readall = "SELECT * FROM domicilio";
+	
+	public DomicilioDAOSQL() {
+		this.lastId = getLastId();
+	}
+	
+	private int getLastId() {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();
+		int lastId = 0;
+		String readLastId = "SELECT MAX(idDomicilio) AS lastId FROM domicilio;";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readLastId);
+			resultSet = statement.executeQuery();
+			while(resultSet.next())
+				lastId = resultSet.getInt("lastId");
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return lastId;
+	}
 		
 	public boolean insert(DomicilioDTO domicilio)
 	{
@@ -26,12 +54,13 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 		try
 		{
 			statement = conexion.prepareStatement(insert);
+			domicilio.setIdDomicilio(++lastId);
 			statement.setInt(1, domicilio.getIdDomicilio());
 			statement.setString(2, domicilio.getCalle());
 			statement.setInt(3, domicilio.getAltura());
 			statement.setString(4, domicilio.getPiso());
 			statement.setString(5, domicilio.getDepartamento());
-			statement.setInt(6, domicilio.getIdLocalidad());
+			statement.setInt(6, domicilio.getLocalidad().getIdLocalidad());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -84,7 +113,7 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 			statement.setInt(2, domicilio_a_editar.getAltura());
 			statement.setString(3, domicilio_a_editar.getPiso());
 			statement.setString(4, domicilio_a_editar.getDepartamento());
-			statement.setInt(5, domicilio_a_editar.getIdLocalidad());
+			statement.setInt(5, domicilio_a_editar.getLocalidad().getIdLocalidad());
 			statement.setInt(6, domicilio_a_editar.getIdDomicilio());
 			if(statement.executeUpdate() > 0)
 			{
@@ -135,7 +164,29 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 		String departamento = resultSet.getString("departamento");
 		int idLocalidad = resultSet.getInt("idLocalidad");
 	
-		return new DomicilioDTO(id, calle, altura, piso, departamento, idLocalidad);
+		return new DomicilioDTO(id, calle, altura, piso, departamento, getLocalidad(idLocalidad));
+	}
+	
+	public LocalidadDTO getLocalidad(int id) throws SQLException {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String readSingle = "SELECT * FROM localidades WHERE idLocalidad = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new LocalidadDTO(id, nombre);
 	}
 
 }

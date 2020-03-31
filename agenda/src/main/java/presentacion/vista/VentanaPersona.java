@@ -28,12 +28,12 @@ public class VentanaPersona extends JFrame
 	private JTextField txtTelefono;
 	private JTextField txtEmail;
 	private JDateChooser fechaCumpleanios;
-	private JComboBox<Object> listTipoDeContacto;
+	private JComboBox<TipoContactoDTO> listTipoDeContacto;
 	private JTextField txtCalle;
 	private JTextField txtAltura;
 	private JTextField txtPiso;
 	private JTextField txtDepartamento;
-	private JComboBox<Object> listLocalidades;
+	private JComboBox<LocalidadDTO> listLocalidades;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
@@ -130,7 +130,7 @@ public class VentanaPersona extends JFrame
 		fechaCumpleanios.setBounds(204, 131, 100, 20);
 		panel.add(fechaCumpleanios);
 		
-		listTipoDeContacto = new JComboBox<Object>();
+		listTipoDeContacto = new JComboBox<TipoContactoDTO>();
 		listTipoDeContacto.setBounds(140, 172, 164, 20);
 		panel.add(listTipoDeContacto);
 		
@@ -152,7 +152,7 @@ public class VentanaPersona extends JFrame
 		txtDepartamento.setBounds(140, 336, 164, 20);
 		panel.add(txtDepartamento);
 		
-		listLocalidades = new JComboBox<Object>();
+		listLocalidades = new JComboBox<LocalidadDTO>();
 		listLocalidades.setBounds(140, 377, 164, 20);
 		panel.add(listLocalidades);
 		
@@ -192,7 +192,7 @@ public class VentanaPersona extends JFrame
 		return this.fechaCumpleanios.getDate(); //Sun Mar 01 01:34:24 ART 2020
 	}
 	
-	public JComboBox<Object> getListTipoDeContacto()
+	public JComboBox<TipoContactoDTO> getListTipoDeContacto()
 	{
 		return this.listTipoDeContacto;
 	}
@@ -213,7 +213,7 @@ public class VentanaPersona extends JFrame
 		return txtDepartamento;
 	}
 
-	public JComboBox<Object> getListLocalidades() {
+	public JComboBox<LocalidadDTO> getListLocalidades() {
 		return listLocalidades;
 	}
 
@@ -232,13 +232,21 @@ public class VentanaPersona extends JFrame
 		this.txtTelefono.setText(persona_a_editar.getTelefono());
 		this.txtEmail.setText(persona_a_editar.getEmail());
 		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));
-		this.listTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto().getNombre());
+//		this.listTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto());
+		for (int idx = 0; idx < this.listTipoDeContacto.getItemCount(); idx++)
+			if ( this.listTipoDeContacto.getItemAt(idx).getNombre().equals(persona_a_editar.getTipoDeContacto().getNombre()) )
+				this.listTipoDeContacto.setSelectedIndex(idx);
 		
 		DomicilioDTO domicilio_persona = persona_a_editar.getDomicilio();
 		this.txtCalle.setText(domicilio_persona.getCalle());
 		this.txtAltura.setText(String.valueOf(domicilio_persona.getAltura()));
 		this.txtPiso.setText(domicilio_persona.getPiso());
 		this.txtDepartamento.setText(domicilio_persona.getDepartamento());
+		
+//		this.listLocalidades.setSelectedItem(domicilio_persona.getLocalidad());
+		for (int idx = 0; idx < this.listLocalidades.getItemCount(); idx++)
+			if (this.listLocalidades.getItemAt(idx).getNombre().equals(domicilio_persona.getLocalidad().getNombre()))
+				this.listLocalidades.setSelectedIndex(idx);
 		
 		this.btnAgregarPersona.setVisible(false);
 		this.btnEditarPersona.setVisible(true);

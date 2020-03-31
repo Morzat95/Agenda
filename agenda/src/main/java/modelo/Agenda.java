@@ -95,7 +95,7 @@ public class Agenda
 		this.domicilio.delete(domicilio_a_aliminar);
 	}
 	
-	public void editarDomicilio(DomicilioDTO domicilio_a_editar) {
+	public void modificarDomicilio(DomicilioDTO domicilio_a_editar) {
 		this.domicilio.update(domicilio_a_editar);
 	}
 	

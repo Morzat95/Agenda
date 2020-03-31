@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -53,19 +55,9 @@ public class Controlador implements ActionListener
 		}
 		
 		private void ventanaAgregarPersona(ActionEvent a) {
-			this.llenarListaTipoContacto();
-			this.llenarListaLocalidades();
+			this.refrescarListaTipoContactoEnVentanaPersona();
+			this.refrescarListaLocalidadesEnVentanaPersona();
 			this.ventanaPersona.mostrarVentana();
-		}
-		
-		private void llenarListaTipoContacto() {
-			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
-			this.ventanaPersona.llenarListaTipoContacto(this.tiposContactoEnLista);
-		}
-		
-		private void llenarListaLocalidades() {
-			this.localidadesEnLista = agenda.obtenerLocalidades();
-			this.ventanaPersona.llenarListaLocalidad(this.localidadesEnLista);
 		}
 
 		public void ventanaEditarPersona(ActionEvent a)
@@ -84,15 +76,15 @@ public class Controlador implements ActionListener
 			
 			int index = filasSeleccionadas[0];
 			
+			this.refrescarListaTipoContactoEnVentanaPersona();
+			this.refrescarListaLocalidadesEnVentanaPersona();
+			
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
 			this.ventanaPersona.mostrarVentana();
 			
-			this.llenarListaTipoContacto();
-			this.llenarListaLocalidades();
-			
-			this.refrescarListaTipoContacto();
-			this.ventanaTipoContacto.limpiarFormulario();
+//			this.refrescarListaTipoContacto();
+//			this.ventanaTipoContacto.limpiarFormulario();
 		}
 		
 		private void ventanaAgregarLocalidad(ActionEvent a) {
@@ -110,19 +102,31 @@ public class Controlador implements ActionListener
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			
+			if (!verifyEmail(email)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
+				return;
+			}
+			
 			String calle = ventanaPersona.getTxtCalle().getText();
 			String altura_string = ventanaPersona.getTxtAltura().getText();
-			int altura = Integer.parseInt(altura_string);
+			int altura;
 			String piso = ventanaPersona.getTxtPiso().getText();
 			String departamento = ventanaPersona.getTxtDepartamento().getText();
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
-			int idLocalidad = localidad.getIdLocalidad();
 			
-			DomicilioDTO domicilioDTO = new DomicilioDTO(0, calle, altura, piso, departamento, idLocalidad);
+			if (!verifyAltura(altura_string)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido.");	
+				return;
+			} else {
+				altura = Integer.parseInt(altura_string);
+			}
+			
+			DomicilioDTO domicilioDTO = new DomicilioDTO(calle, altura, piso, departamento, localidad);
 			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO);
 				
-			this.agenda.agregarPersona(nuevaPersona);
 			this.agenda.agregarDomicilio(domicilioDTO);
+			this.agenda.agregarPersona(nuevaPersona);
+
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
 		}
@@ -134,13 +138,24 @@ public class Controlador implements ActionListener
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			
+			if (!verifyEmail(email)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
+				return;
+			}
+			
 			String calle = ventanaPersona.getTxtCalle().getText();
-			int altura = Integer.valueOf(ventanaPersona.getTxtAltura().getText());
+			String altura_string = this.ventanaPersona.getTxtAltura().getText();
+			int altura;
 			String piso = ventanaPersona.getTxtPiso().getText();
 			String departamento = ventanaPersona.getTxtDepartamento().getText();
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
-			int idLocalidad = localidad.getIdLocalidad();	
-			DomicilioDTO domicilio_persona = new DomicilioDTO(0, calle, altura, piso, departamento, idLocalidad);
+			
+			if (!verifyAltura(altura_string)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero.");	
+				return;
+			} else {
+				altura = Integer.parseInt(altura_string);
+			}
 			
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
@@ -149,10 +164,26 @@ public class Controlador implements ActionListener
 			persona_a_editar.setEmail(email);
 			persona_a_editar.setFechaCumpleanio(fechaCumpleanio);
 			persona_a_editar.setTipoDeContacto(tipoContacto);
-			persona_a_editar.setDomicilio(domicilio_persona);
+			persona_a_editar.getDomicilio().setCalle(calle);
+			persona_a_editar.getDomicilio().setAltura(altura);
+			persona_a_editar.getDomicilio().setPiso(piso);
+			persona_a_editar.getDomicilio().setDepartamento(departamento);
+			persona_a_editar.getDomicilio().setLocalidad(localidad);
+			
+			this.agenda.modificarDomicilio(persona_a_editar.getDomicilio());
 			this.agenda.editarPersona(persona_a_editar);
+			
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
+		}
+		
+		private boolean verifyEmail(String email) {
+//			String regexEmail = "^[\\\\w!#$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+			return email.matches("^(.+)@(.+)$"); // Simplest regex to validate email
+		}
+		
+		private boolean verifyAltura(String altura) {
+			return altura.matches("(0|[1-9]\\d*)");
 		}
 		
 		private void guardarLocalidad(ActionEvent l) {
@@ -285,8 +316,7 @@ public class Controlador implements ActionListener
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
 		}
-
-		
+	
 		public void inicializar()
 		{
 			this.refrescarTabla();
@@ -301,16 +331,24 @@ public class Controlador implements ActionListener
 			this.vista.llenarTabla(this.personasEnTabla);
 		}
 		
-		private void refrescarLista()
-		{
+		private void refrescarLista() {
 			this.localidadesEnLista = agenda.obtenerLocalidades();
 			this.ventanaLocalidad.llenarLista(this.localidadesEnLista);
 		}
 		
-		private void refrescarListaTipoContacto()
-		{
+		private void refrescarListaTipoContacto() {
 			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
 			this.ventanaTipoContacto.llenarLista(this.tiposContactoEnLista);
+		}
+		
+		private void refrescarListaTipoContactoEnVentanaPersona() {
+			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
+			this.ventanaPersona.llenarListaTipoContacto(this.tiposContactoEnLista);
+		}
+		
+		private void refrescarListaLocalidadesEnVentanaPersona() {
+			this.localidadesEnLista = agenda.obtenerLocalidades();
+			this.ventanaPersona.llenarListaLocalidad(this.localidadesEnLista);
 		}
 
 		@Override

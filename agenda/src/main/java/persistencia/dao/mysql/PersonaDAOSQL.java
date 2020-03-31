@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.DomicilioDTO;
+import dto.LocalidadDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 import persistencia.conexion.Conexion;
@@ -187,7 +188,29 @@ public class PersonaDAOSQL implements PersonaDAO
 			e.printStackTrace();
 		}
 	
-		return new DomicilioDTO(id, calle, altura, piso, departamento, idLocalidad);
+		return new DomicilioDTO(id, calle, altura, piso, departamento, getLocalidad(idLocalidad));
+	}
+	
+	public LocalidadDTO getLocalidad(int id) throws SQLException {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String readSingle = "SELECT * FROM localidades WHERE idLocalidad = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new LocalidadDTO(id, nombre);
 	}
 	
 	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
