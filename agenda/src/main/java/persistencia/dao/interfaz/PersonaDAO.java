@@ -14,4 +14,6 @@ public interface PersonaDAO
 	public boolean update(PersonaDTO persona_a_editar);
 
 	public List<PersonaDTO> readAll();
+
+	public boolean hasData();
 }

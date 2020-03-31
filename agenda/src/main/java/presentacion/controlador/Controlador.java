@@ -79,9 +79,6 @@ public class Controlador implements ActionListener
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
 			this.ventanaPersona.mostrarVentana();
-			
-//			this.refrescarListaTipoContacto();
-//			this.ventanaTipoContacto.limpiarFormulario();
 		}
 		
 		private void ventanaAgregarLocalidad(ActionEvent a) {
@@ -98,6 +95,7 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
@@ -129,7 +127,7 @@ public class Controlador implements ActionListener
 			}
 			
 			DomicilioDTO domicilioDTO = new DomicilioDTO(calle, altura, piso, departamento, localidad);
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO);
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO, favorito);
 				
 			this.agenda.agregarDomicilio(domicilioDTO);
 			this.agenda.agregarPersona(nuevaPersona);
@@ -144,6 +142,7 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
@@ -181,6 +180,7 @@ public class Controlador implements ActionListener
 			persona_a_editar.setEmail(email);
 			persona_a_editar.setFechaCumpleanio(fechaCumpleanio);
 			persona_a_editar.setTipoDeContacto(tipoContacto);
+			persona_a_editar.setFavorito(favorito);
 			persona_a_editar.getDomicilio().setCalle(calle);
 			persona_a_editar.getDomicilio().setAltura(altura);
 			persona_a_editar.getDomicilio().setPiso(piso);

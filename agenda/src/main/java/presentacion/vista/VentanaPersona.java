@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ public class VentanaPersona extends JFrame
 	private JTextField txtPiso;
 	private JTextField txtDepartamento;
 	private JComboBox<LocalidadDTO> listLocalidades;
+	private JCheckBox checkFavorito;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
 	private static VentanaPersona INSTANCE;
@@ -60,14 +62,14 @@ public class VentanaPersona extends JFrame
 			}
 		});
 		
-		setBounds(100, 100, 475, 500);
+		setBounds(100, 100, 475, 550);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 470, 500);
+		panel.setBounds(10, 11, 470, 550);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -110,6 +112,10 @@ public class VentanaPersona extends JFrame
 		JLabel lblLocalidad = new JLabel("Localidad");
 		lblLocalidad.setBounds(10, 380, 113, 14);
 		panel.add(lblLocalidad);
+		
+		JLabel lblFavorito = new JLabel("Es Favorito");
+		lblFavorito.setBounds(10, 421, 113, 14);
+		panel.add(lblFavorito);
 		
 		txtNombre = new JTextField();
 		txtNombre.setBounds(140, 8, 164, 20);
@@ -156,12 +162,16 @@ public class VentanaPersona extends JFrame
 		listLocalidades.setBounds(140, 377, 164, 20);
 		panel.add(listLocalidades);
 		
+		checkFavorito = new JCheckBox();
+		checkFavorito.setBounds(140, 418, 164, 20);
+		panel.add(checkFavorito);
+		
 		btnAgregarPersona = new JButton("Agregar");
-		btnAgregarPersona.setBounds(208, 417, 89, 23);
+		btnAgregarPersona.setBounds(208, 467, 89, 23);
 		panel.add(btnAgregarPersona);
 		
 		btnEditarPersona = new JButton("Editar");
-		btnEditarPersona.setBounds(208, 417, 89, 23);
+		btnEditarPersona.setBounds(208, 467, 89, 23);
 		panel.add(btnEditarPersona);
 		
 		this.setVisible(false);
@@ -216,6 +226,10 @@ public class VentanaPersona extends JFrame
 	public JComboBox<LocalidadDTO> getListLocalidades() {
 		return listLocalidades;
 	}
+	
+	public JCheckBox getCheckFavorito() {
+		return checkFavorito;
+	}
 
 	public JButton getBtnAgregarPersona() 
 	{
@@ -232,6 +246,7 @@ public class VentanaPersona extends JFrame
 		this.txtTelefono.setText(persona_a_editar.getTelefono());
 		this.txtEmail.setText(persona_a_editar.getEmail());
 		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));
+		this.checkFavorito.setSelected(persona_a_editar.getFavorito());
 //		this.listTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto());
 		for (int idx = 0; idx < this.listTipoDeContacto.getItemCount(); idx++)
 			if ( this.listTipoDeContacto.getItemAt(idx).getNombre().equals(persona_a_editar.getTipoDeContacto().getNombre()) )
@@ -283,6 +298,7 @@ public class VentanaPersona extends JFrame
 		this.txtAltura.setText(null);
 		this.txtPiso.setText(null);
 		this.txtDepartamento.setText(null);
+		this.checkFavorito.setSelected(false);
 		restoreDefaultForm();
 		this.dispose();
 	}

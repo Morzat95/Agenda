@@ -19,10 +19,11 @@ import persistencia.dao.interfaz.PersonaDAO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto, idDomicilio) VALUES(?, ?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto, idDomicilio, favorito) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
-	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ?, idDomicilio = ? WHERE idPersona = ?";
+	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ?, idDomicilio = ?, favorito = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas";
+	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM personas)";
 	
 		
 	public boolean insert(PersonaDTO persona)
@@ -40,6 +41,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setDate(5, new Date(persona.getFechaCumpleanio().getTime()));
 			statement.setInt(6, persona.getTipoDeContacto().getIdTipoContacto());
 			statement.setInt(7, persona.getDomicilio().getIdDomicilio());
+			statement.setBoolean(8, persona.getFavorito());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -94,7 +96,9 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setDate(4, new Date(persona_a_editar.getFechaCumpleanio().getTime()));
 			statement.setInt(5, persona_a_editar.getTipoDeContacto().getIdTipoContacto());
 			statement.setInt(6, persona_a_editar.getDomicilio().getIdDomicilio());
-			statement.setInt(7, persona_a_editar.getIdPersona());
+			statement.setBoolean(7, persona_a_editar.getFavorito());
+			statement.setInt(8, persona_a_editar.getIdPersona());
+			
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -136,12 +140,12 @@ public class PersonaDAOSQL implements PersonaDAO
 		return personas;
 	}
 
-	public String getTipoContacto(int id) throws SQLException {
+	public TipoContactoDTO getTipoContacto(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
 		String nombre = "";
-		String name = "SELECT nombre FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
+		String name = "SELECT * FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
 		try
 		{
 			statement = conexion.getSQLConexion().prepareStatement(name);
@@ -155,7 +159,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			e.printStackTrace();
 		}
 	
-		return nombre;
+		return new TipoContactoDTO(id, nombre);
 	}
 	
 	public DomicilioDTO getDomicilio(int id) throws SQLException {
@@ -180,7 +184,6 @@ public class PersonaDAOSQL implements PersonaDAO
 				piso = resultSet.getString("piso");
 				departamento = resultSet.getString("departamento");
 				idLocalidad = resultSet.getInt("idLocalidad");
-				
 			}
 		} 
 		catch (SQLException e) 
@@ -219,18 +222,38 @@ public class PersonaDAOSQL implements PersonaDAO
 		String nombre = resultSet.getString("Nombre");
 		String tel = resultSet.getString("Telefono");
 		String email = resultSet.getString("Email");
-		
 		String stringFecha = resultSet.getString("FechaCumpleaños");
+		boolean favorito = resultSet.getBoolean("Favorito");
 		java.util.Date fechaCumpleanio = null;
+		TipoContactoDTO tipoContacto = getTipoContacto(resultSet.getInt("idTipoDeContacto"));
+		DomicilioDTO domicilio = getDomicilio(resultSet.getInt("idDomicilio"));
 		try {
 			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
 		} catch (ParseException e) { e.printStackTrace(); }
 		
-		int idContacto = resultSet.getInt("idTipoDeContacto");
-		TipoContactoDTO tipoContacto = new TipoContactoDTO(idContacto, getTipoContacto(idContacto));
 		
-		DomicilioDTO domicilio = getDomicilio(resultSet.getInt("idDomicilio"));
-		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio);
+		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio, favorito);
+	}
+
+	public boolean hasData()
+	{
+		PreparedStatement statement;
+		ResultSet resultSet; //Guarda el resultado de la query
+		Conexion conexion = Conexion.getConexion();
+		boolean dataExists = false;
+		try 
+		{
+			statement = conexion.getSQLConexion().prepareStatement(hasData);
+			resultSet = statement.executeQuery();
+			resultSet.next();
+			dataExists = resultSet.getInt(1) == 1 ? true : false;
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return dataExists;
 	}
 
 }
