@@ -2,21 +2,20 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
-
 import javax.swing.JOptionPane;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
+import dto.DomicilioDTO;
+import dto.LocalidadDTO;
+import dto.PersonaDTO;
+import dto.TipoContactoDTO;
 import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPersona;
 import presentacion.vista.VentanaTipoContacto;
 import presentacion.vista.Vista;
-import dto.LocalidadDTO;
-import dto.PersonaDTO;
-import dto.TipoContactoDTO;
 
 public class Controlador implements ActionListener
 {
@@ -53,9 +52,11 @@ public class Controlador implements ActionListener
 		}
 		
 		private void ventanaAgregarPersona(ActionEvent a) {
+			this.refrescarListaTipoContactoEnVentanaPersona();
+			this.refrescarListaLocalidadesEnVentanaPersona();
 			this.ventanaPersona.mostrarVentana();
 		}
-		
+
 		public void ventanaEditarPersona(ActionEvent a)
 		{
 			int[] filasSeleccionadas = this.vista.getTablaPersonas().getSelectedRows();
@@ -72,12 +73,15 @@ public class Controlador implements ActionListener
 			
 			int index = filasSeleccionadas[0];
 			
+			this.refrescarListaTipoContactoEnVentanaPersona();
+			this.refrescarListaLocalidadesEnVentanaPersona();
+			
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
 			this.ventanaPersona.mostrarVentana();
 			
-			this.refrescarListaTipoContacto();
-			this.ventanaTipoContacto.limpiarFormulario();
+//			this.refrescarListaTipoContacto();
+//			this.ventanaTipoContacto.limpiarFormulario();
 		}
 		
 		private void ventanaAgregarLocalidad(ActionEvent a) {
@@ -91,22 +95,118 @@ public class Controlador implements ActionListener
 		private void guardarPersona(ActionEvent p) {
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel);
+			String email = ventanaPersona.getTxtEmail().getText();
+			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
+			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			
+			if (!verifyTelefono(tel)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
+				return;
+			}
+			
+			if (!verifyEmail(email)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
+				return;
+			}
+			
+			if (fechaCumpleanio == null) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
+				return;
+			}
+			
+			String calle = ventanaPersona.getTxtCalle().getText();
+			String altura_string = ventanaPersona.getTxtAltura().getText();
+			int altura;
+			String piso = ventanaPersona.getTxtPiso().getText();
+			String departamento = ventanaPersona.getTxtDepartamento().getText();
+			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
+			
+			if (!verifyAltura(altura_string)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido.");	
+				return;
+			} else {
+				altura = Integer.parseInt(altura_string);
+			}
+			
+			DomicilioDTO domicilioDTO = new DomicilioDTO(calle, altura, piso, departamento, localidad);
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO);
+				
+			this.agenda.agregarDomicilio(domicilioDTO);
 			this.agenda.agregarPersona(nuevaPersona);
+
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
 		}
-		
+
 		private void editarPersona(ActionEvent p) {
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
+			String email = ventanaPersona.getTxtEmail().getText();
+			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
+			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			
+			if (!verifyTelefono(tel)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
+				return;
+			}
+			
+			if (!verifyEmail(email)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
+				return;
+			}
+			
+			if (fechaCumpleanio == null) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
+				return;
+			}
+			
+			String calle = ventanaPersona.getTxtCalle().getText();
+			String altura_string = this.ventanaPersona.getTxtAltura().getText();
+			int altura;
+			String piso = ventanaPersona.getTxtPiso().getText();
+			String departamento = ventanaPersona.getTxtDepartamento().getText();
+			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
+			
+			if (!verifyAltura(altura_string)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero.");	
+				return;
+			} else {
+				altura = Integer.parseInt(altura_string);
+			}
+			
 			int index = this.vista.getTablaPersonas().getSelectedRow();
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			persona_a_editar.setNombre(nombre);
 			persona_a_editar.setTelefono(tel);
+			persona_a_editar.setEmail(email);
+			persona_a_editar.setFechaCumpleanio(fechaCumpleanio);
+			persona_a_editar.setTipoDeContacto(tipoContacto);
+			persona_a_editar.getDomicilio().setCalle(calle);
+			persona_a_editar.getDomicilio().setAltura(altura);
+			persona_a_editar.getDomicilio().setPiso(piso);
+			persona_a_editar.getDomicilio().setDepartamento(departamento);
+			persona_a_editar.getDomicilio().setLocalidad(localidad);
+			
+			this.agenda.modificarDomicilio(persona_a_editar.getDomicilio());
 			this.agenda.editarPersona(persona_a_editar);
+			
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
+		}
+		
+		private boolean verifyEmail(String email) {
+//			String regexEmail = "^[\\\\w!#$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+//			return email.matches("^(.+)@(.+)$"); // Simplest regex to validate email
+			return email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"); // Java email validation permitted by RFC 5322. TODO: escape sensitive characters to avoid SQL injection attacks.
+		}
+		
+		private boolean verifyAltura(String altura) {
+			return altura.matches("(0|[1-9]\\d*)");
+		}
+		
+		private boolean verifyTelefono(String telefono) {
+//			return telefono.matches("/^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$/");
+			return telefono.matches("\\d+"); // TODO: validar correctamente
 		}
 		
 		private void guardarLocalidad(ActionEvent l) {
@@ -239,8 +339,7 @@ public class Controlador implements ActionListener
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
 		}
-
-		
+	
 		public void inicializar()
 		{
 			this.refrescarTabla();
@@ -255,16 +354,24 @@ public class Controlador implements ActionListener
 			this.vista.llenarTabla(this.personasEnTabla);
 		}
 		
-		private void refrescarLista()
-		{
+		private void refrescarLista() {
 			this.localidadesEnLista = agenda.obtenerLocalidades();
 			this.ventanaLocalidad.llenarLista(this.localidadesEnLista);
 		}
 		
-		private void refrescarListaTipoContacto()
-		{
+		private void refrescarListaTipoContacto() {
 			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
 			this.ventanaTipoContacto.llenarLista(this.tiposContactoEnLista);
+		}
+		
+		private void refrescarListaTipoContactoEnVentanaPersona() {
+			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
+			this.ventanaPersona.llenarListaTipoContacto(this.tiposContactoEnLista);
+		}
+		
+		private void refrescarListaLocalidadesEnVentanaPersona() {
+			this.localidadesEnLista = agenda.obtenerLocalidades();
+			this.ventanaPersona.llenarListaLocalidad(this.localidadesEnLista);
 		}
 
 		@Override
