@@ -4,9 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.swing.JOptionPane;
 
 import dto.DomicilioDTO;
@@ -102,8 +99,18 @@ public class Controlador implements ActionListener
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			
+			if (!verifyTelefono(tel)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
+				return;
+			}
+			
 			if (!verifyEmail(email)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
+				return;
+			}
+			
+			if (fechaCumpleanio == null) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
 				return;
 			}
 			
@@ -138,8 +145,18 @@ public class Controlador implements ActionListener
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			
+			if (!verifyTelefono(tel)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
+				return;
+			}
+			
 			if (!verifyEmail(email)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
+				return;
+			}
+			
+			if (fechaCumpleanio == null) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
 				return;
 			}
 			
@@ -179,11 +196,17 @@ public class Controlador implements ActionListener
 		
 		private boolean verifyEmail(String email) {
 //			String regexEmail = "^[\\\\w!#$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
-			return email.matches("^(.+)@(.+)$"); // Simplest regex to validate email
+//			return email.matches("^(.+)@(.+)$"); // Simplest regex to validate email
+			return email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"); // Java email validation permitted by RFC 5322. TODO: escape sensitive characters to avoid SQL injection attacks.
 		}
 		
 		private boolean verifyAltura(String altura) {
 			return altura.matches("(0|[1-9]\\d*)");
+		}
+		
+		private boolean verifyTelefono(String telefono) {
+//			return telefono.matches("/^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$/");
+			return telefono.matches("\\d+"); // TODO: validar correctamente
 		}
 		
 		private void guardarLocalidad(ActionEvent l) {

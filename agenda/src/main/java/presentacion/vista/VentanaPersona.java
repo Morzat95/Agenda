@@ -56,7 +56,7 @@ public class VentanaPersona extends JFrame
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
 				
-				restoreDefaultForm();
+				cerrar();
 			}
 		});
 		
