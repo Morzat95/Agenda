@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS `grupo_G14`;
 CREATE DATABASE `grupo_G14`;
 USE grupo_G14;
 CREATE TABLE `personas`
@@ -9,6 +10,7 @@ CREATE TABLE `personas`
   `FechaCumpleaños` DATE NOT NULL,
   `idTipoDeContacto` int(11) NOT NULL,
   `idDomicilio` int(11) NOT NULL,
+  `Favorito` boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`idPersona`)
 );
 CREATE TABLE `localidades`

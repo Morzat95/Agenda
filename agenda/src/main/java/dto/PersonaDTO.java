@@ -11,8 +11,9 @@ public class PersonaDTO
 	private Date fechaCumpleanio; 
 	private TipoContactoDTO tipoDeContacto;
 	private DomicilioDTO domicilio;
+	private boolean favorito;
 	
-	public PersonaDTO(int idPersona, String nombre, String telefono, String email, Date fechaCumpleanio, TipoContactoDTO tipoDeContacto, DomicilioDTO domicilio)
+	public PersonaDTO(int idPersona, String nombre, String telefono, String email, Date fechaCumpleanio, TipoContactoDTO tipoDeContacto, DomicilioDTO domicilio, boolean favorito)
 	{
 		this.idPersona = idPersona;
 		this.nombre = nombre;
@@ -21,6 +22,7 @@ public class PersonaDTO
 		this.fechaCumpleanio = fechaCumpleanio;
 		this.tipoDeContacto = tipoDeContacto;
 		this.domicilio = domicilio;
+		this.favorito = favorito;
 	}	
 	
 	public int getIdPersona() 
@@ -93,5 +95,13 @@ public class PersonaDTO
 		this.domicilio = domicilio;
 	}
 	
+	public boolean getFavorito() 
+	{
+		return this.favorito;
+	}
 	
+	public void setFavorito(boolean favorito)
+	{
+		this.favorito = favorito;
+	}
 }
