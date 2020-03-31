@@ -13,5 +13,7 @@ public interface TipoContactoDAO {
 	public boolean update(TipoContactoDTO tipo_de_contacto_a_modificar);
 	
 	public List<TipoContactoDTO> readAll();
+	
+	public boolean hasData();
 
 }

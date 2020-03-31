@@ -17,6 +17,7 @@ public class TipoContactoDAOSQL implements TipoContactoDAO {
 	private static final String delete = "DELETE FROM tipos_de_contacto WHERE idTipoContacto = ?";
 	private static final String update = "UPDATE tipos_de_contacto SET nombre = ? WHERE idTipoContacto = ?";
 	private static final String readall = "SELECT * FROM tipos_de_contacto";
+	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM tipos_de_contacto)";
 
 	@Override
 	public boolean insert(TipoContactoDTO tipo_de_contacto) {
@@ -125,6 +126,27 @@ public class TipoContactoDAOSQL implements TipoContactoDAO {
 		int id = resultSet.getInt("idTipoContacto");
 		String nombre = resultSet.getString("Nombre");
 		return new TipoContactoDTO(id, nombre);
+	}
+	
+	public boolean hasData()
+	{
+		PreparedStatement statement;
+		ResultSet resultSet; //Guarda el resultado de la query
+		Conexion conexion = Conexion.getConexion();
+		boolean dataExists = false;
+		try 
+		{
+			statement = conexion.getSQLConexion().prepareStatement(hasData);
+			resultSet = statement.executeQuery();
+			resultSet.next();
+			dataExists = resultSet.getInt(1) == 1 ? true : false;
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return dataExists;
 	}
 
 }

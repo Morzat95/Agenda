@@ -17,6 +17,7 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 	private static final String delete = "DELETE FROM localidades WHERE idLocalidad = ?";
 	private static final String update = "UPDATE localidades SET nombre = ? WHERE idLocalidad = ?";
 	private static final String readall = "SELECT * FROM localidades";
+	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM localidades)";
 	
 	public boolean insert(LocalidadDTO localidad)
 	{
@@ -125,6 +126,27 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 		int id = resultSet.getInt("idLocalidad");
 		String nombre = resultSet.getString("Nombre");
 		return new LocalidadDTO(id, nombre);
+	}
+	
+	public boolean hasData()
+	{
+		PreparedStatement statement;
+		ResultSet resultSet; //Guarda el resultado de la query
+		Conexion conexion = Conexion.getConexion();
+		boolean dataExists = false;
+		try 
+		{
+			statement = conexion.getSQLConexion().prepareStatement(hasData);
+			resultSet = statement.executeQuery();
+			resultSet.next();
+			dataExists = resultSet.getInt(1) == 1 ? true : false;
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return dataExists;
 	}
 
 }

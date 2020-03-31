@@ -13,5 +13,7 @@ public interface LocalidadDAO {
 	public boolean update(LocalidadDTO localidad_a_modificar);
 	
 	public List<LocalidadDTO> readAll();
+	
+	public boolean hasData();
 
 }
