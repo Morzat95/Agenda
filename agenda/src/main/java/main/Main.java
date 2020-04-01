@@ -28,6 +28,7 @@ public class Main
 
 	public static void main(String[] args) 
 	{
+		// TODO: Initialize database
 		SeedData(); // Initialize test data
 		Vista vista = new Vista();
 		Agenda modelo = new Agenda(new DAOSQLFactory());
@@ -75,7 +76,7 @@ public class Main
 					localidadDAO.insert(nuevaLocalidad);
 				}
 				
-				System.out.println("Localidades cargadas con �xito.");
+				System.out.println("Localidades cargadas con éxito.");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				System.out.println("No se pudo obtener las localidades.");
@@ -101,7 +102,7 @@ public class Main
 			for (TipoContactoDTO contacto : tiposDecontactos)
 				tipoContactoDAO.insert(contacto);
 			
-			System.out.println("Tipos de Contacto cargados con �xito.");
+			System.out.println("Tipos de Contacto cargados con éxito.");
 			
 		}
 		
@@ -133,10 +134,16 @@ public class Main
 			DomicilioDTO domicilio4 = new DomicilioDTO("All Vegetables", 2718, "2", "e", localidades.get(8));
 			contactos.add(new PersonaDTO(0, "Lisa Simpson", "3141592653", "jazzrules@realponies", dateFormat.parse("2020-03-27"), filterByName(tiposDeContacto, "Trabajo"), domicilio4, true));
 			
+			contactos.addAll(contactos);
+			contactos.addAll(contactos);
+			contactos.addAll(contactos);
+			
 			for (PersonaDTO persona : contactos) {
 				domicilioDAO.insert(persona.getDomicilio());
 				personaDAO.insert(persona);
 			}
+			
+			System.out.println("Personas cargadas con éxito.");
 			
 		} catch (ParseException e) {
 			e.printStackTrace();
