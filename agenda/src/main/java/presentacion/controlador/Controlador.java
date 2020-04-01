@@ -2,9 +2,13 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+
+import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import dto.DomicilioDTO;
 import dto.LocalidadDTO;
@@ -249,7 +253,16 @@ public class Controlador implements ActionListener
 		}
 
 		private void mostrarReporte(ActionEvent r) {
-			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas());
+//			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas());
+//			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas("Favorito")); // Otra opción
+			
+			List<PersonaDTO> personas = agenda.obtenerPersonas();
+			
+//			Collections.sort(personas, (p1, p2) -> {return Boolean.compare(p1.getFavorito(), p2.getFavorito());});
+			
+			Collections.sort(personas, Comparator.comparing(PersonaDTO::getFavorito).thenComparing(PersonaDTO::getNombre));
+			
+			ReporteAgenda reporte = new ReporteAgenda(personas);
 			reporte.mostrar();	
 		}
 
