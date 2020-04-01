@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS `grupo_G14`;
-CREATE DATABASE `grupo_G14`;
+CREATE DATABASE IF NOT EXISTS `grupo_G14`;
 USE grupo_G14;
+DROP TABLE IF EXISTS `personas`;
 CREATE TABLE `personas`
 (
   `idPersona` int(11) NOT NULL AUTO_INCREMENT,
@@ -13,18 +13,21 @@ CREATE TABLE `personas`
   `Favorito` boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`idPersona`)
 );
+DROP TABLE IF EXISTS `localidades`;
 CREATE TABLE `localidades`
 (
   `idLocalidad` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idLocalidad`)
 );
+DROP TABLE IF EXISTS `tipos_de_contacto`;
 CREATE TABLE `tipos_de_contacto`
 (
   `idTipoContacto` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idTipoContacto`)
 );
+DROP TABLE IF EXISTS `domicilio`;
 CREATE TABLE `domicilio`
 (
   `idDomicilio` int(11) NOT NULL AUTO_INCREMENT,
