@@ -134,10 +134,6 @@ public class Main
 			DomicilioDTO domicilio4 = new DomicilioDTO("All Vegetables", 2718, "2", "e", localidades.get(8));
 			contactos.add(new PersonaDTO(0, "Lisa Simpson", "3141592653", "jazzrules@realponies", dateFormat.parse("2020-03-27"), filterByName(tiposDeContacto, "Trabajo"), domicilio4, true));
 			
-			contactos.addAll(contactos);
-			contactos.addAll(contactos);
-			contactos.addAll(contactos);
-			
 			for (PersonaDTO persona : contactos) {
 				domicilioDAO.insert(persona.getDomicilio());
 				personaDAO.insert(persona);

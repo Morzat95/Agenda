@@ -32,7 +32,8 @@ public class ReporteAgenda
 		parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));		
     	try		{
 //			this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda.jasper" );
-    		this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda2.jasper" );
+//    		this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda2.jasper" );
+    		this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda3.jasper" );
 			this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, 
 					new JRBeanCollectionDataSource(personas));
     		log.info("Se cargó correctamente el reporte");
@@ -40,7 +41,8 @@ public class ReporteAgenda
 		catch( JRException ex ) 
 		{
 //			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda.Jasper", ex);
-			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda2.Jasper", ex);
+//			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda2.Jasper", ex);
+			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda3.Jasper", ex);
 		}
     }       
     
