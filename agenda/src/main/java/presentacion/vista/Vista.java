@@ -36,7 +36,7 @@ public class Vista
 		private JMenuItem mnItemEditarLocalidad;
 	private JMenuItem menuTipoContacto;
 	private DefaultTableModel modelPersonas;
-	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
+	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de CumpleaÃ±os", "Tipo de Contacto", "Domicilio"};
 
 	public Vista() 
 	{
