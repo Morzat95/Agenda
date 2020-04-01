@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteAgenda2" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="96b12c68-817e-4418-963e-02f144db2f9f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="net.sf.jasperreports.chart.pie.ignore.duplicated.key" value="true"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="favorito" class="java.lang.Boolean"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="fechaCumpleanio" class="java.util.Date"/>
+	<variable name="TotalRows" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+	</variable>
+	<group name="GrupoFavorito">
+		<groupExpression><![CDATA[$F{favorito}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="550" height="30" backcolor="#DEB8FF" uuid="d5854bca-4103-4362-9a8b-fa34d94c26bc"/>
+					<textField>
+						<reportElement x="0" y="0" width="550" height="30" uuid="8936700c-ddd1-4657-8b9c-dc5e8028dbe0"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[($F{favorito} == true ? "Favoritos" : "No Favoritos")]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30">
+				<frame>
+					<reportElement x="0" y="0" width="550" height="30" uuid="1a3a5d95-092c-465f-b7d8-9a00ec8f5469"/>
+					<textField>
+						<reportElement mode="Opaque" x="0" y="0" width="550" height="20" backcolor="#F0F0F0" uuid="cfb1d76c-ce8e-4d58-aac3-68478cd6956c"/>
+						<box>
+							<bottomPen lineWidth="2.0"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Middle">
+							<font isBold="true" isItalic="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Total: " + $V{GrupoFavorito_COUNT}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="550" height="50" uuid="46d282ec-2698-4820-86b5-746d2cc6d0ec"/>
+				<staticText>
+					<reportElement x="0" y="0" width="550" height="70" uuid="a78fef0c-dc8c-4cea-9a8d-5dde8a19f710"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+						<font size="24" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Reporte de Personas]]></text>
+				</staticText>
+				<textField pattern="dd-MM-yyyy">
+					<reportElement x="480" y="0" width="70" height="20" uuid="dd8288b6-3509-4b08-922b-100b406adb74"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="380" y="0" width="100" height="20" uuid="a92c8382-a911-4195-8bd8-b8ae74101230"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Reporte generado el: ]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="550" height="50" uuid="f2da6e79-c7f7-4b21-96c7-336841485a36"/>
+				<staticText>
+					<reportElement mode="Transparent" x="0" y="0" width="550" height="50" backcolor="#FFFFFF" uuid="41bbf41c-0dcc-4e19-aa13-6d7d3268e4f2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="18"/>
+					</textElement>
+					<text><![CDATA[Reporte de personas agrupado por 'Favorito']]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="550" height="30" backcolor="#DBDBDB" uuid="e7862ed3-56f8-4c5e-8336-4747ec43fa3a"/>
+				<staticText>
+					<reportElement x="60" y="0" width="130" height="30" uuid="86056ed1-9130-4a2d-80f1-9b339ecff851"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombre y Apellido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="190" y="0" width="100" height="30" uuid="f4daae2f-288b-405f-88ad-a064b97f8171"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Teléfono]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="0" width="100" height="30" uuid="b641aa85-4313-4c40-9650-c26ab73c90da"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cumpleaños]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="290" y="0" width="100" height="30" uuid="5dff8f0b-2c1e-4cfe-82f0-65ba86c4ec61"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Email]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="550" height="30" uuid="4cd2a873-103b-4678-827a-da478ad282d1"/>
+				<textField>
+					<reportElement x="60" y="0" width="130" height="30" uuid="8fa74efe-758f-4f57-892c-cdd675b9faf9"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="190" y="0" width="100" height="30" uuid="4b71e223-d4dd-4ae8-841f-afee8d2522bf"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd-MM">
+					<reportElement x="390" y="0" width="100" height="30" uuid="7a9390c1-cb87-4704-a9b3-964d1fbf2b47"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{fechaCumpleanio}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="290" y="0" width="100" height="30" uuid="8b698062-490d-4dc0-a1e3-9708ba4fa921"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="51" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="550" height="30" uuid="e96966c0-33c0-4007-8068-b6a60c4e3f0a"/>
+				<textField>
+					<reportElement x="410" y="0" width="70" height="30" uuid="d2a8e100-3ce4-44fc-989e-b51b8a94440f"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement x="480" y="0" width="70" height="30" uuid="334056d0-6362-4d10-b402-f3b5736ffdac"/>
+					<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="215" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="550" height="215" uuid="7f5a1c63-7067-42c0-aae2-f2d8470508fd"/>
+				<pieChart>
+					<chart evaluationTime="Report">
+						<reportElement x="0" y="20" width="550" height="195" uuid="c7da450b-4f1c-413f-a181-166656b48324"/>
+						<chartTitle position="Top">
+							<titleExpression><![CDATA["Cantidad de Contactos Favoritos y No Favoritos"]]></titleExpression>
+						</chartTitle>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<pieDataset>
+						<dataset resetType="Report"/>
+						<keyExpression><![CDATA[($F{favorito} == true ? "Favoritos" : "No Favoritos")]]></keyExpression>
+						<valueExpression><![CDATA[$V{GrupoFavorito_COUNT}]]></valueExpression>
+					</pieDataset>
+					<piePlot labelFormat="{0} {1} ({2})">
+						<plot/>
+						<itemLabel/>
+					</piePlot>
+				</pieChart>
+			</frame>
+		</band>
+	</summary>
+</jasperReport>
