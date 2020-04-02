@@ -44,9 +44,17 @@ public class SeedData {
 			System.out.println("Error al intentar crear la base de datos.");
 		}
 		
+		// Países
+		PaísDAO paísDAO = DAOFactory.createPaísDAO();
+		List<PaísDTO> países = populatePaíses(paísDAO);
+		
+		// Provincias
+		ProvinciaDAO provinciaDAO = DAOFactory.createProvinciaDAO();
+		List<ProvinciaDTO> provincias = populateProvincias(provinciaDAO, países);
+		
 		// Localidades
 		LocalidadDAO localidadDAO = DAOFactory.createLocalidadDAO();
-		List<LocalidadDTO> localidades = populateLocalidades(localidadDAO, 50); // Para testear.
+		List<LocalidadDTO> localidades = populateLocalidades(localidadDAO, provincias, 50); // Para testear.
 		
 		// Tipos de Contacto
 		TipoContactoDAO tipoContactoDAO = DAOFactory.createTipoContactoDAO();
@@ -55,14 +63,6 @@ public class SeedData {
 		// Contactos
 		PersonaDAO personaDAO = DAOFactory.createPersonaDAO();
 		populateContactos(personaDAO, localidades, tiposDeContacto);
-		
-		// Países
-		PaísDAO paísDAO = DAOFactory.createPaísDAO();
-		List<PaísDTO> países = populatePaíses(paísDAO);
-		
-		// Provincias
-		ProvinciaDAO provinciaDAO = DAOFactory.createProvinciaDAO();
-		populateProvincias(provinciaDAO, países);
 		
 	}
 	
@@ -93,7 +93,7 @@ public class SeedData {
 		
 	}
 	
-	private static List<LocalidadDTO> populateLocalidades(LocalidadDAO localidadDAO, int amount) {
+	private static List<LocalidadDTO> populateLocalidades(LocalidadDAO localidadDAO, List<ProvinciaDTO> provincias, int amount) {
 		
 		List<LocalidadDTO> localidades = new ArrayList<LocalidadDTO>();
 		
@@ -109,7 +109,9 @@ public class SeedData {
 					JSONLocalidades.Localidad l = localidadesJson[idx];
 //				LocalidadDTO nuevaLocalidad = new LocalidadDTO(Integer.parseInt(l.id.substring(1), 10), l.nombre);
 					String nombre = l.nombre.length() > 45 ? l.nombre.substring(0, 45) : l.nombre; // por limitaciones de la esctructura de la tabla
-					LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre);
+					String nombreProvincia = l.provincia.nombre;
+					ProvinciaDTO provincia = provincias.stream().filter(p -> p.getNombre().equals(nombreProvincia)).findFirst().get();
+					LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre, provincia);
 					localidades.add(nuevaLocalidad);
 					localidadDAO.insert(nuevaLocalidad);
 				}
@@ -280,6 +282,7 @@ public class SeedData {
 		class Localidad extends BasicEntity {
 			private String categoria;
 			private String fuente;
+			public Provincia provincia;
 			
 			class Centroide {
 				private double lat;

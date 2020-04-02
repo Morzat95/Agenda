@@ -12,16 +12,21 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import javax.swing.JSplitPane;
 import javax.swing.JList;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import java.awt.Component;
 
 import javax.swing.border.LineBorder;
 import dto.LocalidadDTO;
+import dto.ProvinciaDTO;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.List;
+import javax.swing.JComboBox;
 
 public class VentanaLocalidad extends JFrame {
 	
@@ -30,11 +35,12 @@ public class VentanaLocalidad extends JFrame {
 	private JButton btnAgregarLocalidad;
 	private JButton btnEliminarLocalidad;
 	private JButton btnEditarLocalidad;
-	private JList listaLocalidades;
-	private DefaultListModel modelLocalidades;
+	private JList<LocalidadDTO> listaLocalidades;
+	private DefaultListModel<LocalidadDTO> modelLocalidades;
 	private static VentanaLocalidad INSTANCE;
 	
 	private JSplitPane splitPane;
+	private JComboBox<ProvinciaDTO> comboBoxProvincias;
 	
 	public static VentanaLocalidad getInstance()
 	{
@@ -60,10 +66,27 @@ public class VentanaLocalidad extends JFrame {
 		JScrollPane scrollPaneLocalidades = new JScrollPane();
 		splitPane.setLeftComponent(scrollPaneLocalidades);
 		
-		modelLocalidades = new DefaultListModel();
-		listaLocalidades = new JList(modelLocalidades);
+		modelLocalidades = new DefaultListModel<LocalidadDTO>();
+		listaLocalidades = new JList<LocalidadDTO>(modelLocalidades);
 		listaLocalidades.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneLocalidades.setViewportView(listaLocalidades);
+		listaLocalidades.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (value instanceof ProvinciaDTO) {
+					LocalidadDTO localidad = (LocalidadDTO) value;
+					setText(localidad.getNombre());
+					setToolTipText(localidad.getNombre());
+				}
+				return this;
+			}
+			
+		});
 		
 		JLabel lblLocalidades = new JLabel("Localidades");
 		lblLocalidades.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -86,14 +109,63 @@ public class VentanaLocalidad extends JFrame {
 		gbc_panelData.gridx = 0;
 		gbc_panelData.gridy = 0;
 		panelForm.add(panelData, gbc_panelData);
-		panelData.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		GridBagLayout gbl_panelData = new GridBagLayout();
+		gbl_panelData.columnWidths = new int[]{37, 86, 0};
+		gbl_panelData.rowHeights = new int[]{20, 20, 0};
+		gbl_panelData.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_panelData.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panelData.setLayout(gbl_panelData);
 		
 		JLabel lblNombre = new JLabel("Nombre");
-		panelData.add(lblNombre);
+		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
+		gbc_lblNombre.anchor = GridBagConstraints.WEST;
+		gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNombre.gridx = 0;
+		gbc_lblNombre.gridy = 0;
+		panelData.add(lblNombre, gbc_lblNombre);
 		
 		textFieldNombre = new JTextField();
-		panelData.add(textFieldNombre);
+		GridBagConstraints gbc_textFieldNombre = new GridBagConstraints();
+		gbc_textFieldNombre.insets = new Insets(0, 0, 5, 0);
+		gbc_textFieldNombre.anchor = GridBagConstraints.NORTHWEST;
+		gbc_textFieldNombre.gridx = 1;
+		gbc_textFieldNombre.gridy = 0;
+		panelData.add(textFieldNombre, gbc_textFieldNombre);
 		textFieldNombre.setColumns(10);
+		
+		JLabel lblProvincia = new JLabel("Pertenece a:");
+		GridBagConstraints gbc_lblProvincia = new GridBagConstraints();
+		gbc_lblProvincia.anchor = GridBagConstraints.EAST;
+		gbc_lblProvincia.insets = new Insets(0, 0, 0, 5);
+		gbc_lblProvincia.gridx = 0;
+		gbc_lblProvincia.gridy = 1;
+		panelData.add(lblProvincia, gbc_lblProvincia);
+		
+		comboBoxProvincias = new JComboBox<ProvinciaDTO>();
+		GridBagConstraints gbc_comboBoxProvincias = new GridBagConstraints();
+		gbc_comboBoxProvincias.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBoxProvincias.gridx = 1;
+		gbc_comboBoxProvincias.gridy = 1;
+		panelData.add(comboBoxProvincias, gbc_comboBoxProvincias);
+		comboBoxProvincias.setRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				
+				if (value instanceof ProvinciaDTO) {
+					ProvinciaDTO provincia = (ProvinciaDTO) value;
+					setText(provincia.getNombre());
+					setToolTipText(provincia.getNombre());
+				}
+				
+				return this;
+			}
+			
+		});
 		
 		JPanel panelOperaciones = new JPanel();
 		GridBagConstraints gbc_panelOperaciones = new GridBagConstraints();
@@ -152,23 +224,32 @@ public class VentanaLocalidad extends JFrame {
 		return btnEditarLocalidad;
 	}
 	
-	public JList getListaLocalidades() {
+	public JList<LocalidadDTO> getListaLocalidades() {
 		return listaLocalidades;
+	}
+	
+	public JComboBox<ProvinciaDTO> getComboProvincias() {
+		return comboBoxProvincias;
 	}
 	
 	public void llenarLista(List<LocalidadDTO> localidadesEnLista) {
 		this.modelLocalidades.clear();
 
 		for (LocalidadDTO l : localidadesEnLista)
-		{
-			String nombre = l.getNombre();
-			this.modelLocalidades.addElement(nombre);
-		}
+			this.modelLocalidades.addElement(l);
 		
+	}
+	
+	public void llenarComboProvincias(List<ProvinciaDTO> provinciasEnLista) {
+		this.comboBoxProvincias.removeAllItems();
+		
+		for (ProvinciaDTO provincia : provinciasEnLista)
+			this.comboBoxProvincias.addItem(provincia);
 	}
 	
 	public void limpiarFormulario() {		
 		this.textFieldNombre.setText(null);
+		this.comboBoxProvincias.setSelectedIndex(-1);
 	}
 	
 	public void cerrar()

@@ -9,6 +9,8 @@ import java.util.List;
 
 import dto.DomicilioDTO;
 import dto.LocalidadDTO;
+import dto.PaísDTO;
+import dto.ProvinciaDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.DomicilioDAO;
 
@@ -172,6 +174,7 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
 		String nombre = "";
+		int idProvincia = 0;
 		String readSingle = "SELECT * FROM localidades WHERE idLocalidad = " + id + ";";
 		try
 		{
@@ -179,6 +182,7 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				nombre = resultSet.getString("nombre");
+				idProvincia = resultSet.getInt("idProvincia");
 			}
 		} 
 		catch (SQLException e) 
@@ -186,7 +190,56 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 			e.printStackTrace();
 		}
 	
-		return new LocalidadDTO(id, nombre);
+		return new LocalidadDTO(id, nombre, getProvinciaDTO(idProvincia));
+	}
+	
+	private ProvinciaDTO getProvinciaDTO(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		int idPaís = 0;
+		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+				idPaís = resultSet.getInt("idPaís");
+			}
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new ProvinciaDTO(id, nombre, getPaísDTO(idPaís));
+	}
+	
+	private PaísDTO getPaísDTO(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next())
+				nombre = resultSet.getString("nombre");
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new PaísDTO(id, nombre);
 	}
 
 }

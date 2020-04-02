@@ -56,6 +56,7 @@ public class Controlador implements ActionListener
 			this.ventanaLocalidad.getBtnAgregarLocalidad().addActionListener(l->guardarLocalidad(l));
 			this.ventanaLocalidad.getBtnEliminarLocalidad().addActionListener(l->borrarLocalidad(l));
 			this.ventanaLocalidad.getBtnEditarLocalidad().addActionListener(l->editarLocalidad(l));
+			this.ventanaLocalidad.getListaLocalidades().addListSelectionListener(l->actualizarFormularioLocalidad(l));
 			this.ventanaTipoContacto = VentanaTipoContacto.getInstance();
 			this.ventanaTipoContacto.getBtnAgregarTipoContacto().addActionListener(l->guardarTipoContacto(l));
 			this.ventanaTipoContacto.getBtnEliminarTipoContacto().addActionListener(l->borrarTipoContacto(l));
@@ -103,6 +104,7 @@ public class Controlador implements ActionListener
 		}
 		
 		private void ventanaAgregarLocalidad(ActionEvent a) {
+			refrescarComboProvinciasEnVentanaLocalidad();
 			this.ventanaLocalidad.mostrarVentana();
 		}
 		
@@ -239,22 +241,30 @@ public class Controlador implements ActionListener
 		}
 		
 		private void guardarLocalidad(ActionEvent l) {
-			String nombre = this.ventanaLocalidad.getTxtNombre().getText();
+			String nuevoNombre = this.ventanaLocalidad.getTxtNombre().getText();
 			
-			if (nombre.equals("")) {
+			if (nuevoNombre.equals("")) {
 				JOptionPane.showMessageDialog(this.ventanaLocalidad, "No puede ingresar un nombre en blanco.");	
 				return;
 			}
 			
-			boolean exists = localidadesEnLista.stream().anyMatch(e -> e.getNombre().equals(nombre));
+			ProvinciaDTO provinciaSeleccionada = (ProvinciaDTO) this.ventanaLocalidad.getComboProvincias().getSelectedItem();
+			
+			if (provinciaSeleccionada == null ) {
+				JOptionPane.showMessageDialog(this.ventanaProvincia, "Debe seleccionar la provincia a la que pertenece la localidad.");
+				return;
+			}
+			
+			boolean exists = localidadesEnLista.stream().anyMatch(e -> e.getNombre().equals(nuevoNombre) && e.getProvincia().equals(provinciaSeleccionada));
+			
 			if (exists) {
 				JOptionPane.showMessageDialog(this.ventanaLocalidad, "Ya existe una localidad con ese nombre.");
 				return;
 			}
 			
-			LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre);
+			LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nuevoNombre, provinciaSeleccionada);
 			this.agenda.agregarLocalidad(nuevaLocalidad);
-			this.refrescarLista();
+			this.refrescarListaLocalidades();
 			this.ventanaLocalidad.limpiarFormulario();
 		}
 		
@@ -287,12 +297,12 @@ public class Controlador implements ActionListener
 			
 			PaísDTO paísAsignado = (PaísDTO) this.ventanaProvincia.getComboPaíses().getSelectedItem();
 			
-			boolean exists = provinciasEnLista.stream().anyMatch(p -> p.getNombre().equals(nuevoNombre) && p.getPaís().equals(paísAsignado));
-			
 			if (paísAsignado == null) {
 				JOptionPane.showMessageDialog(this.ventanaProvincia, "Debe seleccionar el país al que pertenece la provincia.");
 				return;
 			}
+			
+			boolean exists = provinciasEnLista.stream().anyMatch(p -> p.getNombre().equals(nuevoNombre) && p.getPaís().equals(paísAsignado));
 			
 			if (exists) {
 				JOptionPane.showMessageDialog(this.ventanaProvincia, String.format("Ya existe una provincia con el nombre %s en %s.", nuevoNombre, paísAsignado.getNombre()));
@@ -358,7 +368,8 @@ public class Controlador implements ActionListener
 				this.agenda.borrarLocalidad(this.localidadesEnLista.get(index));
 			}
 			
-			this.refrescarLista();
+			this.refrescarListaLocalidades();
+			this.ventanaLocalidad.limpiarFormulario();
 		}
 		
 		public void borrarTipoContacto(ActionEvent s)
@@ -397,28 +408,32 @@ public class Controlador implements ActionListener
 		
 		public void editarLocalidad(ActionEvent s)
 		{
-			int[] elementosSeleccionados = this.ventanaLocalidad.getListaLocalidades().getSelectedIndices();
+			LocalidadDTO localidadSeleccionada = this.ventanaLocalidad.getListaLocalidades().getSelectedValue();
 			
-			if (elementosSeleccionados.length == 0) {
+			if (localidadSeleccionada == null) {
 				JOptionPane.showMessageDialog(this.ventanaLocalidad, "Debe seleccionar una localidad de la lista para poder editarla.");
 				return;
 			}
 			
-			for (int index : elementosSeleccionados)
-			{
-				String nuevoNombre = this.ventanaLocalidad.getTxtNombre().getText();
-				
-				if (nuevoNombre.equals("")) {
-					JOptionPane.showMessageDialog(this.ventanaLocalidad, "No puede ingresar un nombre en blanco.");	
-					return;
-				}
-				
-				LocalidadDTO localidad_a_modificar = this.localidadesEnLista.get(index);
-				localidad_a_modificar.setNombre(nuevoNombre);
-				this.agenda.modificarLocalidad(localidad_a_modificar);
+			String nuevoNombre = this.ventanaLocalidad.getTxtNombre().getText();
+			
+			if (nuevoNombre.equals("")) {
+				JOptionPane.showMessageDialog(this.ventanaLocalidad, "No puede ingresar un nombre en blanco.");	
+				return;
 			}
 			
-			this.refrescarLista();
+			ProvinciaDTO provinciaSeleccionada = (ProvinciaDTO) this.ventanaLocalidad.getComboProvincias().getSelectedItem();
+			
+			if (this.localidadesEnLista.stream().anyMatch(p -> p.getNombre().equals(nuevoNombre) && p.getProvincia().equals(provinciaSeleccionada))) {
+				JOptionPane.showMessageDialog(this.ventanaProvincia, String.format("Ya existe una localidad con el nombre %s en %s.", nuevoNombre, provinciaSeleccionada.getNombre()));
+				return;
+			}
+			
+			localidadSeleccionada.setNombre(nuevoNombre);
+			localidadSeleccionada.setProvincia(provinciaSeleccionada);
+			this.agenda.modificarLocalidad(localidadSeleccionada);
+			
+			this.refrescarListaLocalidades();
 			this.ventanaLocalidad.limpiarFormulario();
 		}
 		
@@ -507,6 +522,19 @@ public class Controlador implements ActionListener
 			this.ventanaProvincia.limpiarFormulario();
 		}
 		
+		public void actualizarFormularioLocalidad(ListSelectionEvent l) {
+			
+			if (this.ventanaLocalidad.getListaLocalidades().getValueIsAdjusting())
+				return;
+					
+			LocalidadDTO localidadSeleccionada = this.ventanaLocalidad.getListaLocalidades().getSelectedValue();
+			if (localidadSeleccionada != null) {
+				this.ventanaLocalidad.getTxtNombre().setText(localidadSeleccionada.getNombre());
+				this.ventanaLocalidad.getComboProvincias().setSelectedItem(localidadSeleccionada.getProvincia());				
+			}
+			
+		}
+		
 		public void actualizarFormularioProvincia(ListSelectionEvent l) {
 			
 			if (this.ventanaProvincia.getListaProvincias().getValueIsAdjusting())
@@ -523,7 +551,7 @@ public class Controlador implements ActionListener
 		public void inicializar()
 		{
 			this.refrescarTabla();
-			this.refrescarLista();
+			this.refrescarListaLocalidades();
 			this.refrescarListaTipoContacto();
 			this.refrescarListaPaíses();
 			this.refrescarListaProvincias();
@@ -536,7 +564,7 @@ public class Controlador implements ActionListener
 			this.vista.llenarTabla(this.personasEnTabla);
 		}
 		
-		private void refrescarLista() {
+		private void refrescarListaLocalidades() {
 			this.localidadesEnLista = agenda.obtenerLocalidades();
 			this.ventanaLocalidad.llenarLista(this.localidadesEnLista);
 		}
@@ -554,6 +582,11 @@ public class Controlador implements ActionListener
 		private void refrescarListaProvincias() {
 			this.provinciasEnLista = agenda.obtenerProvincias();
 			this.ventanaProvincia.llenarListaProvincias(this.provinciasEnLista);
+		}
+		
+		private void refrescarComboProvinciasEnVentanaLocalidad() {
+			this.provinciasEnLista = agenda.obtenerProvincias();
+			this.ventanaLocalidad.llenarComboProvincias(this.provinciasEnLista);
 		}
 		
 		private void refrescarComboPaísesEnVentanaProvincia() {

@@ -18,6 +18,7 @@ CREATE TABLE `localidades`
 (
   `idLocalidad` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
+  `idProvincia` int(11) NOT NULL,
   PRIMARY KEY (`idLocalidad`)
 );
 DROP TABLE IF EXISTS `tipos_de_contacto`;
