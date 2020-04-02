@@ -18,7 +18,7 @@ public class PaísDAOSQL implements PaísDAO {
 	private static final String insert = "INSERT INTO países(idPaís, nombre) VALUES(?, ?)";
 	private static final String delete = "DELETE FROM países WHERE idPaís = ?";
 	private static final String update = "UPDATE países SET nombre = ? WHERE idPaís = ?";
-	private static final String readall = "SELECT * FROM países";
+	private static final String readall = "SELECT * FROM países ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM países)";
 	
 	public PaísDAOSQL() {

@@ -19,7 +19,7 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 	private static final String insert = "INSERT INTO provincias(idProvincia, nombre, idPaís) VALUES(?, ?, ?)";
 	private static final String delete = "DELETE FROM provincias WHERE idProvincia = ?";
 	private static final String update = "UPDATE provincias SET nombre = ?, idPaís = ? WHERE idProvincia = ?";
-	private static final String readall = "SELECT * FROM provincias";
+	private static final String readall = "SELECT * FROM provincias ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM provincias)";
 	
 	public ProvinciaDAOSQL() {

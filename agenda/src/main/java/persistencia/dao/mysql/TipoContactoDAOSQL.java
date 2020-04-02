@@ -16,7 +16,7 @@ public class TipoContactoDAOSQL implements TipoContactoDAO {
 	private static final String insert = "INSERT INTO tipos_de_contacto(idTipoContacto, nombre) VALUES(?, ?)";
 	private static final String delete = "DELETE FROM tipos_de_contacto WHERE idTipoContacto = ?";
 	private static final String update = "UPDATE tipos_de_contacto SET nombre = ? WHERE idTipoContacto = ?";
-	private static final String readall = "SELECT * FROM tipos_de_contacto";
+	private static final String readall = "SELECT * FROM tipos_de_contacto ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM tipos_de_contacto)";
 
 	@Override
