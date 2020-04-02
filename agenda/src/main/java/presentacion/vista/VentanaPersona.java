@@ -1,15 +1,19 @@
 package presentacion.vista;
 
+import java.awt.Component;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -18,7 +22,9 @@ import com.toedter.calendar.JDateChooser;
 
 import dto.DomicilioDTO;
 import dto.LocalidadDTO;
+import dto.PaísDTO;
 import dto.PersonaDTO;
+import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 
 public class VentanaPersona extends JFrame 
@@ -29,12 +35,14 @@ public class VentanaPersona extends JFrame
 	private JTextField txtTelefono;
 	private JTextField txtEmail;
 	private JDateChooser fechaCumpleanios;
-	private JComboBox<TipoContactoDTO> listTipoDeContacto;
+	private JComboBox<TipoContactoDTO> comboTipoDeContacto;
 	private JTextField txtCalle;
 	private JTextField txtAltura;
 	private JTextField txtPiso;
 	private JTextField txtDepartamento;
-	private JComboBox<LocalidadDTO> listLocalidades;
+	private JComboBox<PaísDTO> comboPaíses;
+	private JComboBox<ProvinciaDTO> comboProvincias;
+	private JComboBox<LocalidadDTO> comboLocalidades;
 	private JCheckBox checkFavorito;
 	private JButton btnAgregarPersona;
 	private JButton btnEditarPersona;
@@ -62,14 +70,14 @@ public class VentanaPersona extends JFrame
 			}
 		});
 		
-		setBounds(100, 100, 475, 550);
+		setBounds(100, 100, 475, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 470, 550);
+		panel.setBounds(10, 11, 470, 650);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -109,12 +117,20 @@ public class VentanaPersona extends JFrame
 		lblDepartamento.setBounds(10, 339, 113, 14);
 		panel.add(lblDepartamento);
 		
+		JLabel lblPaís= new JLabel("País");
+		lblPaís.setBounds(10, 380, 113, 14);
+		panel.add(lblPaís);
+		
+		JLabel lblProvincia = new JLabel("Provincia");
+		lblProvincia.setBounds(10, 421, 113, 14);
+		panel.add(lblProvincia);
+		
 		JLabel lblLocalidad = new JLabel("Localidad");
-		lblLocalidad.setBounds(10, 380, 113, 14);
+		lblLocalidad.setBounds(10, 462, 113, 14);
 		panel.add(lblLocalidad);
 		
 		JLabel lblFavorito = new JLabel("Es Favorito");
-		lblFavorito.setBounds(10, 421, 113, 14);
+		lblFavorito.setBounds(10, 503, 113, 14);
 		panel.add(lblFavorito);
 		
 		txtNombre = new JTextField();
@@ -136,9 +152,9 @@ public class VentanaPersona extends JFrame
 		fechaCumpleanios.setBounds(204, 131, 100, 20);
 		panel.add(fechaCumpleanios);
 		
-		listTipoDeContacto = new JComboBox<TipoContactoDTO>();
-		listTipoDeContacto.setBounds(140, 172, 164, 20);
-		panel.add(listTipoDeContacto);
+		comboTipoDeContacto = new JComboBox<TipoContactoDTO>();
+		comboTipoDeContacto.setBounds(140, 172, 164, 20);
+		panel.add(comboTipoDeContacto);
 		
 		txtCalle = new JTextField();
 		txtCalle.setBounds(140, 213, 164, 20);
@@ -158,20 +174,85 @@ public class VentanaPersona extends JFrame
 		txtDepartamento.setBounds(140, 336, 164, 20);
 		panel.add(txtDepartamento);
 		
-		listLocalidades = new JComboBox<LocalidadDTO>();
-		listLocalidades.setBounds(140, 377, 164, 20);
-		panel.add(listLocalidades);
+		comboPaíses = new JComboBox<PaísDTO>();
+		comboPaíses.setBounds(140, 377, 164, 20);
+		panel.add(comboPaíses);
+		comboPaíses.setRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				
+				if (value instanceof PaísDTO) {
+					PaísDTO país = (PaísDTO) value;
+					setText(país.getNombre());
+					setToolTipText(país.getNombre());
+				}
+				
+				return this;
+			}
+			
+		});
+		
+		comboProvincias = new JComboBox<ProvinciaDTO>();
+		comboProvincias.setBounds(140, 418, 164, 20);
+		panel.add(comboProvincias);
+		comboProvincias.setRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				
+				if (value instanceof ProvinciaDTO) {
+					ProvinciaDTO provincia = (ProvinciaDTO) value;
+					setText(provincia.getNombre());
+					setToolTipText(provincia.getNombre());
+				}
+				
+				return this;
+			}
+			
+		});
+		
+		comboLocalidades = new JComboBox<LocalidadDTO>();
+		comboLocalidades.setBounds(140, 459, 164, 20);
+		panel.add(comboLocalidades);
+		comboLocalidades.setRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				
+				if (value instanceof LocalidadDTO) {
+					LocalidadDTO localidad = (LocalidadDTO) value;
+					setText(localidad.getNombre());
+					setToolTipText(localidad.getNombre());
+				}
+				
+				return this;
+			}
+			
+		});
 		
 		checkFavorito = new JCheckBox();
-		checkFavorito.setBounds(140, 418, 164, 20);
+		checkFavorito.setBounds(140, 500, 164, 20);
 		panel.add(checkFavorito);
 		
 		btnAgregarPersona = new JButton("Agregar");
-		btnAgregarPersona.setBounds(208, 467, 89, 23);
+		btnAgregarPersona.setBounds(208, 549, 89, 23);
 		panel.add(btnAgregarPersona);
 		
 		btnEditarPersona = new JButton("Editar");
-		btnEditarPersona.setBounds(208, 467, 89, 23);
+		btnEditarPersona.setBounds(208, 549, 89, 23);
 		panel.add(btnEditarPersona);
 		
 		this.setVisible(false);
@@ -204,7 +285,7 @@ public class VentanaPersona extends JFrame
 	
 	public JComboBox<TipoContactoDTO> getListTipoDeContacto()
 	{
-		return this.listTipoDeContacto;
+		return this.comboTipoDeContacto;
 	}
 	
 	public JTextField getTxtCalle() {
@@ -222,9 +303,17 @@ public class VentanaPersona extends JFrame
 	public JTextField getTxtDepartamento() {
 		return txtDepartamento;
 	}
+	
+	public JComboBox<PaísDTO> getComboPaíses() {
+		return comboPaíses;
+	}
+	
+	public JComboBox<ProvinciaDTO> getComboProvincias() {
+		return comboProvincias;
+	}
 
-	public JComboBox<LocalidadDTO> getListLocalidades() {
-		return listLocalidades;
+	public JComboBox<LocalidadDTO> getComboLocalidades() {
+		return comboLocalidades;
 	}
 	
 	public JCheckBox getCheckFavorito() {
@@ -247,45 +336,68 @@ public class VentanaPersona extends JFrame
 		this.txtEmail.setText(persona_a_editar.getEmail());
 		this.fechaCumpleanios.setDate(new Date(persona_a_editar.getFechaCumpleanio().getTime()));
 		this.checkFavorito.setSelected(persona_a_editar.getFavorito());
-//		this.listTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto());
-		for (int idx = 0; idx < this.listTipoDeContacto.getItemCount(); idx++)
-			if ( this.listTipoDeContacto.getItemAt(idx).getNombre().equals(persona_a_editar.getTipoDeContacto().getNombre()) )
-				this.listTipoDeContacto.setSelectedIndex(idx);
+		this.comboTipoDeContacto.setSelectedItem(persona_a_editar.getTipoDeContacto());
 		
 		DomicilioDTO domicilio_persona = persona_a_editar.getDomicilio();
 		this.txtCalle.setText(domicilio_persona.getCalle());
 		this.txtAltura.setText(String.valueOf(domicilio_persona.getAltura()));
 		this.txtPiso.setText(domicilio_persona.getPiso());
 		this.txtDepartamento.setText(domicilio_persona.getDepartamento());
-		
-//		this.listLocalidades.setSelectedItem(domicilio_persona.getLocalidad());
-		for (int idx = 0; idx < this.listLocalidades.getItemCount(); idx++)
-			if (this.listLocalidades.getItemAt(idx).getNombre().equals(domicilio_persona.getLocalidad().getNombre()))
-				this.listLocalidades.setSelectedIndex(idx);
+		this.comboPaíses.setSelectedItem(domicilio_persona.getLocalidad().getProvincia().getPaís());
+		this.comboProvincias.setSelectedItem(domicilio_persona.getLocalidad().getProvincia());
+		this.comboLocalidades.setSelectedItem(domicilio_persona.getLocalidad());
 		
 		this.btnAgregarPersona.setVisible(false);
 		this.btnEditarPersona.setVisible(true);
 	}
 	
-	public void llenarListaTipoContacto(List<TipoContactoDTO> tipoContactosEnLista) {
-		this.listTipoDeContacto.removeAllItems();
+	public void llenarComboTipoContacto(List<TipoContactoDTO> tipoContactosEnLista) {
+		this.comboTipoDeContacto.removeAllItems();
 		for (TipoContactoDTO tipoContacto : tipoContactosEnLista)
 		{
-			this.listTipoDeContacto.addItem(tipoContacto);
+			this.comboTipoDeContacto.addItem(tipoContacto);
 		}
 	}
 	
-	public void llenarListaLocalidad(List<LocalidadDTO> localidadesEnLista) {
-		this.listLocalidades.removeAllItems();
+	public void llenarComboPaíses(List<PaísDTO> paísesEnLista) {
+		this.comboPaíses.removeAllItems();
+		
+		for (PaísDTO país : paísesEnLista)
+			this.comboPaíses.addItem(país);
+		
+	}
+	
+	public void llenarComboProvincias(List<ProvinciaDTO> provinciasEnLista) {
+		this.comboProvincias.removeAllItems();
+		
+		for (ProvinciaDTO provincia : provinciasEnLista)
+			this.comboProvincias.addItem(provincia);
+		
+	}
+	
+	public void llenarComboLocalidades(List<LocalidadDTO> localidadesEnLista) {
+		
+		this.comboLocalidades.removeAllItems();
+		
 		for (LocalidadDTO localidad : localidadesEnLista)
-		{
-			this.listLocalidades.addItem(localidad);
-		}
+			this.comboLocalidades.addItem(localidad);
+		
 	}
 	
 	private void restoreDefaultForm() {
 		this.btnAgregarPersona.setVisible(true);
 		this.btnEditarPersona.setVisible(false);
+	}
+	
+	// Para agregar/eliminar los listener dinámicamente y mejorar la performance del sistema disparándolos solo la cantidad de veces necesaria
+	public void removeComboProvinciasListeners() {
+		for (ActionListener l : this.comboProvincias.getActionListeners())
+			this.comboProvincias.removeActionListener(l);
+	}
+	
+	public void removeComboPaísesListeners() {
+		for (ActionListener l : this.comboPaíses.getActionListeners())
+			this.comboPaíses.removeActionListener(l);
 	}
 
 	public void cerrar()
@@ -299,6 +411,13 @@ public class VentanaPersona extends JFrame
 		this.txtPiso.setText(null);
 		this.txtDepartamento.setText(null);
 		this.checkFavorito.setSelected(false);
+		
+		removeComboPaísesListeners();
+		removeComboProvinciasListeners();
+		
+		this.comboProvincias.removeAllItems();
+		this.comboLocalidades.removeAllItems();
+		
 		restoreDefaultForm();
 		this.dispose();
 	}

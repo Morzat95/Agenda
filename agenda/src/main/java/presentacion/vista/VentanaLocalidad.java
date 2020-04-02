@@ -55,7 +55,7 @@ public class VentanaLocalidad extends JFrame {
 		super();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setBounds(100, 100, 500, 350);
+		this.setBounds(100, 100, 600, 350);
 		
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -78,7 +78,7 @@ public class VentanaLocalidad extends JFrame {
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
 					boolean cellHasFocus) {
 				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if (value instanceof ProvinciaDTO) {
+				if (value instanceof LocalidadDTO) {
 					LocalidadDTO localidad = (LocalidadDTO) value;
 					setText(localidad.getNombre());
 					setToolTipText(localidad.getNombre());
@@ -110,7 +110,7 @@ public class VentanaLocalidad extends JFrame {
 		gbc_panelData.gridy = 0;
 		panelForm.add(panelData, gbc_panelData);
 		GridBagLayout gbl_panelData = new GridBagLayout();
-		gbl_panelData.columnWidths = new int[]{37, 86, 0};
+		gbl_panelData.columnWidths = new int[]{37, 130, 0};
 		gbl_panelData.rowHeights = new int[]{20, 20, 0};
 		gbl_panelData.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gbl_panelData.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
@@ -126,8 +126,9 @@ public class VentanaLocalidad extends JFrame {
 		
 		textFieldNombre = new JTextField();
 		GridBagConstraints gbc_textFieldNombre = new GridBagConstraints();
+		gbc_textFieldNombre.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldNombre.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldNombre.anchor = GridBagConstraints.NORTHWEST;
+		gbc_textFieldNombre.anchor = GridBagConstraints.NORTH;
 		gbc_textFieldNombre.gridx = 1;
 		gbc_textFieldNombre.gridy = 0;
 		panelData.add(textFieldNombre, gbc_textFieldNombre);

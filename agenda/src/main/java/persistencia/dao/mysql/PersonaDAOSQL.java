@@ -142,29 +142,26 @@ public class PersonaDAOSQL implements PersonaDAO
 		return personas;
 	}
 
-	public TipoContactoDTO getTipoContacto(int id) throws SQLException {
-		PreparedStatement statement;
-		ResultSet resultSet = null;
-		Conexion conexion = Conexion.getConexion();	
-		String nombre = "";
-		String name = "SELECT * FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
-		try
-		{
-			statement = conexion.getSQLConexion().prepareStatement(name);
-			resultSet = statement.executeQuery();
-			while(resultSet.next()) {
-				nombre = resultSet.getString("nombre");
-			}
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-	
-		return new TipoContactoDTO(id, nombre);
+	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
+	{
+		int id = resultSet.getInt("idPersona");
+		String nombre = resultSet.getString("Nombre");
+		String tel = resultSet.getString("Telefono");
+		String email = resultSet.getString("Email");
+		String stringFecha = resultSet.getString("FechaCumpleaños");
+		boolean favorito = resultSet.getBoolean("Favorito");
+		java.util.Date fechaCumpleanio = null;
+		TipoContactoDTO tipoContacto = getTipoContactoDTO(resultSet.getInt("idTipoDeContacto"));
+		DomicilioDTO domicilio = getDomicilioDTO(resultSet.getInt("idDomicilio"));
+		try {
+			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
+		} catch (ParseException e) { e.printStackTrace(); }
+		
+		
+		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio, favorito);
 	}
-	
-	public DomicilioDTO getDomicilio(int id) throws SQLException {
+
+	public DomicilioDTO getDomicilioDTO(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
@@ -193,10 +190,10 @@ public class PersonaDAOSQL implements PersonaDAO
 			e.printStackTrace();
 		}
 	
-		return new DomicilioDTO(id, calle, altura, piso, departamento, getLocalidad(idLocalidad));
+		return new DomicilioDTO(id, calle, altura, piso, departamento, getLocalidadDTO(idLocalidad));
 	}
 	
-	public LocalidadDTO getLocalidad(int id) throws SQLException {
+	public LocalidadDTO getLocalidadDTO(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
@@ -226,7 +223,7 @@ public class PersonaDAOSQL implements PersonaDAO
 		Conexion conexion = Conexion.getConexion();	
 		String nombre = "";
 		int idPaís = 0;
-		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		String readSingle = "SELECT * FROM provincias WHERE idProvincia = " + id + ";";
 		try
 		{
 			statement = conexion.getSQLConexion().prepareStatement(readSingle);
@@ -236,13 +233,13 @@ public class PersonaDAOSQL implements PersonaDAO
 				nombre = resultSet.getString("nombre");
 				idPaís = resultSet.getInt("idPaís");
 			}
-
+			
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
-	
+		
 		return new ProvinciaDTO(id, nombre, getPaísDTO(idPaís));
 	}
 	
@@ -259,35 +256,38 @@ public class PersonaDAOSQL implements PersonaDAO
 			
 			while (resultSet.next())
 				nombre = resultSet.getString("nombre");
-
+			
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return new PaísDTO(id, nombre);
+	}
+	
+	public TipoContactoDTO getTipoContactoDTO(int id) throws SQLException {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String name = "SELECT * FROM tipos_de_contacto WHERE idTipoContacto = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(name);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+			}
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
 	
-		return new PaísDTO(id, nombre);
+		return new TipoContactoDTO(id, nombre);
 	}
 	
-	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
-	{
-		int id = resultSet.getInt("idPersona");
-		String nombre = resultSet.getString("Nombre");
-		String tel = resultSet.getString("Telefono");
-		String email = resultSet.getString("Email");
-		String stringFecha = resultSet.getString("FechaCumpleaños");
-		boolean favorito = resultSet.getBoolean("Favorito");
-		java.util.Date fechaCumpleanio = null;
-		TipoContactoDTO tipoContacto = getTipoContacto(resultSet.getInt("idTipoDeContacto"));
-		DomicilioDTO domicilio = getDomicilio(resultSet.getInt("idDomicilio"));
-		try {
-			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
-		} catch (ParseException e) { e.printStackTrace(); }
-		
-		
-		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio, favorito);
-	}
-
 	public boolean hasData()
 	{
 		PreparedStatement statement;

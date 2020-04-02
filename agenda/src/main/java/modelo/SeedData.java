@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -95,20 +96,27 @@ public class SeedData {
 	
 	private static List<LocalidadDTO> populateLocalidades(LocalidadDAO localidadDAO, List<ProvinciaDTO> provincias, int amount) {
 		
+		long seed = 1L;
+		Random random = new Random(seed);
+		
 		List<LocalidadDTO> localidades = new ArrayList<LocalidadDTO>();
 		
 		if ( !localidadDAO.hasData() ) { // Si ya hay localidades no hacemos nada
 			
-			// Retrieve Localidades		
+			// Argentina
+			
+			// Retrieve Localidades fron JSON		
 			BufferedReader br;
 			try {
+				
 				br = new BufferedReader(new FileReader("localidades.json"));
 				JSONLocalidades json = new Gson().fromJson(br, JSONLocalidades.class);
 				JSONLocalidades.Localidad[] localidadesJson = json.localidades;
+				amount = amount > localidadesJson.length ? localidadesJson.length : amount;
+				
 				for (int idx = 0; idx < amount; idx++) {
-					JSONLocalidades.Localidad l = localidadesJson[idx];
-//				LocalidadDTO nuevaLocalidad = new LocalidadDTO(Integer.parseInt(l.id.substring(1), 10), l.nombre);
-					String nombre = l.nombre.length() > 45 ? l.nombre.substring(0, 45) : l.nombre; // por limitaciones de la esctructura de la tabla
+					JSONLocalidades.Localidad l = localidadesJson[random.nextInt(localidadesJson.length)];
+					String nombre = l.nombre;
 					String nombreProvincia = l.provincia.nombre;
 					ProvinciaDTO provincia = provincias.stream().filter(p -> p.getNombre().equals(nombreProvincia)).findFirst().get();
 					LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre, provincia);
@@ -116,10 +124,58 @@ public class SeedData {
 					localidadDAO.insert(nuevaLocalidad);
 				}
 				
+				localidades.clear();
+				
+			// Estados Unidos
+			
+				ProvinciaDTO alabama = provincias.stream().filter(p -> p.getNombre().equals("Alabama")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Abbeville", alabama));
+				localidades.add(new LocalidadDTO(0, "Hamilton", alabama));
+				
+				ProvinciaDTO georgia = provincias.stream().filter(p -> p.getNombre().equals("Georgia")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Atlanta", georgia));
+				localidades.add(new LocalidadDTO(0, "Savannah", georgia));
+			
+			// Rusia
+			
+				ProvinciaDTO astracán = provincias.stream().filter(p -> p.getNombre().equals("Astracán")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Jarabali", astracán));
+				localidades.add(new LocalidadDTO(0, "Tulugánovka", astracán));
+				
+				ProvinciaDTO moscú = provincias.stream().filter(p -> p.getNombre().equals("Moscú")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Dmítrov", moscú));
+				localidades.add(new LocalidadDTO(0, "Istra", moscú));
+			
+			// Alemania
+				
+				ProvinciaDTO berlín = provincias.stream().filter(p -> p.getNombre().equals("Berlín")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Dahlem", berlín));
+				localidades.add(new LocalidadDTO(0, "Gatow", berlín));
+				
+				ProvinciaDTO brandeburgo = provincias.stream().filter(p -> p.getNombre().equals("Brandeburgo")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Friedrichswalde", brandeburgo));
+				localidades.add(new LocalidadDTO(0, "Ziethen", brandeburgo));
+				
+			// Noruega
+			
+				ProvinciaDTO nordland = provincias.stream().filter(p -> p.getNombre().equals("Nordland")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Lurøy", nordland));
+				localidades.add(new LocalidadDTO(0, "Værøy", nordland));
+				
+				ProvinciaDTO vestfoldOgTelemark = provincias.stream().filter(p -> p.getNombre().equals("Vestfold og Telemark")).findFirst().get();
+				localidades.add(new LocalidadDTO(0, "Fyresdal", vestfoldOgTelemark));
+				localidades.add(new LocalidadDTO(0, "Porsgrunn", vestfoldOgTelemark));
+				
+				for (LocalidadDTO localidad : localidades)
+					localidadDAO.insert(localidad);
+					
 				System.out.println("Localidades cargadas con éxito.");
+				
 			} catch (FileNotFoundException e) {
+				
 				e.printStackTrace();
 				System.out.println("No se pudo obtener las localidades.");
+				
 			}
 			
 		}
@@ -160,6 +216,7 @@ public class SeedData {
 		
 		List<PersonaDTO> contactos = new ArrayList<PersonaDTO>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
 		try {
 			
 			DomicilioDTO domicilio1 = new DomicilioDTO("Avenida Siempreviva", 742, "0", "", localidades.get(0));
@@ -234,6 +291,8 @@ public class SeedData {
 			
 			PaísDTO argentina = países.stream().filter(p -> p.getNombre().equals("Argentina")).findFirst().get();
 			
+			provincias.add(new ProvinciaDTO(0, "Ciudad Autónoma de Buenos Aires", argentina));
+			provincias.add(new ProvinciaDTO(0, "Tierra del Fuego, Antártida e Islas del Atlántico Sur", argentina));
 			provincias.add(new ProvinciaDTO(0, "Buenos Aires", argentina));
 			provincias.add(new ProvinciaDTO(0, "Catamarca", argentina));
 			provincias.add(new ProvinciaDTO(0, "Chaco", argentina));
@@ -252,10 +311,65 @@ public class SeedData {
 			provincias.add(new ProvinciaDTO(0, "Salta", argentina));
 			provincias.add(new ProvinciaDTO(0, "San Juan", argentina));
 			provincias.add(new ProvinciaDTO(0, "San Luis", argentina));
+			provincias.add(new ProvinciaDTO(0, "Santa Cruz", argentina));
 			provincias.add(new ProvinciaDTO(0, "Santa Fe", argentina));
 			provincias.add(new ProvinciaDTO(0, "Santiago del Estero", argentina));
 			provincias.add(new ProvinciaDTO(0, "Tierra del Fuego", argentina));
 			provincias.add(new ProvinciaDTO(0, "Tucumán", argentina));
+			
+			PaísDTO estadosUnidos = países.stream().filter(p -> p.getNombre().equals("Estados Unidos")).findFirst().get();
+			
+			provincias.add(new ProvinciaDTO(0, "Alabama", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Alaska", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Arizona", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Arkansas", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "California", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Colorado", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Connecticut", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Delaware", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Florida", estadosUnidos));
+			provincias.add(new ProvinciaDTO(0, "Georgia", estadosUnidos));
+			
+			PaísDTO rusia = países.stream().filter(p -> p.getNombre().equals("Rusia")).findFirst().get();
+			
+			provincias.add(new ProvinciaDTO(0, "Amur", rusia));
+			provincias.add(new ProvinciaDTO(0, "Arjángelsk", rusia));
+			provincias.add(new ProvinciaDTO(0, "Astracán", rusia));
+			provincias.add(new ProvinciaDTO(0, "Bélgorod", rusia));
+			provincias.add(new ProvinciaDTO(0, "Briansk", rusia));
+			provincias.add(new ProvinciaDTO(0, "Cheliábinsk", rusia));
+			provincias.add(new ProvinciaDTO(0, "Irkutsk", rusia));
+			provincias.add(new ProvinciaDTO(0, "Ivánovo", rusia));
+			provincias.add(new ProvinciaDTO(0, "Kaliningrado", rusia));
+			provincias.add(new ProvinciaDTO(0, "Moscú", rusia));
+			
+			PaísDTO alemania = países.stream().filter(p -> p.getNombre().equals("Alemania")).findFirst().get();
+			
+			provincias.add(new ProvinciaDTO(0, "Baden-Wurtemberg", alemania));
+			provincias.add(new ProvinciaDTO(0, "Baviera", alemania));
+			provincias.add(new ProvinciaDTO(0, "Berlín", alemania));
+			provincias.add(new ProvinciaDTO(0, "Brandeburgo", alemania));
+			provincias.add(new ProvinciaDTO(0, "Bremen", alemania));
+			provincias.add(new ProvinciaDTO(0, "Hamburgo", alemania));
+			provincias.add(new ProvinciaDTO(0, "Hesse", alemania));
+			provincias.add(new ProvinciaDTO(0, "Mecklemburgo-Pomerania Occidental", alemania));
+			provincias.add(new ProvinciaDTO(0, "Sajonia", alemania));
+			provincias.add(new ProvinciaDTO(0, "Renania del Norte-Westfalia", alemania));
+			
+			PaísDTO noruega = países.stream().filter(p -> p.getNombre().equals("Noruega")).findFirst().get();
+			
+			provincias.add(new ProvinciaDTO(0, "Agder", noruega));
+			provincias.add(new ProvinciaDTO(0, "Innlandet", noruega));
+			provincias.add(new ProvinciaDTO(0, "Møre og Romsdal", noruega));
+			provincias.add(new ProvinciaDTO(0, "Nordland", noruega));
+			provincias.add(new ProvinciaDTO(0, "Oslo", noruega));
+			provincias.add(new ProvinciaDTO(0, "Rogaland", noruega));
+			provincias.add(new ProvinciaDTO(0, "Svalbard", noruega));
+			provincias.add(new ProvinciaDTO(0, "Trøndelag", noruega));
+			provincias.add(new ProvinciaDTO(0, "Troms og Finnmark", noruega));
+			provincias.add(new ProvinciaDTO(0, "Vestfold og Telemark", noruega));
+			provincias.add(new ProvinciaDTO(0, "Vestland", noruega));
+			provincias.add(new ProvinciaDTO(0, "Viken", noruega));
 			
 			for (ProvinciaDTO provincia : provincias)
 				provinciaDAO.insert(provincia);

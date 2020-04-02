@@ -166,10 +166,10 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 		String departamento = resultSet.getString("departamento");
 		int idLocalidad = resultSet.getInt("idLocalidad");
 	
-		return new DomicilioDTO(id, calle, altura, piso, departamento, getLocalidad(idLocalidad));
+		return new DomicilioDTO(id, calle, altura, piso, departamento, getLocalidadDTO(idLocalidad));
 	}
 	
-	public LocalidadDTO getLocalidad(int id) throws SQLException {
+	public LocalidadDTO getLocalidadDTO(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
@@ -199,7 +199,7 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 		Conexion conexion = Conexion.getConexion();	
 		String nombre = "";
 		int idPaís = 0;
-		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		String readSingle = "SELECT * FROM provincias WHERE idProvincia = " + id + ";";
 		try
 		{
 			statement = conexion.getSQLConexion().prepareStatement(readSingle);

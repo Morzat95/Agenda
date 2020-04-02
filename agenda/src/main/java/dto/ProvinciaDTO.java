@@ -70,6 +70,9 @@ public class ProvinciaDTO {
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - - %s", this.idProvincia, this.nombre, this.país.toString());
+	}
 	
 }
