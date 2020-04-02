@@ -38,3 +38,10 @@ CREATE TABLE `domicilio`
    `idLocalidad` int(11) NOT NULL,
   PRIMARY KEY (`idDomicilio`)
 );
+DROP TABLE IF EXISTS `países`;
+CREATE TABLE `países`
+(
+  `idPaís` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,
+  PRIMARY KEY (`idPaís`)
+);

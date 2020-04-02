@@ -8,15 +8,15 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
-
 import dto.DomicilioDTO;
 import dto.LocalidadDTO;
+import dto.PaísDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 import modelo.Agenda;
 import presentacion.reportes.ReporteAgenda;
 import presentacion.vista.VentanaLocalidad;
+import presentacion.vista.VentanaPaís;
 import presentacion.vista.VentanaPersona;
 import presentacion.vista.VentanaTipoContacto;
 import presentacion.vista.Vista;
@@ -27,9 +27,11 @@ public class Controlador implements ActionListener
 		private List<PersonaDTO> personasEnTabla;
 		private List<LocalidadDTO> localidadesEnLista;
 		private List<TipoContactoDTO> tiposContactoEnLista;
+		private List<PaísDTO> paísesEnLista;
 		private VentanaPersona ventanaPersona;
 		private VentanaLocalidad ventanaLocalidad;
 		private VentanaTipoContacto ventanaTipoContacto;
+		private VentanaPaís ventanaPaís;
 		private Agenda agenda;
 		
 		public Controlador(Vista vista, Agenda agenda)
@@ -41,6 +43,7 @@ public class Controlador implements ActionListener
 			this.vista.getBtnReporte().addActionListener(r->mostrarReporte(r));
 			this.vista.getMenuLocalidad().addActionListener(a->ventanaAgregarLocalidad(a));
 			this.vista.getMenuTipoContacto().addActionListener(a->ventanaAgregarTipoContacto(a));
+			this.vista.getMenuPaís().addActionListener(a->ventanaPaís(a));
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
 			this.ventanaPersona.getBtnEditarPersona().addActionListener(p->editarPersona(p));
@@ -52,6 +55,10 @@ public class Controlador implements ActionListener
 			this.ventanaTipoContacto.getBtnAgregarTipoContacto().addActionListener(l->guardarTipoContacto(l));
 			this.ventanaTipoContacto.getBtnEliminarTipoContacto().addActionListener(l->borrarTipoContacto(l));
 			this.ventanaTipoContacto.getBtnEditarTipoContacto().addActionListener(l->editarTipoContacto(l));
+			this.ventanaPaís = VentanaPaís.getInstance();
+			this.ventanaPaís.getBtnAgregarPaís().addActionListener(l->guardarPaís(l));
+			this.ventanaPaís.getBtnEliminarPaís().addActionListener(l->borrarPaís(l));
+			this.ventanaPaís.getBtnEditarPaís().addActionListener(l->editarPaís(l));
 			this.agenda = agenda;
 		}
 		
@@ -93,6 +100,10 @@ public class Controlador implements ActionListener
 			this.ventanaTipoContacto.mostrarVentana();
 		}
 
+		private void ventanaPaís(ActionEvent a) {
+			this.ventanaPaís.mostrarVentana();
+		}
+		
 		private void guardarPersona(ActionEvent p) {
 			String nombre = this.ventanaPersona.getTxtNombre().getText();
 			String tel = ventanaPersona.getTxtTelefono().getText();
@@ -102,17 +113,17 @@ public class Controlador implements ActionListener
 			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un tel�fono v�lido.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
 				return;
 			}
 			
 			if (!verifyEmail(email)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una direcci�n de email v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
 				return;
 			}
 			
 			if (fechaCumpleanio == null) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
 				return;
 			}
 			
@@ -124,7 +135,7 @@ public class Controlador implements ActionListener
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
 			
 			if (!verifyAltura(altura_string)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un n�mero entero v�lido.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido.");	
 				return;
 			} else {
 				altura = Integer.parseInt(altura_string);
@@ -149,17 +160,17 @@ public class Controlador implements ActionListener
 			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un tel�fono v�lido.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
 				return;
 			}
 			
 			if (!verifyEmail(email)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una direcci�n de email v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
 				return;
 			}
 			
 			if (fechaCumpleanio == null) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
 				return;
 			}
 			
@@ -171,7 +182,7 @@ public class Controlador implements ActionListener
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
 			
 			if (!verifyAltura(altura_string)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un n�mero entero.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero.");	
 				return;
 			} else {
 				altura = Integer.parseInt(altura_string);
@@ -199,7 +210,6 @@ public class Controlador implements ActionListener
 		}
 		
 		private boolean verifyEmail(String email) {
-//			String regexEmail = "^[\\\\w!#$%&�*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
 //			return email.matches("^(.+)@(.+)$"); // Simplest regex to validate email
 			return email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"); // Java email validation permitted by RFC 5322. TODO: escape sensitive characters to avoid SQL injection attacks.
 		}
@@ -252,9 +262,29 @@ public class Controlador implements ActionListener
 			this.ventanaTipoContacto.limpiarFormulario();
 		}
 
+		private void guardarPaís(ActionEvent l) {
+			String nombre = this.ventanaPaís.getTxtNombre().getText();
+			
+			if (nombre.equals("")) {
+				JOptionPane.showMessageDialog(this.ventanaPaís, "No puede ingresar un nombre en blanco.");	
+				return;
+			}
+			
+			boolean exists = paísesEnLista.stream().anyMatch(e -> e.getNombre().equals(nombre));
+			if (exists) {
+				JOptionPane.showMessageDialog(this.ventanaPaís, "Ya existe un país con ese nombre.");
+				return;
+			}
+			
+			PaísDTO nuevoPaís = new PaísDTO(0, nombre);
+			this.agenda.agregarPaís(nuevoPaís);
+			this.refrescarListaPaíses();
+			this.ventanaPaís.limpiarFormulario();
+		}
+		
 		private void mostrarReporte(ActionEvent r) {
 //			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas());
-//			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas("Favorito")); // Otra opci�n
+//			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas("Favorito")); // Otra opción
 			
 			List<PersonaDTO> personas = agenda.obtenerPersonas();
 			
@@ -297,6 +327,17 @@ public class Controlador implements ActionListener
 			}
 			
 			this.refrescarListaTipoContacto();
+		}
+		
+		public void borrarPaís(ActionEvent s)
+		{
+			int[] elementosSeleccionados = this.ventanaPaís.getListaPaíses().getSelectedIndices();
+			for (int index : elementosSeleccionados)
+			{
+				this.agenda.borrarPaís(this.paísesEnLista.get(index));
+			}
+			
+			this.refrescarListaPaíses();
 		}
 		
 		public void editarLocalidad(ActionEvent s)
@@ -352,12 +393,40 @@ public class Controlador implements ActionListener
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
 		}
-	
+
+		public void editarPaís(ActionEvent s)
+		{
+			int[] elementosSeleccionados = this.ventanaPaís.getListaPaíses().getSelectedIndices();
+			
+			if (elementosSeleccionados.length == 0) {
+				JOptionPane.showMessageDialog(this.ventanaPaís, "Debe seleccionar un país de la lista para poder editarlo.");
+				return;
+			}
+			
+			for (int index : elementosSeleccionados)
+			{
+				String nuevoNombre = this.ventanaPaís.getTxtNombre().getText();
+				
+				if (nuevoNombre.equals("")) {
+					JOptionPane.showMessageDialog(this.ventanaPaís, "No puede ingresar un nombre en blanco.");	
+					return;
+				}
+				
+				PaísDTO país_a_modificar = this.paísesEnLista.get(index);
+				país_a_modificar.setNombre(nuevoNombre);
+				this.agenda.modificarPaís(país_a_modificar);
+			}
+			
+			this.refrescarListaPaíses();;
+			this.ventanaPaís.limpiarFormulario();
+		}
+		
 		public void inicializar()
 		{
 			this.refrescarTabla();
 			this.refrescarLista();
 			this.refrescarListaTipoContacto();
+			this.refrescarListaPaíses();
 			this.vista.show();
 		}
 		
@@ -375,6 +444,11 @@ public class Controlador implements ActionListener
 		private void refrescarListaTipoContacto() {
 			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
 			this.ventanaTipoContacto.llenarLista(this.tiposContactoEnLista);
+		}
+		
+		private void refrescarListaPaíses() {
+			this.paísesEnLista = agenda.obtenerPaíses();
+			this.ventanaPaís.llenarLista(this.paísesEnLista);
 		}
 		
 		private void refrescarListaTipoContactoEnVentanaPersona() {

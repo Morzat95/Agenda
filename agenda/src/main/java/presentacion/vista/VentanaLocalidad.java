@@ -17,12 +17,7 @@ import javax.swing.JScrollPane;
 import java.awt.Color;
 
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.SplitPaneUI;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
-
 import dto.LocalidadDTO;
-import dto.PersonaDTO;
-
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
