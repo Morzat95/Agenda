@@ -113,17 +113,17 @@ public class Controlador implements ActionListener
 			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un tel�fono v�lido.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
 				return;
 			}
 			
 			if (!verifyEmail(email)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una direcci�n de email v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
 				return;
 			}
 			
 			if (fechaCumpleanio == null) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
 				return;
 			}
 			
@@ -135,7 +135,7 @@ public class Controlador implements ActionListener
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
 			
 			if (!verifyAltura(altura_string)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un n�mero entero v�lido.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido.");	
 				return;
 			} else {
 				altura = Integer.parseInt(altura_string);
@@ -160,17 +160,17 @@ public class Controlador implements ActionListener
 			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un tel�fono v�lido.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido.");	
 				return;
 			}
 			
 			if (!verifyEmail(email)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una direcci�n de email v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida.");	
 				return;
 			}
 			
 			if (fechaCumpleanio == null) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento v�lida.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha de nacimiento válida.");	
 				return;
 			}
 			
@@ -182,7 +182,7 @@ public class Controlador implements ActionListener
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
 			
 			if (!verifyAltura(altura_string)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un n�mero entero.");	
+				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero.");	
 				return;
 			} else {
 				altura = Integer.parseInt(altura_string);
@@ -210,7 +210,6 @@ public class Controlador implements ActionListener
 		}
 		
 		private boolean verifyEmail(String email) {
-//			String regexEmail = "^[\\\\w!#$%&�*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
 //			return email.matches("^(.+)@(.+)$"); // Simplest regex to validate email
 			return email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"); // Java email validation permitted by RFC 5322. TODO: escape sensitive characters to avoid SQL injection attacks.
 		}
@@ -285,7 +284,7 @@ public class Controlador implements ActionListener
 		
 		private void mostrarReporte(ActionEvent r) {
 //			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas());
-//			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas("Favorito")); // Otra opci�n
+//			ReporteAgenda reporte = new ReporteAgenda(agenda.obtenerPersonas("Favorito")); // Otra opción
 			
 			List<PersonaDTO> personas = agenda.obtenerPersonas();
 			
