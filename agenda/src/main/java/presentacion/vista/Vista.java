@@ -29,12 +29,9 @@ public class Vista
 	private JButton btnBorrar;
 	private JButton btnEditar;
 	private JButton btnReporte;
-//	private JMenu menuLocalidad;
 	private JMenuItem menuLocalidad;
-		private JMenuItem mnItemAgregarLocalidad;
-		private JMenuItem mnItemEliminarLocalidad;
-		private JMenuItem mnItemEditarLocalidad;
 	private JMenuItem menuTipoContacto;
+	private JMenuItem menuPaís;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
 
@@ -104,34 +101,17 @@ public class Vista
 		menuBar.add(menu);
 		
 			// Add ABM Localidad
-//			menuLocalidad = new JMenu("Localidad");
-//			menu.add(menuLocalidad);
 			menuLocalidad = new JMenuItem("Localidad");
 			menu.add(menuLocalidad);
-			
-//				mnItemAgregarLocalidad = new JMenuItem("Agregar");
-//				menuLocalidad.add(mnItemAgregarLocalidad);
-//				
-//				mnItemEliminarLocalidad = new JMenuItem("Eliminar");
-//				menuLocalidad.add(mnItemEliminarLocalidad);
-//				
-//				mnItemEditarLocalidad = new JMenuItem("Editar");
-//				menuLocalidad.add(mnItemEditarLocalidad);
+
 				
 			// Add ABM Tipo de Contacto
-//			JMenu menuContactos = new JMenu("Contactos");
-//			menu.add(menuContactos);
 			menuTipoContacto = new JMenuItem("Tipos de Contactos");
 			menu.add(menuTipoContacto);
 			
-//				JMenuItem mnItemContactosAgregar = new JMenuItem("Agregar");
-//				menuContactos.add(mnItemContactosAgregar);
-//				
-//				JMenuItem mnItemContactosEliminar = new JMenuItem("Eliminar");
-//				menuContactos.add(mnItemContactosEliminar);
-//				
-//				JMenuItem mnItemContactosEditar = new JMenuItem("Editar");
-//				menuContactos.add(mnItemContactosEditar);
+			// Add ABM País
+			menuPaís = new JMenuItem("Países");
+			menu.add(menuPaís);
 
 	}
 	
@@ -170,28 +150,16 @@ public class Vista
 		return btnEditar;
 	}
 	
-//	public JMenu getMenuLocalidad() {
 	public JMenuItem getMenuLocalidad() {
 		return menuLocalidad;
 	}
 	
-	public JMenuItem getMnItemAgregarLocalidad() // TODO: Delete
-	{
-		return mnItemAgregarLocalidad;
-	}
-	
-	public JMenuItem getMnItemEliminarLocalidad() // TODO: Delete
-	{
-		return mnItemEliminarLocalidad;
-	}
-	
-	public JMenuItem getMnItemEditarLocalidad() // TODO: Delete
-	{
-		return mnItemEditarLocalidad;
-	}
-	
 	public JMenuItem getMenuTipoContacto() {
 		return menuTipoContacto;
+	}
+	
+	public JMenuItem getMenuPaís() {
+		return menuPaís;
 	}
 	
 	public JButton getBtnReporte() 

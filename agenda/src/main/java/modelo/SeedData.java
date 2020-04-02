@@ -18,12 +18,14 @@ import com.google.gson.Gson;
 
 import dto.DomicilioDTO;
 import dto.LocalidadDTO;
+import dto.PaísDTO;
 import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.DomicilioDAO;
 import persistencia.dao.interfaz.LocalidadDAO;
+import persistencia.dao.interfaz.PaísDAO;
 import persistencia.dao.interfaz.PersonaDAO;
 import persistencia.dao.interfaz.TipoContactoDAO;
 import persistencia.dao.mysql.DAOSQLFactory;
@@ -51,6 +53,10 @@ public class SeedData {
 		// Contactos
 		PersonaDAO personaDAO = DAOFactory.createPersonaDAO();
 		populateContactos(personaDAO, localidades, tiposDeContacto);
+		
+		// Países
+		PaísDAO paísDAO = DAOFactory.createPaísDAO();
+		populatePaíses(paísDAO);
 		
 	}
 	
@@ -177,6 +183,38 @@ public class SeedData {
 	
 	private static TipoContactoDTO filterByName(List<TipoContactoDTO> tiposDeContacto, String name) {
 		return tiposDeContacto.stream().filter(t -> t.getNombre().equals(name)).findAny().orElse(null);
+	}
+	
+	private static List<PaísDTO> populatePaíses(PaísDAO paísDAO) {
+		
+		List<PaísDTO> países = new ArrayList<PaísDTO>();
+		
+		if (!paísDAO.hasData()) {
+			
+			países.add(new PaísDTO(0, "Argentina"));
+			países.add(new PaísDTO(0, "Chile"));
+			países.add(new PaísDTO(0, "Brasil"));
+			países.add(new PaísDTO(0, "Paraguay"));
+			países.add(new PaísDTO(0, "Bolivia"));
+			países.add(new PaísDTO(0, "Estados Unidos"));
+			países.add(new PaísDTO(0, "China"));
+			países.add(new PaísDTO(0, "Italia"));
+			países.add(new PaísDTO(0, "Francia"));
+			países.add(new PaísDTO(0, "España"));
+			países.add(new PaísDTO(0, "Hungría"));
+			países.add(new PaísDTO(0, "Alemania"));
+			países.add(new PaísDTO(0, "Polonia"));
+			países.add(new PaísDTO(0, "Noruega"));
+			países.add(new PaísDTO(0, "Rusia"));
+			países.add(new PaísDTO(0, "Inglaterra"));
+			
+			for (PaísDTO país : países)
+				paísDAO.insert(país);
+			
+		}
+		
+		return países;
+		
 	}
 	
 	@SuppressWarnings("unused")
