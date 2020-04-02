@@ -8,55 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.PaísDTO;
+import dto.ProvinciaDTO;
 import persistencia.conexion.Conexion;
-import persistencia.dao.interfaz.PaísDAO;
+import persistencia.dao.interfaz.ProvinciaDAO;
 
-public class PaísDAOSQL implements PaísDAO {
+public class ProvinciaDAOSQL implements ProvinciaDAO {
 	
-	private static int lastId = 1;
+	private static final String insert = "INSERT INTO provincias(idProvincia, nombre, idPaís) VALUES(?, ?, ?)";
+	private static final String delete = "DELETE FROM provincias WHERE idProvincia = ?";
+	private static final String update = "UPDATE provincias SET nombre = ?, idPaís = ? WHERE idProvincia = ?";
+	private static final String readall = "SELECT * FROM provincias";
+	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM provincias)";
 	
-	private static final String insert = "INSERT INTO países(idPaís, nombre) VALUES(?, ?)";
-	private static final String delete = "DELETE FROM países WHERE idPaís = ?";
-	private static final String update = "UPDATE países SET nombre = ? WHERE idPaís = ?";
-	private static final String readall = "SELECT * FROM países";
-	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM países)";
-	
-	public PaísDAOSQL() {
-		PaísDAOSQL.lastId = getLastId();
-	}
-	
-	private int getLastId() {
-		PreparedStatement statement;
-		ResultSet resultSet = null;
-		Conexion conexion = Conexion.getConexion();
-		int lastId = 0;
-		String readLastId = "SELECT MAX(idPaís) AS lastId FROM países;";
-		try
-		{
-			statement = conexion.getSQLConexion().prepareStatement(readLastId);
-			resultSet = statement.executeQuery();
-			while(resultSet.next())
-				lastId = resultSet.getInt("lastId");
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-	
-		return lastId;
-	}
-
 	@Override
-	public boolean insert(PaísDTO país) {
+	public boolean insert(ProvinciaDTO provincia) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		boolean isInsertExitoso = false;
 		try
 		{
 			statement = conexion.prepareStatement(insert);
-			país.setIdPaís(++lastId);
-			statement.setInt(1, país.getIdPaís());
-			statement.setString(2, país.getNombre());
+			statement.setInt(1, provincia.getIdProvincia());
+			statement.setString(2, provincia.getNombre());
+			statement.setInt(3, provincia.getPaís().getIdPaís());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -75,16 +49,16 @@ public class PaísDAOSQL implements PaísDAO {
 		
 		return isInsertExitoso;
 	}
-
+	
 	@Override
-	public boolean delete(PaísDTO país_a_eliminar) {
+	public boolean delete(ProvinciaDTO provincia_a_eliminar) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		boolean isdeleteExitoso = false;
 		try 
 		{
 			statement = conexion.prepareStatement(delete);
-			statement.setInt(1, país_a_eliminar.getIdPaís());
+			statement.setInt(1, provincia_a_eliminar.getIdProvincia());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -97,17 +71,18 @@ public class PaísDAOSQL implements PaísDAO {
 		}
 		return isdeleteExitoso;
 	}
-
+	
 	@Override
-	public boolean update(PaísDTO país_a_modificar) {
+	public boolean update(ProvinciaDTO provincia_a_modificar) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		boolean isUpdateExitoso = false;
 		try
 		{
 			statement = conexion.prepareStatement(update);
-			statement.setString(1, país_a_modificar.getNombre());
-			statement.setInt(2, país_a_modificar.getIdPaís());
+			statement.setString(1, provincia_a_modificar.getNombre());
+			statement.setInt(2, provincia_a_modificar.getPaís().getIdPaís());
+			statement.setInt(3, provincia_a_modificar.getIdProvincia());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -126,12 +101,12 @@ public class PaísDAOSQL implements PaísDAO {
 		
 		return isUpdateExitoso;
 	}
-
+	
 	@Override
-	public List<PaísDTO> readAll() {
+	public List<ProvinciaDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet;
-		ArrayList<PaísDTO> países = new ArrayList<PaísDTO>();
+		ArrayList<ProvinciaDTO> países = new ArrayList<ProvinciaDTO>();
 		Conexion conexion = Conexion.getConexion();
 		try 
 		{
@@ -139,7 +114,7 @@ public class PaísDAOSQL implements PaísDAO {
 			resultSet = statement.executeQuery();
 			while(resultSet.next())
 			{
-				países.add(getPaísDTO(resultSet));
+				países.add(getPprovinciaDTO(resultSet));
 			}
 		} 
 		catch (SQLException e) 
@@ -149,16 +124,39 @@ public class PaísDAOSQL implements PaísDAO {
 		return países;
 	}
 	
-	private PaísDTO getPaísDTO(ResultSet resultSet) throws SQLException
+	private ProvinciaDTO getPprovinciaDTO(ResultSet resultSet) throws SQLException
 	{
-		int id = resultSet.getInt("idPaís");
+		int id = resultSet.getInt("idProvincia");
 		String nombre = resultSet.getString("nombre");
+		int idPaís = resultSet.getInt("idPaís");
+		return new ProvinciaDTO(id, nombre, getPaísDTO(idPaís));
+	}
+	
+	private PaísDTO getPaísDTO(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next())
+				nombre = resultSet.getString("nombre");
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
 		return new PaísDTO(id, nombre);
 	}
 	
 	@Override
-	public boolean hasData()
-	{
+	public boolean hasData() {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();

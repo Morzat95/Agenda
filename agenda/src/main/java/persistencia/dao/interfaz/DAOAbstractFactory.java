@@ -7,4 +7,5 @@ public interface DAOAbstractFactory
 	public TipoContactoDAO createTipoContactoDAO();
 	public DomicilioDAO createDomicilioDAO();
 	public PaísDAO createPaísDAO();
+	public ProvinciaDAO createProvinciaDAO();
 }
