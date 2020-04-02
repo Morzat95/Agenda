@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS `localidades`;
 CREATE TABLE `localidades`
 (
   `idLocalidad` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
+  `nombre` varchar(70) NOT NULL,
   `idProvincia` int(11) NOT NULL,
   PRIMARY KEY (`idLocalidad`)
 );
@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `provincias`;
 CREATE TABLE `provincias`
 (
   `idProvincia` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
+  `nombre` varchar(70) NOT NULL,
   `idPaís` int(11) NOT NULL,
   PRIMARY KEY (`idProvincia`)
 );

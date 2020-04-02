@@ -134,7 +134,7 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 	public List<ProvinciaDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet;
-		ArrayList<ProvinciaDTO> países = new ArrayList<ProvinciaDTO>();
+		ArrayList<ProvinciaDTO> provincias = new ArrayList<ProvinciaDTO>();
 		Conexion conexion = Conexion.getConexion();
 		try 
 		{
@@ -142,17 +142,17 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 			resultSet = statement.executeQuery();
 			while(resultSet.next())
 			{
-				países.add(getPprovinciaDTO(resultSet));
+				provincias.add(getProvinciaDTO(resultSet));
 			}
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
-		return países;
+		return provincias;
 	}
 	
-	private ProvinciaDTO getPprovinciaDTO(ResultSet resultSet) throws SQLException
+	private ProvinciaDTO getProvinciaDTO(ResultSet resultSet) throws SQLException
 	{
 		int id = resultSet.getInt("idProvincia");
 		String nombre = resultSet.getString("nombre");

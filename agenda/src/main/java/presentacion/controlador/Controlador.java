@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import dto.DomicilioDTO;
@@ -52,6 +55,8 @@ public class Controlador implements ActionListener
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
 			this.ventanaPersona.getBtnEditarPersona().addActionListener(p->editarPersona(p));
+//			this.ventanaPersona.getComboPaíses().addActionListener(l->actualizarProvinciasFormularioPersona(l));
+//			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
 			this.ventanaLocalidad = VentanaLocalidad.getInstance();
 			this.ventanaLocalidad.getBtnAgregarLocalidad().addActionListener(l->guardarLocalidad(l));
 			this.ventanaLocalidad.getBtnEliminarLocalidad().addActionListener(l->borrarLocalidad(l));
@@ -73,10 +78,18 @@ public class Controlador implements ActionListener
 			this.ventanaProvincia.getListaProvincias().addListSelectionListener(l->actualizarFormularioProvincia(l));
 			this.agenda = agenda;
 		}
-		
+
 		private void ventanaAgregarPersona(ActionEvent a) {
 			this.refrescarListaTipoContactoEnVentanaPersona();
-			this.refrescarListaLocalidadesEnVentanaPersona();
+			this.refrescarListaPaísesEnVentanaPersona(null);
+//			this.refrescarListaProvinciasEnVentanaPersona(null);
+//			this.refrescarListaLocalidadesEnVentanaPersona(null);
+			this.ventanaPersona.getListTipoDeContacto().setSelectedIndex(-1);
+			this.ventanaPersona.getComboPaíses().setSelectedIndex(-1);
+			
+			this.ventanaPersona.getComboPaíses().addActionListener(l->actualizarProvinciasFormularioPersona(l));
+//			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
+			
 			this.ventanaPersona.mostrarVentana();
 		}
 
@@ -97,10 +110,16 @@ public class Controlador implements ActionListener
 			int index = filasSeleccionadas[0];
 			
 			this.refrescarListaTipoContactoEnVentanaPersona();
-			this.refrescarListaLocalidadesEnVentanaPersona();
+			this.refrescarListaPaísesEnVentanaPersona(null);
+			this.refrescarListaProvinciasEnVentanaPersona(null);
+			this.refrescarListaLocalidadesEnVentanaPersona(null);
 			
 			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
+			
+			this.ventanaPersona.getComboPaíses().addActionListener(l->actualizarProvinciasFormularioPersona(l));
+//			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
+			
 			this.ventanaPersona.mostrarVentana();
 		}
 		
@@ -128,6 +147,12 @@ public class Controlador implements ActionListener
 			String email = ventanaPersona.getTxtEmail().getText();
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
+			
+			if (tipoContacto == null) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe seleccionar un Tipo de Contacto.");	
+				return;
+			}
+			
 			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
 			if (!verifyTelefono(tel)) {
@@ -150,7 +175,12 @@ public class Controlador implements ActionListener
 			int altura;
 			String piso = ventanaPersona.getTxtPiso().getText();
 			String departamento = ventanaPersona.getTxtDepartamento().getText();
-			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
+			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getComboLocalidades().getSelectedItem();
+			
+			if (localidad == null) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe seleccionar una localidad.");	
+				return;
+			}
 			
 			if (!verifyAltura(altura_string)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido.");	
@@ -197,7 +227,7 @@ public class Controlador implements ActionListener
 			int altura;
 			String piso = ventanaPersona.getTxtPiso().getText();
 			String departamento = ventanaPersona.getTxtDepartamento().getText();
-			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getListLocalidades().getSelectedItem();
+			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getComboLocalidades().getSelectedItem();
 			
 			if (!verifyAltura(altura_string)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero.");	
@@ -524,6 +554,28 @@ public class Controlador implements ActionListener
 			this.ventanaProvincia.limpiarFormulario();
 		}
 		
+		private void actualizarProvinciasFormularioPersona(ActionEvent l) {
+			
+			System.out.println("ActionEvent combo Países");
+			
+			this.ventanaPersona.removeComboProvinciasListeners();
+			
+			PaísDTO paísSeleccionado = (PaísDTO) this.ventanaPersona.getComboPaíses().getSelectedItem();
+			
+			refrescarListaProvinciasEnVentanaPersona(p -> p.getPaís().equals(paísSeleccionado));
+			
+			this.ventanaPersona.getComboProvincias().addActionListener(a -> actualizarLocalidadesFormularioPersona(a));
+		}
+		
+		private void actualizarLocalidadesFormularioPersona(ActionEvent l) {
+			
+			System.out.println("ActionEvent combo Provincias");
+			
+			ProvinciaDTO provinciaSeleccionada = (ProvinciaDTO) this.ventanaPersona.getComboProvincias().getSelectedItem();
+			
+			refrescarListaLocalidadesEnVentanaPersona(e -> e.getProvincia().equals(provinciaSeleccionada));
+		}
+		
 		public void actualizarFormularioTipoDeContacto(ListSelectionEvent l) {
 			
 			if (this.ventanaTipoContacto.getListaTiposContacto().getValueIsAdjusting())
@@ -612,12 +664,40 @@ public class Controlador implements ActionListener
 		
 		private void refrescarListaTipoContactoEnVentanaPersona() {
 			this.tiposContactoEnLista = agenda.obtenerTiposContacto();
-			this.ventanaPersona.llenarListaTipoContacto(this.tiposContactoEnLista);
+			this.ventanaPersona.llenarComboTipoContacto(this.tiposContactoEnLista);
 		}
 		
-		private void refrescarListaLocalidadesEnVentanaPersona() {
+		private void refrescarListaPaísesEnVentanaPersona(Predicate<PaísDTO> predicado) {
+			this.paísesEnLista = agenda.obtenerPaíses();
+			
+			List<PaísDTO> países = paísesEnLista;
+			
+			if (predicado != null)
+				países = países.stream().filter(predicado).collect(Collectors.toList());
+			
+			this.ventanaPersona.llenarComboPaíses(países);
+		}
+		
+		private void refrescarListaProvinciasEnVentanaPersona(Predicate<ProvinciaDTO> predicado) {
+			this.provinciasEnLista = agenda.obtenerProvincias();
+			
+			List<ProvinciaDTO> provincias = provinciasEnLista;
+			
+			if (predicado != null)
+				provincias = provincias.stream().filter(predicado).collect(Collectors.toList());
+			
+			this.ventanaPersona.llenarComboProvincias(provincias);
+		}
+		
+		private void refrescarListaLocalidadesEnVentanaPersona(Predicate<LocalidadDTO> predicado) {
 			this.localidadesEnLista = agenda.obtenerLocalidades();
-			this.ventanaPersona.llenarListaLocalidad(this.localidadesEnLista);
+			
+			List<LocalidadDTO> localidades = localidadesEnLista;
+			
+			if (predicado != null)
+				localidades = localidades.stream().filter(predicado).collect(Collectors.toList());
+			
+			this.ventanaPersona.llenarComboLocalidades(localidades);
 		}
 
 		@Override

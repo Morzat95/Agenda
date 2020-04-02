@@ -128,12 +128,12 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 	private LocalidadDTO getLocalidadDTO(ResultSet resultSet) throws SQLException
 	{
 		int id = resultSet.getInt("idLocalidad");
-		String nombre = resultSet.getString("Nombre");
+		String nombre = resultSet.getString("nombre");
 		int idProvincia = resultSet.getInt("idProvincia");
-		return new LocalidadDTO(id, nombre, getProvincia(idProvincia));
+		return new LocalidadDTO(id, nombre, getProvinciaDTO(idProvincia));
 	}
 	
-	public ProvinciaDTO getProvincia(int id) throws SQLException {
+	public ProvinciaDTO getProvinciaDTO(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	

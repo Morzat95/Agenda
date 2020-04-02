@@ -54,6 +54,9 @@ public class PaísDTO {
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return String.format("PaísID: %d, PaísNombre: %s", this.idPaís, this.nombre);
+	}
 
 }
