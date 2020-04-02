@@ -7,7 +7,7 @@ CREATE TABLE `personas`
   `Nombre` varchar(45) NOT NULL,
   `Telefono` varchar(20) NOT NULL,
   `Email` varchar(20) NOT NULL,
-  `FechaCumpleaÒos` DATE NOT NULL,
+  `FechaCumplea√±os` DATE NOT NULL,
   `idTipoDeContacto` int(11) NOT NULL,
   `idDomicilio` int(11) NOT NULL,
   `Favorito` boolean NOT NULL DEFAULT FALSE,
@@ -35,13 +35,21 @@ CREATE TABLE `domicilio`
   `altura` varchar(45) NOT NULL,
   `piso` varchar(45) NOT NULL,
   `departamento` varchar(45) NOT NULL,
-   `idLocalidad` int(11) NOT NULL,
+  `idLocalidad` int(11) NOT NULL,
   PRIMARY KEY (`idDomicilio`)
 );
-DROP TABLE IF EXISTS `paÌses`;
-CREATE TABLE `paÌses`
+DROP TABLE IF EXISTS `pa√≠ses`;
+CREATE TABLE `pa√≠ses`
 (
-  `idPaÌs` int(11) NOT NULL AUTO_INCREMENT,
+  `idPa√≠s` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
-  PRIMARY KEY (`idPaÌs`)
+  PRIMARY KEY (`idPa√≠s`)
+);
+DROP TABLE IF EXISTS `provincias`;
+CREATE TABLE `provincias`
+(
+  `idProvincia` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,
+  `idPa√≠s` int(11) NOT NULL,
+  PRIMARY KEY (`idProvincia`)
 );

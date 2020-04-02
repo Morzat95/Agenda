@@ -22,7 +22,7 @@ public class DomicilioDAOSQL implements DomicilioDAO {
 	private static final String readall = "SELECT * FROM domicilio";
 	
 	public DomicilioDAOSQL() {
-		this.lastId = getLastId();
+		DomicilioDAOSQL.lastId = getLastId();
 	}
 	
 	private int getLastId() {

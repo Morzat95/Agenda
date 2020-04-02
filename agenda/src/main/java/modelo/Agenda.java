@@ -6,12 +6,14 @@ import dto.DomicilioDTO;
 import dto.LocalidadDTO;
 import dto.PaísDTO;
 import dto.PersonaDTO;
+import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.DomicilioDAO;
 import persistencia.dao.interfaz.LocalidadDAO;
 import persistencia.dao.interfaz.PaísDAO;
 import persistencia.dao.interfaz.PersonaDAO;
+import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.TipoContactoDAO;
 
 
@@ -21,7 +23,8 @@ public class Agenda
 	private LocalidadDAO localidad;
 	private TipoContactoDAO tipoContacto;
 	private DomicilioDAO domicilio;
-	private PaísDAO paísDAO;
+	private PaísDAO país;
+	private ProvinciaDAO provincia;
 	
 	public Agenda(DAOAbstractFactory metodo_persistencia)
 	{
@@ -29,7 +32,8 @@ public class Agenda
 		this.localidad = metodo_persistencia.createLocalidadDAO();
 		this.tipoContacto = metodo_persistencia.createTipoContactoDAO();
 		this.domicilio = metodo_persistencia.createDomicilioDAO();
-		this.paísDAO = metodo_persistencia.createPaísDAO();
+		this.país = metodo_persistencia.createPaísDAO();
+		this.provincia = metodo_persistencia.createProvinciaDAO();
 	}
 	
 	public void agregarPersona(PersonaDTO nuevaPersona)
@@ -109,19 +113,35 @@ public class Agenda
 	}
 	
 	public void agregarPaís(PaísDTO nuevoPaís) {
-		this.paísDAO.insert(nuevoPaís);
+		this.país.insert(nuevoPaís);
 	}
 	
 	public void modificarPaís(PaísDTO país_a_modificar) {
-		this.paísDAO.update(país_a_modificar);
+		this.país.update(país_a_modificar);
 	}
 	
 	public void borrarPaís(PaísDTO país_a_eliminar) {
-		this.paísDAO.delete(país_a_eliminar);
+		this.país.delete(país_a_eliminar);
 	}
 	
 	public List<PaísDTO> obtenerPaíses() {
-		return this.paísDAO.readAll();
+		return this.país.readAll();
+	}
+	
+	public void agregarProvincia(ProvinciaDTO nuevaProvincia) {
+		this.provincia.insert(nuevaProvincia);
+	}
+	
+	public void modificarProvincia(ProvinciaDTO provincia_a_modificar) {
+		this.provincia.update(provincia_a_modificar);
+	}
+	
+	public void borrarProvincia(ProvinciaDTO provincia_a_eliminar) {
+		this.provincia.delete(provincia_a_eliminar);
+	}
+	
+	public List<ProvinciaDTO> obtenerProvincias() {
+		return this.provincia.readAll();
 	}
 	
 }

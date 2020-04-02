@@ -20,6 +20,7 @@ import dto.DomicilioDTO;
 import dto.LocalidadDTO;
 import dto.PaísDTO;
 import dto.PersonaDTO;
+import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.DAOAbstractFactory;
@@ -27,6 +28,7 @@ import persistencia.dao.interfaz.DomicilioDAO;
 import persistencia.dao.interfaz.LocalidadDAO;
 import persistencia.dao.interfaz.PaísDAO;
 import persistencia.dao.interfaz.PersonaDAO;
+import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.TipoContactoDAO;
 import persistencia.dao.mysql.DAOSQLFactory;
 
@@ -56,7 +58,11 @@ public class SeedData {
 		
 		// Países
 		PaísDAO paísDAO = DAOFactory.createPaísDAO();
-		populatePaíses(paísDAO);
+		List<PaísDTO> países = populatePaíses(paísDAO);
+		
+		// Provincias
+		ProvinciaDAO provinciaDAO = DAOFactory.createProvinciaDAO();
+		populateProvincias(provinciaDAO, países);
 		
 	}
 	
@@ -67,7 +73,8 @@ public class SeedData {
 		InputStreamReader reader = null;
 		
 		try {
-			reader = new InputStreamReader(new FileInputStream("sql/scriptAgenda.sql"), "ISO-8859-1");
+//			reader = new InputStreamReader(new FileInputStream("sql/scriptAgenda.sql"), "ISO-8859-1");
+			reader = new InputStreamReader(new FileInputStream("sql/scriptAgenda.sql"), "UTF-8");
 			runner.runScript(reader);
 			reader.close();
 			Conexion.getConexion().cerrarConexion();
@@ -214,6 +221,46 @@ public class SeedData {
 		}
 		
 		return países;
+		
+	}
+	
+	private static List<ProvinciaDTO> populateProvincias(ProvinciaDAO provinciaDAO, List<PaísDTO> países) {
+			
+		List<ProvinciaDTO> provincias = new ArrayList<ProvinciaDTO>();
+		
+		if (!provinciaDAO.hasData()) {
+			
+			PaísDTO argentina = países.stream().filter(p -> p.getNombre().equals("Argentina")).findFirst().get();
+			
+			provincias.add(new ProvinciaDTO(0, "Buenos Aires", argentina));
+			provincias.add(new ProvinciaDTO(0, "Catamarca", argentina));
+			provincias.add(new ProvinciaDTO(0, "Chaco", argentina));
+			provincias.add(new ProvinciaDTO(0, "Chubut", argentina));
+			provincias.add(new ProvinciaDTO(0, "Córdoba", argentina));
+			provincias.add(new ProvinciaDTO(0, "Corrientes", argentina));
+			provincias.add(new ProvinciaDTO(0, "Entre Ríos", argentina));
+			provincias.add(new ProvinciaDTO(0, "Formosa", argentina));
+			provincias.add(new ProvinciaDTO(0, "Jujuy", argentina));
+			provincias.add(new ProvinciaDTO(0, "La Pampa", argentina));
+			provincias.add(new ProvinciaDTO(0, "La Rioja", argentina));
+			provincias.add(new ProvinciaDTO(0, "Mendoza", argentina));
+			provincias.add(new ProvinciaDTO(0, "Misiones", argentina));
+			provincias.add(new ProvinciaDTO(0, "Neuquén", argentina));
+			provincias.add(new ProvinciaDTO(0, "Río Negro", argentina));
+			provincias.add(new ProvinciaDTO(0, "Salta", argentina));
+			provincias.add(new ProvinciaDTO(0, "San Juan", argentina));
+			provincias.add(new ProvinciaDTO(0, "San Luis", argentina));
+			provincias.add(new ProvinciaDTO(0, "Santa Fe", argentina));
+			provincias.add(new ProvinciaDTO(0, "Santiago del Estero", argentina));
+			provincias.add(new ProvinciaDTO(0, "Tierra del Fuego", argentina));
+			provincias.add(new ProvinciaDTO(0, "Tucumán", argentina));
+			
+			for (ProvinciaDTO provincia : provincias)
+				provinciaDAO.insert(provincia);
+			
+		}
+		
+		return provincias;
 		
 	}
 	

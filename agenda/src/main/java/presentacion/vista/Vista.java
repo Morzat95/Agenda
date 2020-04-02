@@ -32,6 +32,7 @@ public class Vista
 	private JMenuItem menuLocalidad;
 	private JMenuItem menuTipoContacto;
 	private JMenuItem menuPaís;
+	private JMenuItem menuProvincia;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
 
@@ -112,6 +113,10 @@ public class Vista
 			// Add ABM País
 			menuPaís = new JMenuItem("Países");
 			menu.add(menuPaís);
+			
+			// Add ABM Provincia
+			menuProvincia = new JMenuItem("Provincias");
+			menu.add(menuProvincia);
 
 	}
 	
@@ -160,6 +165,10 @@ public class Vista
 	
 	public JMenuItem getMenuPaís() {
 		return menuPaís;
+	}
+	
+	public JMenuItem getMenuProvincia() {
+		return menuProvincia;
 	}
 	
 	public JButton getBtnReporte() 
