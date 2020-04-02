@@ -8,14 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.LocalidadDTO;
+import dto.PaísDTO;
+import dto.ProvinciaDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.LocalidadDAO;
 
 public class LocalidadDAOSQL implements LocalidadDAO {
 	
-	private static final String insert = "INSERT INTO localidades(idLocalidad, nombre) VALUES(?, ?)";
+	private static final String insert = "INSERT INTO localidades(idLocalidad, nombre, idProvincia) VALUES(?, ?, ?)";
 	private static final String delete = "DELETE FROM localidades WHERE idLocalidad = ?";
-	private static final String update = "UPDATE localidades SET nombre = ? WHERE idLocalidad = ?";
+	private static final String update = "UPDATE localidades SET nombre = ?, idProvincia = ? WHERE idLocalidad = ?";
 	private static final String readall = "SELECT * FROM localidades ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM localidades)";
 	
@@ -29,6 +31,7 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 			statement = conexion.prepareStatement(insert);
 			statement.setInt(1, localidad.getIdLocalidad());
 			statement.setString(2, localidad.getNombre());
+			statement.setInt(3, localidad.getProvincia().getIdProvincia());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -79,7 +82,8 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 		{
 			statement = conexion.prepareStatement(update);
 			statement.setString(1, localidad_a_modificar.getNombre());
-			statement.setInt(2, localidad_a_modificar.getIdLocalidad());
+			statement.setInt(2, localidad_a_modificar.getProvincia().getIdProvincia());
+			statement.setInt(3, localidad_a_modificar.getIdLocalidad());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -125,7 +129,56 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 	{
 		int id = resultSet.getInt("idLocalidad");
 		String nombre = resultSet.getString("Nombre");
-		return new LocalidadDTO(id, nombre);
+		int idProvincia = resultSet.getInt("idProvincia");
+		return new LocalidadDTO(id, nombre, getProvincia(idProvincia));
+	}
+	
+	public ProvinciaDTO getProvincia(int id) throws SQLException {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		int idPaís = 0;
+		String readSingle = "SELECT * FROM provincias WHERE idProvincia = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+				idPaís = resultSet.getInt("idPaís");
+			}
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new ProvinciaDTO(id, nombre, getPaísDTO(idPaís));
+	}
+	
+	private PaísDTO getPaísDTO(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next())
+				nombre = resultSet.getString("nombre");
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new PaísDTO(id, nombre);
 	}
 	
 	public boolean hasData()

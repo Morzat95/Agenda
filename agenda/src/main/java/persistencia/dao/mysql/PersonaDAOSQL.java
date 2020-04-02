@@ -12,7 +12,9 @@ import java.util.List;
 
 import dto.DomicilioDTO;
 import dto.LocalidadDTO;
+import dto.PaísDTO;
 import dto.PersonaDTO;
+import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PersonaDAO;
@@ -199,6 +201,7 @@ public class PersonaDAOSQL implements PersonaDAO
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
 		String nombre = "";
+		int idProvincia = 0;
 		String readSingle = "SELECT * FROM localidades WHERE idLocalidad = " + id + ";";
 		try
 		{
@@ -206,6 +209,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				nombre = resultSet.getString("nombre");
+				idProvincia = resultSet.getInt("idProvincia");
 			}
 		} 
 		catch (SQLException e) 
@@ -213,7 +217,56 @@ public class PersonaDAOSQL implements PersonaDAO
 			e.printStackTrace();
 		}
 	
-		return new LocalidadDTO(id, nombre);
+		return new LocalidadDTO(id, nombre, getProvinciaDTO(idProvincia));
+	}
+	
+	private ProvinciaDTO getProvinciaDTO(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		int idPaís = 0;
+		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				nombre = resultSet.getString("nombre");
+				idPaís = resultSet.getInt("idPaís");
+			}
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new ProvinciaDTO(id, nombre, getPaísDTO(idPaís));
+	}
+	
+	private PaísDTO getPaísDTO(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();	
+		String nombre = "";
+		String readSingle = "SELECT * FROM países WHERE idPaís = " + id + ";";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readSingle);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next())
+				nombre = resultSet.getString("nombre");
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return new PaísDTO(id, nombre);
 	}
 	
 	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException

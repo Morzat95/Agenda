@@ -14,11 +14,38 @@ import persistencia.dao.interfaz.ProvinciaDAO;
 
 public class ProvinciaDAOSQL implements ProvinciaDAO {
 	
+	private static int lastId = 1;
+	
 	private static final String insert = "INSERT INTO provincias(idProvincia, nombre, idPaís) VALUES(?, ?, ?)";
 	private static final String delete = "DELETE FROM provincias WHERE idProvincia = ?";
 	private static final String update = "UPDATE provincias SET nombre = ?, idPaís = ? WHERE idProvincia = ?";
 	private static final String readall = "SELECT * FROM provincias";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM provincias)";
+	
+	public ProvinciaDAOSQL() {
+		ProvinciaDAOSQL.lastId = getLastId();
+	}
+	
+	private int getLastId() {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();
+		int lastId = 0;
+		String readLastId = "SELECT MAX(idPaís) AS lastId FROM provincias;";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readLastId);
+			resultSet = statement.executeQuery();
+			while(resultSet.next())
+				lastId = resultSet.getInt("lastId");
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return lastId;
+	}
 	
 	@Override
 	public boolean insert(ProvinciaDTO provincia) {
@@ -28,6 +55,7 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 		try
 		{
 			statement = conexion.prepareStatement(insert);
+			provincia.setIdProvincia(++lastId);
 			statement.setInt(1, provincia.getIdProvincia());
 			statement.setString(2, provincia.getNombre());
 			statement.setInt(3, provincia.getPaís().getIdPaís());
