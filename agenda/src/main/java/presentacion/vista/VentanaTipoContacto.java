@@ -12,16 +12,13 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import javax.swing.JSplitPane;
 import javax.swing.JList;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import java.awt.Component;
 
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.SplitPaneUI;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
-
-import dto.LocalidadDTO;
-import dto.PersonaDTO;
 import dto.TipoContactoDTO;
 
 import java.awt.GridBagLayout;
@@ -36,8 +33,8 @@ public class VentanaTipoContacto extends JFrame {
 	private JButton btnAgregarTipoContacto;
 	private JButton btnEliminarTipoContacto;
 	private JButton btnEditarTipoContacto;
-	private JList listaTipoContactos;
-	private DefaultListModel modelTipoContactos;
+	private JList<TipoContactoDTO> listaTipoContactos;
+	private DefaultListModel<TipoContactoDTO> modelTipoContactos;
 	private static VentanaTipoContacto INSTANCE;
 	
 	private JSplitPane splitPane;
@@ -65,10 +62,28 @@ public class VentanaTipoContacto extends JFrame {
 		JScrollPane scrollPaneTipoContactos = new JScrollPane();
 		splitPane.setLeftComponent(scrollPaneTipoContactos);
 		
-		modelTipoContactos = new DefaultListModel();
-		listaTipoContactos = new JList(modelTipoContactos);
+		modelTipoContactos = new DefaultListModel<TipoContactoDTO>();
+		listaTipoContactos = new JList<TipoContactoDTO>(modelTipoContactos);
 		listaTipoContactos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneTipoContactos.setViewportView(listaTipoContactos);
+		listaTipoContactos.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				
+				if (value instanceof TipoContactoDTO) {
+					TipoContactoDTO elemento = (TipoContactoDTO) value;
+					setText(elemento.getNombre());
+					setToolTipText(elemento.getNombre());
+				}
+				
+				return this;
+			}
+		});
 		
 		JLabel lblTipoContactos = new JLabel("Tipos de Contactos");
 		lblTipoContactos.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -157,7 +172,7 @@ public class VentanaTipoContacto extends JFrame {
 		return btnEditarTipoContacto;
 	}
 	
-	public JList getListaTiposContacto() {
+	public JList<TipoContactoDTO> getListaTiposContacto() {
 		return listaTipoContactos;
 	}
 	
@@ -165,10 +180,7 @@ public class VentanaTipoContacto extends JFrame {
 		this.modelTipoContactos.clear();
 
 		for (TipoContactoDTO l : tipoContactosEnLista)
-		{
-			String nombre = l.getNombre();
-			this.modelTipoContactos.addElement(nombre);
-		}
+			this.modelTipoContactos.addElement(l);
 		
 	}
 	

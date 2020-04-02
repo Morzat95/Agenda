@@ -61,6 +61,7 @@ public class Controlador implements ActionListener
 			this.ventanaTipoContacto.getBtnAgregarTipoContacto().addActionListener(l->guardarTipoContacto(l));
 			this.ventanaTipoContacto.getBtnEliminarTipoContacto().addActionListener(l->borrarTipoContacto(l));
 			this.ventanaTipoContacto.getBtnEditarTipoContacto().addActionListener(l->editarTipoContacto(l));
+			this.ventanaTipoContacto.getListaTiposContacto().addListSelectionListener(l->actualizarFormularioTipoDeContacto(l));
 			this.ventanaPaís = VentanaPaís.getInstance();
 			this.ventanaPaís.getBtnAgregarPaís().addActionListener(l->guardarPaís(l));
 			this.ventanaPaís.getBtnEliminarPaís().addActionListener(l->borrarPaís(l));
@@ -439,26 +440,27 @@ public class Controlador implements ActionListener
 		
 		public void editarTipoContacto(ActionEvent s)
 		{
-			int[] elementosSeleccionados = this.ventanaTipoContacto.getListaTiposContacto().getSelectedIndices();
+			TipoContactoDTO elementosSeleccionados = this.ventanaTipoContacto.getListaTiposContacto().getSelectedValue();
 			
-			if (elementosSeleccionados.length == 0) {
+			if (elementosSeleccionados == null) {
 				JOptionPane.showMessageDialog(this.ventanaTipoContacto, "Debe seleccionar un tipo de contacto de la lista para poder editarlo.");
 				return;
 			}
 			
-			for (int index : elementosSeleccionados)
-			{
-				String nuevoNombre = this.ventanaTipoContacto.getTxtNombre().getText();
-				
-				if (nuevoNombre.equals("")) {
-					JOptionPane.showMessageDialog(this.ventanaTipoContacto, "No puede ingresar un nombre en blanco.");	
-					return;
-				}
-				
-				TipoContactoDTO tipo_de_contacto_a_modificar = this.tiposContactoEnLista.get(index);
-				tipo_de_contacto_a_modificar.setNombre(nuevoNombre);
-				this.agenda.modificarTipoContacto(tipo_de_contacto_a_modificar);
+			String nuevoNombre = this.ventanaTipoContacto.getTxtNombre().getText();
+			
+			if (nuevoNombre.equals("")) {
+				JOptionPane.showMessageDialog(this.ventanaTipoContacto, "No puede ingresar un nombre en blanco.");	
+				return;
 			}
+			
+			if (this.tiposContactoEnLista.stream().anyMatch(t -> t.getNombre().equals(nuevoNombre))) {
+				JOptionPane.showMessageDialog(this.ventanaTipoContacto, String.format("Ya existe un tipo de contacto con el nombre %s.", nuevoNombre));
+				return;
+			}
+			
+			elementosSeleccionados.setNombre(nuevoNombre);
+			this.agenda.modificarTipoContacto(elementosSeleccionados);
 			
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
@@ -522,12 +524,25 @@ public class Controlador implements ActionListener
 			this.ventanaProvincia.limpiarFormulario();
 		}
 		
+		public void actualizarFormularioTipoDeContacto(ListSelectionEvent l) {
+			
+			if (this.ventanaTipoContacto.getListaTiposContacto().getValueIsAdjusting())
+				return;
+					
+			TipoContactoDTO tipoDeContactoSeleccionado = this.ventanaTipoContacto.getListaTiposContacto().getSelectedValue();
+			
+			if (tipoDeContactoSeleccionado != null)
+				this.ventanaTipoContacto.getTxtNombre().setText(tipoDeContactoSeleccionado.getNombre());				
+			
+		}
+		
 		public void actualizarFormularioLocalidad(ListSelectionEvent l) {
 			
 			if (this.ventanaLocalidad.getListaLocalidades().getValueIsAdjusting())
 				return;
 					
 			LocalidadDTO localidadSeleccionada = this.ventanaLocalidad.getListaLocalidades().getSelectedValue();
+			
 			if (localidadSeleccionada != null) {
 				this.ventanaLocalidad.getTxtNombre().setText(localidadSeleccionada.getNombre());
 				this.ventanaLocalidad.getComboProvincias().setSelectedItem(localidadSeleccionada.getProvincia());				
@@ -541,6 +556,7 @@ public class Controlador implements ActionListener
 				return;
 					
 			ProvinciaDTO provinciaSeleccionada = this.ventanaProvincia.getListaProvincias().getSelectedValue();
+			
 			if (provinciaSeleccionada != null) {
 				this.ventanaProvincia.getTxtNombre().setText(provinciaSeleccionada.getNombre());
 				this.ventanaProvincia.getComboPaíses().setSelectedItem(provinciaSeleccionada.getPaís());				
