@@ -31,7 +31,7 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();
 		int lastId = 0;
-		String readLastId = "SELECT MAX(idPaís) AS lastId FROM provincias;";
+		String readLastId = "SELECT MAX(idProvincia) AS lastId FROM provincias;";
 		try
 		{
 			statement = conexion.getSQLConexion().prepareStatement(readLastId);
