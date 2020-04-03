@@ -109,16 +109,17 @@ public class Controlador implements ActionListener
 			
 			int index = filasSeleccionadas[0];
 			
+			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
+			
 			this.refrescarListaTipoContactoEnVentanaPersona();
 			this.refrescarListaPaísesEnVentanaPersona(null);
-			this.refrescarListaProvinciasEnVentanaPersona(null);
-			this.refrescarListaLocalidadesEnVentanaPersona(null);
+			this.refrescarListaProvinciasEnVentanaPersona(p -> p.getPaís().equals(persona_a_editar.getDomicilio().getLocalidad().getProvincia().getPaís()));
+			this.refrescarListaLocalidadesEnVentanaPersona(l -> l.getProvincia().equals(persona_a_editar.getDomicilio().getLocalidad().getProvincia()));
 			
-			PersonaDTO persona_a_editar = this.personasEnTabla.get(index);
 			this.ventanaPersona.llenarFormulario(persona_a_editar);
 			
 			this.ventanaPersona.getComboPaíses().addActionListener(l->actualizarProvinciasFormularioPersona(l));
-//			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
+			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
 			
 			this.ventanaPersona.mostrarVentana();
 		}
@@ -565,6 +566,9 @@ public class Controlador implements ActionListener
 			refrescarListaProvinciasEnVentanaPersona(p -> p.getPaís().equals(paísSeleccionado));
 			
 			this.ventanaPersona.getComboProvincias().addActionListener(a -> actualizarLocalidadesFormularioPersona(a));
+			
+			this.ventanaPersona.getComboProvincias().setSelectedIndex(-1);
+			this.ventanaPersona.getComboLocalidades().setSelectedIndex(-1);
 		}
 		
 		private void actualizarLocalidadesFormularioPersona(ActionEvent l) {
@@ -572,6 +576,8 @@ public class Controlador implements ActionListener
 			System.out.println("ActionEvent combo Provincias");
 			
 			ProvinciaDTO provinciaSeleccionada = (ProvinciaDTO) this.ventanaPersona.getComboProvincias().getSelectedItem();
+			
+			this.ventanaPersona.getComboLocalidades().setSelectedIndex(-1);
 			
 			refrescarListaLocalidadesEnVentanaPersona(e -> e.getProvincia().equals(provinciaSeleccionada));
 		}

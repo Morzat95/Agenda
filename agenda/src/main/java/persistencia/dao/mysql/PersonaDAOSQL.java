@@ -21,12 +21,39 @@ import persistencia.dao.interfaz.PersonaDAO;
 
 public class PersonaDAOSQL implements PersonaDAO
 {
+	
+	private static int lastId = 1;
+	
 	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto, idDomicilio, favorito) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
 	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ?, idDomicilio = ?, favorito = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM personas)";
 	
+	public PersonaDAOSQL() {
+		PersonaDAOSQL.lastId = getLastId();
+	}
+	
+	private int getLastId() {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();
+		int lastId = 0;
+		String readLastId = "SELECT MAX(idPersona) AS lastId FROM personas;";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readLastId);
+			resultSet = statement.executeQuery();
+			while(resultSet.next())
+				lastId = resultSet.getInt("lastId");
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return lastId;
+	}
 		
 	public boolean insert(PersonaDTO persona)
 	{
@@ -36,6 +63,7 @@ public class PersonaDAOSQL implements PersonaDAO
 		try
 		{
 			statement = conexion.prepareStatement(insert);
+			persona.setIdPersona(++lastId);
 			statement.setInt(1, persona.getIdPersona());
 			statement.setString(2, persona.getNombre());
 			statement.setString(3, persona.getTelefono());

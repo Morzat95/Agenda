@@ -6,12 +6,20 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectStreamClass;
 import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -97,7 +105,6 @@ public class SeedData {
 	private static List<LocalidadDTO> populateLocalidades(LocalidadDAO localidadDAO, List<ProvinciaDTO> provincias, int amount) {
 		
 		long seed = 1L;
-		Random random = new Random(seed);
 		
 		List<LocalidadDTO> localidades = new ArrayList<LocalidadDTO>();
 		
@@ -105,69 +112,79 @@ public class SeedData {
 			
 			// Argentina
 			
-			// Retrieve Localidades fron JSON		
+			// Retrieve Localidades fron JSON
 			BufferedReader br;
 			try {
 				
 				br = new BufferedReader(new FileReader("localidades.json"));
 				JSONLocalidades json = new Gson().fromJson(br, JSONLocalidades.class);
-				JSONLocalidades.Localidad[] localidadesJson = json.localidades;
-				amount = amount > localidadesJson.length ? localidadesJson.length : amount;
+				List<modelo.SeedData.JSONLocalidades.Localidad> localidadesJson = json.localidades;
 				
-				for (int idx = 0; idx < amount; idx++) {
-					JSONLocalidades.Localidad l = localidadesJson[random.nextInt(localidadesJson.length)];
-					String nombre = l.nombre;
-					String nombreProvincia = l.provincia.nombre;
+				amount = amount > localidadesJson.size() ? localidadesJson.size() : amount;
+				
+				Collections.shuffle(localidadesJson, new Random(seed)); // Permutamos aleatoriamente las localidades
+
+				while (amount-- > 0) {
+					
+					JSONLocalidades.Localidad localidad = localidadesJson.remove(0);
+					String nombre = localidad.nombre;
+					String nombreProvincia = localidad.provincia.nombre;
+					
 					ProvinciaDTO provincia = provincias.stream().filter(p -> p.getNombre().equals(nombreProvincia)).findFirst().get();
+					
 					LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nombre, provincia);
+					
 					localidades.add(nuevaLocalidad);
 					localidadDAO.insert(nuevaLocalidad);
+					
 				}
 				
-				localidades.clear();
+				List<LocalidadDTO> tmp = new ArrayList<LocalidadDTO>();
 				
 			// Estados Unidos
 			
 				ProvinciaDTO alabama = provincias.stream().filter(p -> p.getNombre().equals("Alabama")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Abbeville", alabama));
-				localidades.add(new LocalidadDTO(0, "Hamilton", alabama));
+				tmp.add(new LocalidadDTO(0, "Abbeville", alabama));
+				tmp.add(new LocalidadDTO(0, "Hamilton", alabama));
 				
 				ProvinciaDTO georgia = provincias.stream().filter(p -> p.getNombre().equals("Georgia")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Atlanta", georgia));
-				localidades.add(new LocalidadDTO(0, "Savannah", georgia));
+				tmp.add(new LocalidadDTO(0, "Atlanta", georgia));
+				tmp.add(new LocalidadDTO(0, "Savannah", georgia));
 			
 			// Rusia
 			
 				ProvinciaDTO astracán = provincias.stream().filter(p -> p.getNombre().equals("Astracán")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Jarabali", astracán));
-				localidades.add(new LocalidadDTO(0, "Tulugánovka", astracán));
+				tmp.add(new LocalidadDTO(0, "Jarabali", astracán));
+				tmp.add(new LocalidadDTO(0, "Tulugánovka", astracán));
 				
 				ProvinciaDTO moscú = provincias.stream().filter(p -> p.getNombre().equals("Moscú")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Dmítrov", moscú));
-				localidades.add(new LocalidadDTO(0, "Istra", moscú));
+				tmp.add(new LocalidadDTO(0, "Dmítrov", moscú));
+				tmp.add(new LocalidadDTO(0, "Istra", moscú));
 			
 			// Alemania
 				
 				ProvinciaDTO berlín = provincias.stream().filter(p -> p.getNombre().equals("Berlín")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Dahlem", berlín));
-				localidades.add(new LocalidadDTO(0, "Gatow", berlín));
+				tmp.add(new LocalidadDTO(0, "Dahlem", berlín));
+				tmp.add(new LocalidadDTO(0, "Gatow", berlín));
 				
 				ProvinciaDTO brandeburgo = provincias.stream().filter(p -> p.getNombre().equals("Brandeburgo")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Friedrichswalde", brandeburgo));
-				localidades.add(new LocalidadDTO(0, "Ziethen", brandeburgo));
+				tmp.add(new LocalidadDTO(0, "Friedrichswalde", brandeburgo));
+				tmp.add(new LocalidadDTO(0, "Ziethen", brandeburgo));
 				
 			// Noruega
 			
 				ProvinciaDTO nordland = provincias.stream().filter(p -> p.getNombre().equals("Nordland")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Lurøy", nordland));
-				localidades.add(new LocalidadDTO(0, "Værøy", nordland));
+				tmp.add(new LocalidadDTO(0, "Lurøy", nordland));
+				tmp.add(new LocalidadDTO(0, "Værøy", nordland));
 				
 				ProvinciaDTO vestfoldOgTelemark = provincias.stream().filter(p -> p.getNombre().equals("Vestfold og Telemark")).findFirst().get();
-				localidades.add(new LocalidadDTO(0, "Fyresdal", vestfoldOgTelemark));
-				localidades.add(new LocalidadDTO(0, "Porsgrunn", vestfoldOgTelemark));
+				tmp.add(new LocalidadDTO(0, "Fyresdal", vestfoldOgTelemark));
+				tmp.add(new LocalidadDTO(0, "Porsgrunn", vestfoldOgTelemark));
 				
-				for (LocalidadDTO localidad : localidades)
+				for (LocalidadDTO localidad : tmp) {
 					localidadDAO.insert(localidad);
+					localidades.add(localidad);
+				}
 					
 				System.out.println("Localidades cargadas con éxito.");
 				
@@ -180,8 +197,8 @@ public class SeedData {
 			
 		}
 		
-//		return localidades;
-		return localidadDAO.readAll();
+		return localidades;
+//		return localidadDAO.readAll();
 		
 	}
 	
@@ -202,8 +219,8 @@ public class SeedData {
 			
 		}
 		
-//		return tiposDecontactos;
-		return tipoContactoDAO.readAll();
+		return tiposDecontactos;
+//		return tipoContactoDAO.readAll();
 		
 	}
 	
@@ -214,21 +231,24 @@ public class SeedData {
 		if (personaDAO.hasData())
 			return null;
 		
+		long seed = 1L;
+		Random random = new Random(seed);
+		
 		List<PersonaDTO> contactos = new ArrayList<PersonaDTO>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
 			
-			DomicilioDTO domicilio1 = new DomicilioDTO("Avenida Siempreviva", 742, "0", "", localidades.get(0));
+			DomicilioDTO domicilio1 = new DomicilioDTO("Avenida Siempreviva", 742, "0", "", localidades.get(random.nextInt(localidades.size())));
 			contactos.add(new PersonaDTO(0, "Homero Simpson", "123456", "homer@donuts.com", dateFormat.parse("2020-03-01"), filterByName(tiposDeContacto, "Familia"), domicilio1, true));
 			
-			DomicilioDTO domicilio2 = new DomicilioDTO("Avenida Siempreviva", 742, "", "", localidades.get(0));
+			DomicilioDTO domicilio2 = new DomicilioDTO("Avenida Siempreviva", 742, "", "", localidades.get(random.nextInt(localidades.size())));
 			contactos.add(new PersonaDTO(0, "Marge Simpson", "987654", "marge@hotmail.com", dateFormat.parse("2020-03-04"), filterByName(tiposDeContacto, "Amigos"), domicilio2, false));
 			
-			DomicilioDTO domicilio3 = new DomicilioDTO("Calle Falsa", 123, "", "", localidades.get(1));
+			DomicilioDTO domicilio3 = new DomicilioDTO("Calle Falsa", 123, "", "", localidades.get(random.nextInt(localidades.size())));
 			contactos.add(new PersonaDTO(0, "Bart Simpson", "666666", "elbarto@gmail.com", dateFormat.parse("2006-06-06"), filterByName(tiposDeContacto, "Familia"), domicilio3, true));
 			
-			DomicilioDTO domicilio4 = new DomicilioDTO("All Vegetables", 2718, "2", "e", localidades.get(8));
+			DomicilioDTO domicilio4 = new DomicilioDTO("All Vegetables", 2718, "2", "e", localidades.get(random.nextInt(localidades.size())));
 			contactos.add(new PersonaDTO(0, "Lisa Simpson", "3141592653", "jazzrules@realponies", dateFormat.parse("2020-03-27"), filterByName(tiposDeContacto, "Trabajo"), domicilio4, true));
 			
 			for (PersonaDTO persona : contactos) {
@@ -382,7 +402,8 @@ public class SeedData {
 	
 	@SuppressWarnings("unused")
 	private class JSONLocalidades {
-		public Localidad[] localidades;
+//		public Localidad[] localidades;
+		public List<Localidad> localidades;
 		public int total;
 		public int cantidad;
 		public Object parametros;

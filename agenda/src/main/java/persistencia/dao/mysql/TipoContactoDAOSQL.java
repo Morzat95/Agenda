@@ -13,12 +13,39 @@ import persistencia.dao.interfaz.TipoContactoDAO;
 
 public class TipoContactoDAOSQL implements TipoContactoDAO {
 	
+	private static int lastId = 1;
+	
 	private static final String insert = "INSERT INTO tipos_de_contacto(idTipoContacto, nombre) VALUES(?, ?)";
 	private static final String delete = "DELETE FROM tipos_de_contacto WHERE idTipoContacto = ?";
 	private static final String update = "UPDATE tipos_de_contacto SET nombre = ? WHERE idTipoContacto = ?";
 	private static final String readall = "SELECT * FROM tipos_de_contacto ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM tipos_de_contacto)";
 
+	public TipoContactoDAOSQL() {
+		TipoContactoDAOSQL.lastId = getLastId();
+	}
+	
+	private int getLastId() {
+		PreparedStatement statement;
+		ResultSet resultSet = null;
+		Conexion conexion = Conexion.getConexion();
+		int lastId = 0;
+		String readLastId = "SELECT MAX(idTipoContacto) AS lastId FROM tipos_de_contacto;";
+		try
+		{
+			statement = conexion.getSQLConexion().prepareStatement(readLastId);
+			resultSet = statement.executeQuery();
+			while(resultSet.next())
+				lastId = resultSet.getInt("lastId");
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	
+		return lastId;
+	}
+	
 	@Override
 	public boolean insert(TipoContactoDTO tipo_de_contacto) {
 		PreparedStatement statement;
@@ -27,6 +54,7 @@ public class TipoContactoDAOSQL implements TipoContactoDAO {
 		try
 		{
 			statement = conexion.prepareStatement(insert);
+			tipo_de_contacto.setIdTipoContacto(++lastId);
 			statement.setInt(1, tipo_de_contacto.getIdTipoContacto());
 			statement.setString(2, tipo_de_contacto.getNombre());
 			if(statement.executeUpdate() > 0)
