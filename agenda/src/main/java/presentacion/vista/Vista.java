@@ -1,5 +1,7 @@
 package presentacion.vista;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import dto.PersonaDTO;
@@ -76,6 +79,21 @@ public class Vista
 		tablaPersonas.getColumnModel().getColumn(5).setResizable(false);
 		
 		spPersonas.setViewportView(tablaPersonas);
+		
+		tablaPersonas.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				
+				c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+				
+				return c;
+			}
+		});
 		
 		btnAgregar = new JButton("Agregar");
 		btnAgregar.setBounds(120, 268, 89, 23);
