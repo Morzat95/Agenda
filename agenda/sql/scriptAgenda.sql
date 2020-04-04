@@ -6,7 +6,7 @@ CREATE TABLE `personas`
   `idPersona` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(45) NOT NULL,
   `Telefono` varchar(20) NOT NULL,
-  `Email` varchar(20) NOT NULL,
+  `Email` varchar(45) NOT NULL,
   `FechaCumpleaños` DATE NOT NULL,
   `idTipoDeContacto` int(11) NOT NULL,
   `idDomicilio` int(11) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `domicilio`
 (
   `idDomicilio` int(11) NOT NULL AUTO_INCREMENT,
   `calle` varchar(45) NOT NULL,
-  `altura` varchar(45) NOT NULL,
+  `altura` varchar(5) NOT NULL,
   `piso` varchar(45) NOT NULL,
   `departamento` varchar(45) NOT NULL,
   `idLocalidad` int(11) NOT NULL,
