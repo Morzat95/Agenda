@@ -157,7 +157,7 @@ public class Controlador implements ActionListener
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un Teléfono valido.\nNo debe exceder los 20 caracteres"); return;
 			}
 			
-			if (!verifyEmail(email)) {
+			if (email.length() > 45 || !verifyEmail(email)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un Email valido.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
