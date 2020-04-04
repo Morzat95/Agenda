@@ -149,32 +149,19 @@ public class Controlador implements ActionListener
 			Date fechaCumpleanio = ventanaPersona.getFechaCumpleanio();
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			
-			if(nombre.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Nombre y Apellido es obligatorio."); return;
-			}
-			else if (nombre.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Nombre y Apellido debe ser mas corto."); return;
+			if(nombre.isEmpty() || nombre.length() > 45) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Nombre y Apellido es obligatorio.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
-			if(tel.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Telefono es obligatorio."); return;
-			} else if (tel.length() > 20) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Telefono debe ser mas corto."); return;
-			} else if (!verifyTelefono(tel)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido."); return;
+			if (!verifyTelefono(tel)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un Teléfono valido.\nNo debe exceder los 20 caracteres"); return;
 			}
 			
-			if(email.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Email es obligatorio."); return;
-			} else if(email.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Email debe ser mas corto."); return;
-			} else if (!verifyEmail(email)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida."); return;
+			if (!verifyEmail(email)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un Email valido.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
-			if (fechaCumpleanio == null) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha."); return;
-			} else if(fechaCumpleanio.compareTo(new Date()) > 0) {
+			if (fechaCumpleanio == null || fechaCumpleanio.compareTo(new Date()) > 0) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha valida."); return;
 			}
 				
@@ -191,28 +178,22 @@ public class Controlador implements ActionListener
 			String departamento = ventanaPersona.getTxtDepartamento().getText();
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getComboLocalidades().getSelectedItem();
 			
-			if (calle.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Calle es obligatorio."); return;
-			} else if(calle.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Calle debe ser mas corto."); return;
+			if (calle.isEmpty() || calle.length() > 45) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Calle es obligatorio.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
-			if(altura_string.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Altura es obligatorio."); return;
-			} else if(altura_string.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Altura debe ser mas corto."); return;
-			} else if(!verifyAltura(altura_string)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido."); return;
+			if(!verifyAltura(altura_string)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una altura valida.\nNo debe exceder los 5 caracteres"); return;
 			} else {
 				altura = Integer.parseInt(altura_string);
 			}
 			
 			if(piso.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Piso debe ser mas corto."); return;
+				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Piso no debe exceder los 45 caracteres."); return;
 			}
 			
 			if(departamento.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Departamento debe ser mas corto."); return;
+				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Departamento no debe exceder los 45 caracteres."); return;
 			}
 			
 			if (localidad == null) {
@@ -237,32 +218,19 @@ public class Controlador implements ActionListener
 			TipoContactoDTO tipoContacto = (TipoContactoDTO) ventanaPersona.getListTipoDeContacto().getSelectedItem();
 			boolean favorito = ventanaPersona.getCheckFavorito().isSelected();
 			
-			if(nombre.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Nombre y Apellido es obligatorio."); return;
-			}
-			else if (nombre.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Nombre y Apellido debe ser mas corto."); return;
+			if(nombre.isEmpty() || nombre.length() > 45) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Nombre y Apellido es obligatorio.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
-			if(tel.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Telefono es obligatorio."); return;
-			} else if (tel.length() > 20) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Telefono debe ser mas corto."); return;
-			} else if (!verifyTelefono(tel)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un teléfono válido."); return;
+			if (!verifyTelefono(tel)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un Teléfono valido.\nNo debe exceder los 20 caracteres"); return;
 			}
 			
-			if(email.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Email es obligatorio."); return;
-			} else if(email.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Email debe ser mas corto."); return;
-			} else if (!verifyEmail(email)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una dirección de email válida."); return;
+			if (email.length() > 45 || !verifyEmail(email)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar un Email valido.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
-			if (fechaCumpleanio == null) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha."); return;
-			} else if(fechaCumpleanio.compareTo(new Date()) > 0) {
+			if (!verifyFecha(fechaCumpleanio)) {
 				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una fecha valida."); return;
 			}
 				
@@ -277,28 +245,22 @@ public class Controlador implements ActionListener
 			String departamento = ventanaPersona.getTxtDepartamento().getText();
 			LocalidadDTO localidad = (LocalidadDTO) ventanaPersona.getComboLocalidades().getSelectedItem();
 					
-			if (calle.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Calle es obligatorio."); return;
-			} else if(calle.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Calle debe ser mas corto."); return;
+			if (calle.isEmpty() || calle.length() > 45) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Calle es obligatorio.\nNo debe exceder los 45 caracteres"); return;
 			}
 			
-			if(altura_string.isEmpty()) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Altura es obligatorio."); return;
-			} else if(altura_string.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Altura debe ser mas corto."); return;
-			} else if(!verifyAltura(altura_string)) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "La altura debe ser un número entero válido."); return;
+			if(!verifyAltura(altura_string)) {
+				JOptionPane.showMessageDialog(this.ventanaPersona, "Debe ingresar una altura valida.\nNo debe exceder los 5 caracteres"); return;
 			} else {
 				altura = Integer.parseInt(altura_string);
 			}
 			
 			if(piso.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Piso debe ser mas corto."); return;
+				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Piso no debe exceder los 45 caracteres."); return;
 			}
 			
 			if(departamento.length() > 45) {
-				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Departamento debe ser mas corto."); return;
+				JOptionPane.showMessageDialog(this.ventanaPersona, "El campo Departamento no debe exceder los 45 caracteres."); return;
 			}
 			
 			if (localidad == null) {
@@ -332,12 +294,16 @@ public class Controlador implements ActionListener
 		}
 		
 		private boolean verifyAltura(String altura) {
-			return altura.matches("(0|[1-9]\\d*)");
+			return altura.matches("(0|[1-9]\\d*){1,5}");
 		}
 		
 		private boolean verifyTelefono(String telefono) {
 //			return telefono.matches("/^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$/");
-			return telefono.matches("\\d+"); // TODO: validar correctamente
+			return telefono.matches("\\d{1,20}"); // TODO: validar correctamente
+		}
+		
+		private boolean verifyFecha(Date fecha) {
+			return (fecha == null || fecha.compareTo(new Date()) > 0);
 		}
 		
 		private void guardarLocalidad(ActionEvent l) {

@@ -33,7 +33,7 @@ CREATE TABLE `domicilio`
 (
   `idDomicilio` int(11) NOT NULL AUTO_INCREMENT,
   `calle` varchar(45) NOT NULL,
-  `altura` varchar(45) NOT NULL,
+  `altura` varchar(5) NOT NULL,
   `piso` varchar(45) NOT NULL,
   `departamento` varchar(45) NOT NULL,
   `idLocalidad` int(11) NOT NULL,

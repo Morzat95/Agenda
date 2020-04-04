@@ -73,5 +73,5 @@ public class DomicilioDTO {
 	public void setLocalidad(LocalidadDTO localidad) {
 		this.localidad = localidad;
 	}
-	
+
 }
