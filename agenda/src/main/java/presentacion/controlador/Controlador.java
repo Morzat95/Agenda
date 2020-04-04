@@ -190,8 +190,12 @@ public class Controlador implements ActionListener
 				altura = Integer.parseInt(altura_string);
 			}
 			
-			DomicilioDTO domicilioDTO = new DomicilioDTO(calle, altura, piso, departamento, localidad);
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO, favorito);
+			DomicilioDTO domicilioDTO = new DomicilioDTO(calle, altura, piso, departamento);
+			domicilioDTO.setLocalidad(localidad);
+			
+			PersonaDTO nuevaPersona = new PersonaDTO(nombre, tel, email, fechaCumpleanio, favorito);
+			nuevaPersona.setTipoDeContacto(tipoContacto);
+			nuevaPersona.setDomicilio(domicilioDTO);
 				
 			this.agenda.agregarDomicilio(domicilioDTO);
 			this.agenda.agregarPersona(nuevaPersona);
@@ -294,7 +298,9 @@ public class Controlador implements ActionListener
 				return;
 			}
 			
-			LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nuevoNombre, provinciaSeleccionada);
+			LocalidadDTO nuevaLocalidad = new LocalidadDTO(nuevoNombre);
+			nuevaLocalidad.setProvincia(provinciaSeleccionada);
+			
 			this.agenda.agregarLocalidad(nuevaLocalidad);
 			this.refrescarListaLocalidades();
 			this.ventanaLocalidad.limpiarFormulario();
@@ -313,7 +319,9 @@ public class Controlador implements ActionListener
 				JOptionPane.showMessageDialog(this.ventanaTipoContacto, "Ya existe un tipo de contacto con ese nombre.");
 				return;
 			}
-			TipoContactoDTO nuevoTipoContacto = new TipoContactoDTO(0, nombre);
+			
+			TipoContactoDTO nuevoTipoContacto = new TipoContactoDTO(nombre);
+			
 			this.agenda.agregarTipoContacto(nuevoTipoContacto);
 			this.refrescarListaTipoContacto();
 			this.ventanaTipoContacto.limpiarFormulario();
@@ -341,7 +349,9 @@ public class Controlador implements ActionListener
 				return;
 			}
 			
-			ProvinciaDTO nuevaProvincia = new ProvinciaDTO(0, nuevoNombre, paísAsignado);
+			ProvinciaDTO nuevaProvincia = new ProvinciaDTO(nuevoNombre);
+			nuevaProvincia.setPaís(paísAsignado);
+			
 			this.agenda.agregarProvincia(nuevaProvincia);
 			this.refrescarListaProvincias();
 			this.ventanaProvincia.limpiarFormulario();
@@ -361,7 +371,8 @@ public class Controlador implements ActionListener
 				return;
 			}
 			
-			PaísDTO nuevoPaís = new PaísDTO(0, nombre);
+			PaísDTO nuevoPaís = new PaísDTO(nombre);
+			
 			this.agenda.agregarPaís(nuevoPaís);
 			this.refrescarListaPaíses();
 			this.ventanaPaís.limpiarFormulario();

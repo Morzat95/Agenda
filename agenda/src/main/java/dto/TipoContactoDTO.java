@@ -1,21 +1,33 @@
 package dto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Tipos_de_Contacto")
 public class TipoContactoDTO {
 	
-	private int idTipoContacto;
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String nombre;
 	
-	public TipoContactoDTO(int idTipoContacto, String nombre) {
-		this.idTipoContacto = idTipoContacto;
+	public TipoContactoDTO() {
+		
+	}
+	
+	public TipoContactoDTO(String nombre) {
 		this.nombre = nombre;
 	}
 
-	public int getIdTipoContacto() {
-		return idTipoContacto;
+	public Long getIdTipoContacto() {
+		return id;
 	}
 
-	public void setIdTipoContacto(int idTipoContacto) {
-		this.idTipoContacto = idTipoContacto;
+	public void setIdTipoContacto(Long id) {
+		this.id = id;
 	}
 
 	public String getNombre() {
@@ -34,7 +46,7 @@ public class TipoContactoDTO {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + idTipoContacto;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
 		return result;
 	}
@@ -48,7 +60,10 @@ public class TipoContactoDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		TipoContactoDTO other = (TipoContactoDTO) obj;
-		if (idTipoContacto != other.idTipoContacto)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (nombre == null) {
 			if (other.nombre != null)

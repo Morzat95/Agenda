@@ -1,23 +1,60 @@
 package dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Provincias")
 public class ProvinciaDTO {
 
-	private int idProvincia;
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String nombre;
+	
+	@ManyToOne
 	private PaísDTO país;
 	
-	public ProvinciaDTO(int idProvincia, String nombre, PaísDTO país) {
-		this.idProvincia = idProvincia;
+	@OneToMany ( mappedBy = "provincia", cascade = CascadeType.ALL, orphanRemoval = true )
+	private List<LocalidadDTO> localidades = new ArrayList<LocalidadDTO>();
+	
+	public ProvinciaDTO() {
+		
+	}
+	
+	public ProvinciaDTO(String nombre) {
 		this.nombre = nombre;
-		this.setPaís(país);
 	}
 	
-	public int getIdProvincia() {
-		return idProvincia;
+	public ProvinciaDTO(String nombre, PaísDTO país) {
+		this.nombre = nombre;
+		this.país = país;
 	}
 	
-	public void setIdProvincia(int idProvincia) {
-		this.idProvincia = idProvincia;
+	public void addLocalidad(LocalidadDTO localidad) {
+		localidades.add(localidad);
+		localidad.setProvincia(this);
+	}
+	
+	public void removeLocalidad(LocalidadDTO localidad) {
+		localidades.remove(localidad);
+		localidad.setProvincia(null);
+	}
+	
+	public Long getIdProvincia() {
+		return id;
+	}
+	
+	public void setIdProvincia(Long id) {
+		this.id = id;
 	}
 	
 	public String getNombre() {
@@ -35,12 +72,12 @@ public class ProvinciaDTO {
 	public void setPaís(PaísDTO país) {
 		this.país = país;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + idProvincia;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
 		result = prime * result + ((país == null) ? 0 : país.hashCode());
 		return result;
@@ -55,7 +92,10 @@ public class ProvinciaDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		ProvinciaDTO other = (ProvinciaDTO) obj;
-		if (idProvincia != other.idProvincia)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (nombre == null) {
 			if (other.nombre != null)
@@ -69,10 +109,10 @@ public class ProvinciaDTO {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - - %s", this.idProvincia, this.nombre, this.país.toString());
+		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - - %s", this.id.intValue(), this.nombre, this.país.toString());
 	}
 	
 }

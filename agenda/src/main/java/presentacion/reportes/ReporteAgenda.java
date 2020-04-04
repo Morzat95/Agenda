@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 
 import net.sf.jasperreports.engine.JRException;
@@ -34,6 +36,7 @@ public class ReporteAgenda
 //			this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda.jasper" );
 //    		this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda2.jasper" );
     		this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteAgenda3.jasper" );
+//    		this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "./src/main/resources" + File.separator + "ReporteAgenda3.jasper" );
 			this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, 
 					new JRBeanCollectionDataSource(personas));
     		log.info("Se cargó correctamente el reporte");
@@ -43,6 +46,8 @@ public class ReporteAgenda
 //			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda.Jasper", ex);
 //			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda2.Jasper", ex);
 			log.error("Ocurrió un error mientras se cargaba el archivo ReporteAgenda3.Jasper", ex);
+			
+			JOptionPane.showMessageDialog(null, ex.getMessage());
 		}
     }       
     

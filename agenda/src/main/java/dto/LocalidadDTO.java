@@ -1,23 +1,62 @@
 package dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Localidades")
 public class LocalidadDTO {
 	
-	private int idLocalidad;
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String nombre;
+	
+	@ManyToOne
 	private ProvinciaDTO provincia;
 	
-	public LocalidadDTO(int idLocalidad, String nombre, ProvinciaDTO provincia) {
-		this.idLocalidad = idLocalidad;
+	@OneToMany ( mappedBy = "localidad", cascade = CascadeType.ALL, orphanRemoval = true )
+	private List<DomicilioDTO> domicilios = new ArrayList<DomicilioDTO>();
+	
+	public LocalidadDTO() {
+		
+	}
+	
+	public LocalidadDTO(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public LocalidadDTO(String nombre, ProvinciaDTO provincia) {
 		this.nombre = nombre;
 		this.provincia = provincia;
 	}
-
-	public int getIdLocalidad() {
-		return idLocalidad;
+	
+	public void addDomicilio(DomicilioDTO domicilio) {
+		domicilios.add(domicilio);
+		domicilio.setLocalidad(this);
+	}
+	
+	public void removeDomicilio(DomicilioDTO domicilio) {
+		domicilios.remove(domicilio);
+		
+		if (domicilio != null)
+			domicilio.setLocalidad(null);
 	}
 
-	public void setIdLocalidad(int idLocalidad) {
-		this.idLocalidad = idLocalidad;
+	public Long getIdLocalidad() {
+		return id;
+	}
+
+	public void setIdLocalidad(Long id) {
+		this.id = id;
 	}
 
 	public String getNombre() {
@@ -40,7 +79,8 @@ public class LocalidadDTO {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + idLocalidad;
+		result = prime * result + ((domicilios == null) ? 0 : domicilios.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
 		result = prime * result + ((provincia == null) ? 0 : provincia.hashCode());
 		return result;
@@ -55,7 +95,15 @@ public class LocalidadDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		LocalidadDTO other = (LocalidadDTO) obj;
-		if (idLocalidad != other.idLocalidad)
+		if (domicilios == null) {
+			if (other.domicilios != null)
+				return false;
+		} else if (!domicilios.equals(other.domicilios))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (nombre == null) {
 			if (other.nombre != null)
@@ -69,10 +117,10 @@ public class LocalidadDTO {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - %s", this.idLocalidad, this.nombre, this.provincia.toString());
+		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - %s", this.id.intValue(), this.nombre, this.provincia.toString());
 	}
 	
 }

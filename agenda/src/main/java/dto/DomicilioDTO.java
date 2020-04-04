@@ -1,21 +1,35 @@
 package dto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Domicilios")
 public class DomicilioDTO {
 	
-	private int idDomicilio;
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String calle;
 	private int altura;
 	private String piso;
 	private String departamento;
+	
+	@ManyToOne
 	private LocalidadDTO localidad;
 	
-	public DomicilioDTO(int idDomicilio, String calle, int altura, String piso, String departamento, LocalidadDTO localidad) {
-		this.idDomicilio = idDomicilio;
+	public DomicilioDTO() {
+		
+	}
+	
+	public DomicilioDTO(String calle, int altura, String piso, String departamento) {
 		this.calle = calle;
 		this.altura = altura;
 		this.piso = piso;
 		this.departamento = departamento;
-		this.localidad = localidad;
 	}
 	
 	public DomicilioDTO(String calle, int altura, String piso, String departamento, LocalidadDTO localidad) {
@@ -26,12 +40,12 @@ public class DomicilioDTO {
 		this.localidad = localidad;
 	}
 
-	public int getIdDomicilio() {
-		return idDomicilio;
+	public Long getIdDomicilio() {
+		return id;
 	}
 
-	public void setIdDomicilio(int idDomicilio) {
-		this.idDomicilio = idDomicilio;
+	public void setIdDomicilio(Long id) {
+		this.id = id;
 	}
 
 	public String getCalle() {
