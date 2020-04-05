@@ -141,6 +141,11 @@ public class SeedData {
 			
 		}
 		
+		System.out.println("Países cargados con éxito.");
+		
+		System.out.println(paísDAO.cantidadElementos());
+//		System.out.println(paísDAO.readAll().size());
+		
 		return países;
 		
 	}
@@ -235,6 +240,8 @@ public class SeedData {
 			
 			for (ProvinciaDTO provincia : provincias)
 				provinciaDAO.insert(provincia);
+			
+			System.out.println("Provincias cargadas con éxito.");
 			
 		}
 		

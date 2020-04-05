@@ -3,7 +3,12 @@ package persistencia.dao.mysql;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.Table;
+
+import org.hibernate.Session;
 
 import persistencia.dao.interfaz.DAO;
 import persistencia.dao.interfaz.EntityManagers;
@@ -81,9 +86,30 @@ public class DAOJPA<T> implements DAO<T> {
 
 	@Override
 	public boolean hasData() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return entityManager.createNativeQuery(String.format("SELECT EXISTS (SELECT 1 FROM %s)", getTableName())).getFirstResult() > 0;
+		
 	}
+	
+	@Override
+	public Long cantidadElementos() { // TODO: no anda esto
+		
+//		return entityManager.createQuery(String.format("SELECT COUNT(a) FROM %s a", getTableName()), Long.class).getSingleResult();
+//		return (Long) entityManager.createNativeQuery(String.format("SELECT COUNT(a) FROM %s a", getTableName()), Long.class).getSingleResult();
+		return null;
+		
+	}
+	
+	private String getTableName() {
+		
+		Table table = entityClass.getAnnotation(Table.class);
+		return table != null ? table.name() : entityClass.getSimpleName();
+		
+	}
+	
+//	public long cantidadElementos() {
+//		return entityManager.createQuery(String.format("SELECT COUNT(a) FROM Stock a", entityClass.getSimpleName()), Long.class).getSingleResult();
+//	}
 	
 
 	@Override

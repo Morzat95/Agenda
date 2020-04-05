@@ -16,6 +16,8 @@ public interface DAO<T> {
 	
 	public boolean hasData();
 	
+	public Long cantidadElementos();
+	
 	public void cerrar();
 
 }
