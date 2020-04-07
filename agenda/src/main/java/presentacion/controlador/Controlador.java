@@ -304,7 +304,7 @@ public class Controlador implements ActionListener
 		}
 		
 		private boolean verifyFecha(Date fecha) {
-			return (fecha == null || fecha.compareTo(new Date()) > 0);
+			return (fecha == null || fecha.compareTo(new Date()) < 0);
 		}
 		
 		private void guardarLocalidad(ActionEvent l) {
