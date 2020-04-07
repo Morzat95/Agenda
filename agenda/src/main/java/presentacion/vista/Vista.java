@@ -32,6 +32,7 @@ public class Vista
 	private JButton btnBorrar;
 	private JButton btnEditar;
 	private JButton btnReporte;
+	private JMenuItem menuUbicaciones;
 	private JMenuItem menuLocalidad;
 	private JMenuItem menuTipoContacto;
 	private JMenuItem menuPaís;
@@ -119,6 +120,10 @@ public class Vista
 		JMenu menu = new JMenu("ABM");
 		menuBar.add(menu);
 		
+			// Add Locations
+			menuUbicaciones = new JMenuItem("Ubicaciones");
+			menu.add(menuUbicaciones);
+		
 			// Add ABM Localidad
 			menuLocalidad = new JMenuItem("Localidad");
 			menu.add(menuLocalidad);
@@ -171,6 +176,10 @@ public class Vista
 	public JButton getBtnEditar() 
 	{
 		return btnEditar;
+	}
+	
+	public JMenuItem getMenuUbicaciones() {
+		return menuUbicaciones;
 	}
 	
 	public JMenuItem getMenuLocalidad() {
