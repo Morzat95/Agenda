@@ -120,7 +120,9 @@ public class LocalidadDTO {
 
 	@Override
 	public String toString() {
-		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - %s", this.id.intValue(), this.nombre, this.provincia.toString());
+		
+		return String.format("LocalidadID: %d, LocalidadNombre: %s\n", this.id.intValue(), this.nombre);
+		
 	}
 	
 }

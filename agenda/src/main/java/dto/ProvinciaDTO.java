@@ -71,6 +71,11 @@ public class ProvinciaDTO {
 
 	public void setPaís(PaísDTO país) {
 		this.país = país;
+//		país.provincias.add(this);
+	}
+	
+	public List<LocalidadDTO> getLocalidades() {
+		return this.localidades;
 	}
 	
 	@Override
@@ -112,7 +117,14 @@ public class ProvinciaDTO {
 
 	@Override
 	public String toString() {
-		return String.format("ProvinciaID: %d, ProvinciaNombre: %s\n - - %s", this.id.intValue(), this.nombre, this.país.toString());
+		
+		String result = String.format("ProvinciaID: %d, ProvinciaNombre: %s\n", this.id.intValue(), this.nombre);
+		
+		for (LocalidadDTO localidad : localidades)
+			result += String.format("-> %s", localidad.toString());
+		
+		return result;
+		
 	}
 	
 }

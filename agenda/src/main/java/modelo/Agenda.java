@@ -137,6 +137,7 @@ public class Agenda
 	}
 	
 	public void borrarProvincia(ProvinciaDTO provincia_a_eliminar) {
+//		provincia_a_eliminar.getPaís().removeProvincia(provincia_a_eliminar);
 		this.provincia.delete(provincia_a_eliminar);
 	}
 	

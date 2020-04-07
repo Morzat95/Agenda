@@ -56,6 +56,7 @@ public class DAOJPA<T> implements DAO<T> {
 
 		entityManager.getTransaction().begin();
 		entity = entityManager.merge(entity);
+		System.out.println(entity.toString());
 		entityManager.remove(entity);
 		entityManager.getTransaction().commit();
 		

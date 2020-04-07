@@ -56,6 +56,10 @@ public class PaísDTO {
 		this.nombre = nombre;
 	}
 	
+	public List<ProvinciaDTO> getProvincias() {
+		return this.provincias;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -89,7 +93,12 @@ public class PaísDTO {
 
 	@Override
 	public String toString() {
-		return String.format("PaísID: %d, PaísNombre: %s", this.id.intValue(), this.nombre);
+		String result = String.format("PaísID: %d, PaísNombre: %s\n", this.id.intValue(), this.nombre);
+		
+		for (ProvinciaDTO provincia : provincias)
+			result += String.format("-> %s\n", provincia.toString());	
+		
+		return result;
 	}
 
 }
