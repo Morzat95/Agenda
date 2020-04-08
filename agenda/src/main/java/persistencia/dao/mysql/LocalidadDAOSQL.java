@@ -21,6 +21,7 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 	private static final String delete = "DELETE FROM localidades WHERE idLocalidad = ?";
 	private static final String update = "UPDATE localidades SET nombre = ?, idProvincia = ? WHERE idLocalidad = ?";
 	private static final String readall = "SELECT * FROM localidades ORDER BY nombre";
+	private static final String readByProvincia = "SELECT * FROM localidades WHERE idProvincia = ? ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM localidades)";
 	
 	public LocalidadDAOSQL() {
@@ -228,6 +229,35 @@ public class LocalidadDAOSQL implements LocalidadDAO {
 		}
 		
 		return dataExists;
+	}
+	
+	public List<LocalidadDTO> readBy(ProvinciaDTO provincia) {
+		
+		PreparedStatement statement;
+		ResultSet resultSet;
+		ArrayList<LocalidadDTO> localidades = new ArrayList<LocalidadDTO>();
+		
+		if (provincia != null) {
+		
+			Conexion conexion = Conexion.getConexion();
+			try 
+			{
+				statement = conexion.getSQLConexion().prepareStatement(readByProvincia);
+				statement.setInt(1, provincia.getIdProvincia());
+				resultSet = statement.executeQuery();
+				while(resultSet.next())
+				{
+					localidades.add(getLocalidadDTO(resultSet));
+				}
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return localidades;
 	}
 
 }

@@ -82,9 +82,9 @@ public class Controlador implements ActionListener
 		private void ventanaUbicaciones(ActionEvent a) {
 			refrescarListaPaíses();
 			this.ventanaUbicaciones.getListaPaises().addListSelectionListener(l -> this.ventanaUbicaciones.llenarFormularioPaís());
-			this.ventanaUbicaciones.getListaPaises().addListSelectionListener(l -> actualizarListaProvinciasEnVentanaUbicaciones());
+			this.ventanaUbicaciones.getListaPaises().addListSelectionListener(l -> actualizarListaProvinciasEnVentanaUbicacionesSQL());
 			this.ventanaUbicaciones.getListaProvincias().addListSelectionListener(l -> this.ventanaUbicaciones.llenarFormularioProvincia());
-			this.ventanaUbicaciones.getListaProvincias().addListSelectionListener(l -> actualizarListaLocalidadesEnVentanaUbicaciones());
+			this.ventanaUbicaciones.getListaProvincias().addListSelectionListener(l -> actualizarListaLocalidadesEnVentanaUbicacionesSQL());
 			this.ventanaUbicaciones.getListaLocalidades().addListSelectionListener(l -> this.ventanaUbicaciones.llenarFormularioLocalidad());
 			this.ventanaUbicaciones.mostrarVentana();
 		}
@@ -183,7 +183,7 @@ public class Controlador implements ActionListener
 			ProvinciaDTO nuevaProvincia = new ProvinciaDTO(0, nuevoNombre, paísSeleccionado);
 			this.agenda.agregarProvincia(nuevaProvincia);
 			
-			actualizarListaProvinciasEnVentanaUbicaciones();
+			actualizarListaProvinciasEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioProvincia();
 		}
 
@@ -198,7 +198,7 @@ public class Controlador implements ActionListener
 			
 			this.agenda.borrarProvincia(provinciaSeleccionada);
 
-			actualizarListaProvinciasEnVentanaUbicaciones();
+			actualizarListaProvinciasEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioProvincia();	
 		}
 		
@@ -230,24 +230,32 @@ public class Controlador implements ActionListener
 			
 			this.agenda.modificarProvincia(provinciaSeleccionada);
 			
-			actualizarListaProvinciasEnVentanaUbicaciones();
+			actualizarListaProvinciasEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioProvincia();
 		}
 		
-		private void actualizarListaProvinciasEnVentanaUbicaciones() {
+//		// Ya no se usa por tener baja performance en comparación con el nuevo método
+//		private void actualizarListaProvinciasEnVentanaUbicaciones() {
+//			PaísDTO paísSeleccionado = this.ventanaUbicaciones.getListaPaises().getSelectedValue();
+//			refrescarListaProvinciasEnVentanaUbicaciones(e -> e.getPaís().equals(paísSeleccionado));
+//		}
+//
+//		private void refrescarListaProvinciasEnVentanaUbicaciones(Predicate<ProvinciaDTO> predicado) {
+//			this.provinciasEnLista = agenda.obtenerProvincias();
+//			
+//			List<ProvinciaDTO> provincias = provinciasEnLista;
+//			
+//			if (predicado != null)
+//				provincias = provincias.stream().filter(predicado).collect(Collectors.toList());
+//			
+//			this.ventanaUbicaciones.llenarListaProvincias(provincias);
+//		}
+// 		// --
+		private void actualizarListaProvinciasEnVentanaUbicacionesSQL() {
 			PaísDTO paísSeleccionado = this.ventanaUbicaciones.getListaPaises().getSelectedValue();
-			refrescarListaProvinciasEnVentanaUbicaciones(e -> e.getPaís().equals(paísSeleccionado));
-		}
-
-		private void refrescarListaProvinciasEnVentanaUbicaciones(Predicate<ProvinciaDTO> predicado) {
-			this.provinciasEnLista = agenda.obtenerProvincias();
 			
-			List<ProvinciaDTO> provincias = provinciasEnLista;
-			
-			if (predicado != null)
-				provincias = provincias.stream().filter(predicado).collect(Collectors.toList());
-			
-			this.ventanaUbicaciones.llenarListaProvincias(provincias);
+			List<ProvinciaDTO> localidades = this.agenda.obtenerProvinciasPor(paísSeleccionado);
+			this.ventanaUbicaciones.llenarListaProvincias(localidades);
 		}
 
 		// ====================================================================================================
@@ -278,7 +286,7 @@ public class Controlador implements ActionListener
 			LocalidadDTO nuevaLocalidad = new LocalidadDTO(0, nuevoNombre, provinciaSeleccionada);
 			this.agenda.agregarLocalidad(nuevaLocalidad);
 			
-			actualizarListaLocalidadesEnVentanaUbicaciones();
+			actualizarListaLocalidadesEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioLocalidad();
 		}
 
@@ -293,7 +301,7 @@ public class Controlador implements ActionListener
 			
 			this.agenda.borrarLocalidad(localidadSeleccionada);
 			
-			actualizarListaLocalidadesEnVentanaUbicaciones();
+			actualizarListaLocalidadesEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioLocalidad();
 		}
 		
@@ -324,23 +332,32 @@ public class Controlador implements ActionListener
 			localidadSeleccionada.setProvincia(provinciaSeleccionada);
 			this.agenda.modificarLocalidad(localidadSeleccionada);
 			
-			actualizarListaLocalidadesEnVentanaUbicaciones();
+			actualizarListaLocalidadesEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioLocalidad();
 		}
 
-		private void actualizarListaLocalidadesEnVentanaUbicaciones() {
+//		// Ya no se usa por tener baja performance en comparación con el nuevo método
+//			private void actualizarListaLocalidadesEnVentanaUbicaciones() {
+//				ProvinciaDTO provinciaSeleccionada = (ProvinciaDTO) this.ventanaUbicaciones.getListaProvincias().getSelectedValue();
+//				refrescarListaLocalidadesEnVentanaUbicaciones(e -> e.getProvincia().equals(provinciaSeleccionada));
+//			}
+//	
+//			private void refrescarListaLocalidadesEnVentanaUbicaciones(Predicate<LocalidadDTO> predicado) {
+//				this.localidadesEnLista = agenda.obtenerLocalidades();
+//				
+//				List<LocalidadDTO> localidades = localidadesEnLista;
+//				
+//				if (predicado != null)
+//					localidades = localidades.stream().filter(predicado).collect(Collectors.toList());
+//				
+//				this.ventanaUbicaciones.llenarListaLocalidades(localidades);
+//			}
+//		// --
+		
+		private void actualizarListaLocalidadesEnVentanaUbicacionesSQL() {
 			ProvinciaDTO provinciaSeleccionada = (ProvinciaDTO) this.ventanaUbicaciones.getListaProvincias().getSelectedValue();
-			refrescarListaLocalidadesEnVentanaUbicaciones(e -> e.getProvincia().equals(provinciaSeleccionada));
-		}
-
-		private void refrescarListaLocalidadesEnVentanaUbicaciones(Predicate<LocalidadDTO> predicado) {
-			this.localidadesEnLista = agenda.obtenerLocalidades();
 			
-			List<LocalidadDTO> localidades = localidadesEnLista;
-			
-			if (predicado != null)
-				localidades = localidades.stream().filter(predicado).collect(Collectors.toList());
-			
+			List<LocalidadDTO> localidades = this.agenda.obtenerLocalidadesPor(provinciaSeleccionada);
 			this.ventanaUbicaciones.llenarListaLocalidades(localidades);
 		}
 

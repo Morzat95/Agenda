@@ -3,6 +3,7 @@ package persistencia.dao.interfaz;
 import java.util.List;
 
 import dto.LocalidadDTO;
+import dto.ProvinciaDTO;
 
 public interface LocalidadDAO {
 	
@@ -15,5 +16,7 @@ public interface LocalidadDAO {
 	public List<LocalidadDTO> readAll();
 	
 	public boolean hasData();
+	
+	public List<LocalidadDTO> readBy(ProvinciaDTO provincia);
 
 }

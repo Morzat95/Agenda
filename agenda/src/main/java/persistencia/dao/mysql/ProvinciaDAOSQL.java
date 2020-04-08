@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.LocalidadDTO;
 import dto.PaísDTO;
 import dto.ProvinciaDTO;
 import persistencia.conexion.Conexion;
@@ -21,6 +22,7 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 	private static final String update = "UPDATE provincias SET nombre = ?, idPaís = ? WHERE idProvincia = ?";
 	private static final String readall = "SELECT * FROM provincias ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM provincias)";
+	private static final String readByPaís = "SELECT * FROM provincias WHERE idPaís = ? ORDER BY nombre";
 	
 	public ProvinciaDAOSQL() {
 		ProvinciaDAOSQL.lastId = getLastId();
@@ -202,6 +204,35 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 		}
 		
 		return dataExists;
+	}
+	
+	public List<ProvinciaDTO> readBy(PaísDTO país) {
+		
+		PreparedStatement statement;
+		ResultSet resultSet;
+		ArrayList<ProvinciaDTO> provincias = new ArrayList<ProvinciaDTO>();
+		
+		if (país != null) {
+		
+			Conexion conexion = Conexion.getConexion();
+			try 
+			{
+				statement = conexion.getSQLConexion().prepareStatement(readByPaís);
+				statement.setInt(1, país.getIdPaís());
+				resultSet = statement.executeQuery();
+				while(resultSet.next())
+				{
+					provincias.add(getProvinciaDTO(resultSet));
+				}
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return provincias;
 	}
 
 }
