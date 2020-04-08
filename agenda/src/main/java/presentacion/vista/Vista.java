@@ -33,10 +33,10 @@ public class Vista
 	private JButton btnEditar;
 	private JButton btnReporte;
 	private JMenuItem menuUbicaciones;
-	private JMenuItem menuLocalidad;
+//	private JMenuItem menuLocalidad;
 	private JMenuItem menuTipoContacto;
-	private JMenuItem menuPaís;
-	private JMenuItem menuProvincia;
+//	private JMenuItem menuPaís;
+//	private JMenuItem menuProvincia;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
 
@@ -123,23 +123,10 @@ public class Vista
 			// Add Locations
 			menuUbicaciones = new JMenuItem("Ubicaciones");
 			menu.add(menuUbicaciones);
-		
-			// Add ABM Localidad
-			menuLocalidad = new JMenuItem("Localidad");
-			menu.add(menuLocalidad);
-
 				
 			// Add ABM Tipo de Contacto
 			menuTipoContacto = new JMenuItem("Tipos de Contactos");
 			menu.add(menuTipoContacto);
-			
-			// Add ABM País
-			menuPaís = new JMenuItem("Países");
-			menu.add(menuPaís);
-			
-			// Add ABM Provincia
-			menuProvincia = new JMenuItem("Provincias");
-			menu.add(menuProvincia);
 
 	}
 	
@@ -182,20 +169,8 @@ public class Vista
 		return menuUbicaciones;
 	}
 	
-	public JMenuItem getMenuLocalidad() {
-		return menuLocalidad;
-	}
-	
 	public JMenuItem getMenuTipoContacto() {
 		return menuTipoContacto;
-	}
-	
-	public JMenuItem getMenuPaís() {
-		return menuPaís;
-	}
-	
-	public JMenuItem getMenuProvincia() {
-		return menuProvincia;
 	}
 	
 	public JButton getBtnReporte() 

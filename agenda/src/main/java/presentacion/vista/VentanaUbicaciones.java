@@ -1,13 +1,11 @@
 package presentacion.vista;
 
 import java.awt.Component;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -20,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import dto.LocalidadDTO;
 import dto.PaísDTO;
 import dto.ProvinciaDTO;
+import java.awt.Color;
 
 public class VentanaUbicaciones extends JFrame {
 
@@ -39,7 +38,6 @@ public class VentanaUbicaciones extends JFrame {
 	private JButton btnAgregarProvincia;
 	private JButton btnEditarProvincia;	
 	private JButton btnEliminarProvincia;
-	private JComboBox<PaísDTO> comboBoxPaíses;
 	private JList<ProvinciaDTO> listaProvincias;
 	private DefaultListModel<ProvinciaDTO> modelProvincias;
 	
@@ -47,7 +45,6 @@ public class VentanaUbicaciones extends JFrame {
 	private JButton btnAgregarLocalidad;
 	private JButton btnEditarLocalidad;
 	private JButton btnEliminarLocalidad;
-	private JComboBox<ProvinciaDTO> comboBoxProvincias;
 	private JList<LocalidadDTO> listaLocalidades;
 	private DefaultListModel<LocalidadDTO> modelLocalidades;
 	
@@ -115,6 +112,11 @@ public class VentanaUbicaciones extends JFrame {
 		scrollPanePais.setBounds(360, 30, 250, 150);
 		contentPane.add(scrollPanePais);
 		
+		JLabel lblPaíses = new JLabel("Países");
+		lblPaíses.setOpaque(true);
+		lblPaíses.setBackground(Color.LIGHT_GRAY);
+		scrollPanePais.setColumnHeaderView(lblPaíses);
+		
 		//Provinces
 		JLabel lblNombreProvincia = new JLabel("Nombre de Provincia");
 		lblNombreProvincia.setBounds(20, 191, 130, 20);
@@ -136,30 +138,6 @@ public class VentanaUbicaciones extends JFrame {
 		btnEliminarProvincia = new JButton("Eliminar");
 		btnEliminarProvincia.setBounds(230, 234, 80, 30);
 		contentPane.add(btnEliminarProvincia);
-		
-
-		comboBoxPaíses = new JComboBox<PaísDTO>();
-		comboBoxPaíses.setBounds(360, 191, 250, 30);
-		contentPane.add(comboBoxPaíses);
-		comboBoxPaíses.setRenderer(new DefaultListCellRenderer() {
-
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus) {
-				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				
-				if (value instanceof PaísDTO) {
-					PaísDTO país = (PaísDTO) value;
-					setText(país.getNombre());
-					setToolTipText(país.getNombre());
-				}
-				
-				return this;
-			}
-			
-		});
 		
 		modelProvincias = new DefaultListModel<ProvinciaDTO>();
 		listaProvincias = new JList<ProvinciaDTO>(modelProvincias);
@@ -185,8 +163,13 @@ public class VentanaUbicaciones extends JFrame {
 		contentPane.add(listaProvincias);
 		
 		JScrollPane scrollPaneProvincia = new JScrollPane(listaProvincias);
-		scrollPaneProvincia.setBounds(360, 233, 250, 110);
+		scrollPaneProvincia.setBounds(360, 191, 250, 152);
 		contentPane.add(scrollPaneProvincia);
+		
+		JLabel lblProvincias = new JLabel("Provincias");
+		lblProvincias.setOpaque(true);
+		lblProvincias.setBackground(Color.LIGHT_GRAY);
+		scrollPaneProvincia.setColumnHeaderView(lblProvincias);
 		
 		//Localities
 		JLabel lblNombreLocalidad = new JLabel("Nombre de Localidad");
@@ -209,29 +192,6 @@ public class VentanaUbicaciones extends JFrame {
 		btnEliminarLocalidad = new JButton("Eliminar");
 		btnEliminarLocalidad.setBounds(230, 403, 80, 30);
 		contentPane.add(btnEliminarLocalidad);
-		
-		comboBoxProvincias = new JComboBox<ProvinciaDTO>();
-		comboBoxProvincias.setBounds(360, 360, 250, 30);
-		//contentPane.add(comboBoxProvincias);
-		comboBoxProvincias.setRenderer(new DefaultListCellRenderer() {
-
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus) {
-				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				
-				if (value instanceof ProvinciaDTO) {
-					ProvinciaDTO provincia = (ProvinciaDTO) value;
-					setText(provincia.getNombre());
-					setToolTipText(provincia.getNombre());
-				}
-				
-				return this;
-			}
-			
-		});
 		
 		modelLocalidades = new DefaultListModel<LocalidadDTO>();
 		listaLocalidades = new JList<LocalidadDTO>(modelLocalidades);
@@ -262,6 +222,11 @@ public class VentanaUbicaciones extends JFrame {
 		scrollPaneLocalidades.setBounds(360, 360, 250, 150);
 		contentPane.add(scrollPaneLocalidades);
 		
+		JLabel lblLocalidades = new JLabel("Localidades");
+		lblLocalidades.setOpaque(true);
+		lblLocalidades.setBackground(Color.LIGHT_GRAY);
+		scrollPaneLocalidades.setColumnHeaderView(lblLocalidades);
+		
 	}
 	
 	public void mostrarVentana() {
@@ -275,27 +240,12 @@ public class VentanaUbicaciones extends JFrame {
 			this.modelPaises.addElement(pais);
 	}	
 	
-	public void llenarComboPaíses(List<PaísDTO> paísesEnLista) {
-		this.comboBoxPaíses.removeAllItems();
-
-		for (PaísDTO p : paísesEnLista)
-			this.comboBoxPaíses.addItem(p);
-		
-	}
-	
 	public void llenarListaProvincias(List<ProvinciaDTO> provinciasEnLista) {
 		this.modelProvincias.clear();
 
 		for (ProvinciaDTO provincia : provinciasEnLista)
 			this.modelProvincias.addElement(provincia);
 		
-	}
-	
-	public void llenarComboProvincias(List<ProvinciaDTO> provinciasEnLista) {
-		this.comboBoxProvincias.removeAllItems();
-		
-		for (ProvinciaDTO provincia : provinciasEnLista)
-			this.comboBoxProvincias.addItem(provincia);
 	}
 	
 	public void llenarListaLocalidades(List<LocalidadDTO> localidadesEnLista) {
@@ -316,20 +266,40 @@ public class VentanaUbicaciones extends JFrame {
 		super.dispose();
 		limpiarFormulario();
 	}
-	
-	public void removeComboPaísesListeners() {
-		for (ActionListener l : this.comboBoxPaíses.getActionListeners())
-			this.comboBoxPaíses.removeActionListener(l);
+		
+	public void llenarFormularioPaís() {
+		PaísDTO paísSeleccionado = this.listaPaises.getSelectedValue();
+		if (paísSeleccionado != null)
+			this.textNombrePais.setText(paísSeleccionado.getNombre());
 	}
 	
-	public void removeComboProvinciasListeners() {
-		for (ActionListener l : this.comboBoxProvincias.getActionListeners())
-			this.comboBoxProvincias.removeActionListener(l);
+	public void llenarFormularioProvincia() {
+		ProvinciaDTO provinciaSeleccionada = this.listaProvincias.getSelectedValue();
+		if (provinciaSeleccionada != null)
+			this.textNombreProvincia.setText(provinciaSeleccionada.getNombre());
+	}
+	
+	public void llenarFormularioLocalidad() {
+		LocalidadDTO localidadSeleccionada = this.listaLocalidades.getSelectedValue();
+		if (localidadSeleccionada != null)
+			this.textNombreLocalidad.setText(localidadSeleccionada.getNombre());
 	}
 	
 	public void limpiarFormulario() {
+		limpiarFormularioPaís();
+		limpiarFormularioProvincia();
+		limpiarFormularioLocalidad();
+	}
+	
+	public void limpiarFormularioPaís() {
 		this.textNombrePais.setText(null);
+	}
+	
+	public void limpiarFormularioProvincia() {
 		this.textNombreProvincia.setText(null);
+	}
+	
+	public void limpiarFormularioLocalidad() {
 		this.textNombreLocalidad.setText(null);
 	}
 
@@ -392,13 +362,5 @@ public class VentanaUbicaciones extends JFrame {
 	public JList<LocalidadDTO> getListaLocalidades() {
 		return listaLocalidades;
 	}
-	
-	public JComboBox<PaísDTO> getComboBoxPaíses() {
-		return comboBoxPaíses;
-	}
 
-	public JComboBox<ProvinciaDTO> getComboBoxProvincias() {
-		return comboBoxProvincias;
-	}
-	
 }
