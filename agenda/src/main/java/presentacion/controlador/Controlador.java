@@ -2,6 +2,7 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -28,11 +29,11 @@ import presentacion.vista.Vista;
 public class Controlador implements ActionListener
 {
 		private Vista vista;
-		private List<PersonaDTO> personasEnTabla;
-		private List<LocalidadDTO> localidadesEnLista;
-		private List<TipoContactoDTO> tiposContactoEnLista;
-		private List<PaísDTO> paísesEnLista;
-		private List<ProvinciaDTO> provinciasEnLista;
+		private List<PersonaDTO> personasEnTabla = new ArrayList<PersonaDTO>();
+		private List<LocalidadDTO> localidadesEnLista = new ArrayList<LocalidadDTO>();
+		private List<TipoContactoDTO> tiposContactoEnLista = new ArrayList<TipoContactoDTO>();
+		private List<PaísDTO> paísesEnLista = new ArrayList<PaísDTO>();
+		private List<ProvinciaDTO> provinciasEnLista = new ArrayList<ProvinciaDTO>();
 		private VentanaPersona ventanaPersona;
 		private VentanaTipoContacto ventanaTipoContacto;
 		private VentanaUbicaciones ventanaUbicaciones;
@@ -173,6 +174,7 @@ public class Controlador implements ActionListener
 				return;
 			}
 			
+			System.out.println(provinciasEnLista.isEmpty());
 			boolean exists = provinciasEnLista.stream().anyMatch(p -> p.getNombre().equals(nuevoNombre) && p.getPaís().equals(paísSeleccionado));
 			
 			if (exists) {
