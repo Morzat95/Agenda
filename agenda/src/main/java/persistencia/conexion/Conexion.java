@@ -27,6 +27,28 @@ public class Conexion
 		}
 	}
 	
+	private Conexion(String baseDeDatos, String usuario, String contraseña) {
+		try
+		{
+			Class.forName("com.mysql.cj.jdbc.Driver"); // quitar si no es necesario
+			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+baseDeDatos+"?serverTimezone=UTC",usuario,contraseña);
+			this.connection.setAutoCommit(false);
+			log.info("Conexión exitosa");
+		}
+		catch(Exception e)
+		{
+			log.error("Conexión fallida", e);
+		}
+	}
+	
+	public static Conexion getConexion(String baseDeDatos, String usuario, String contraseña)   
+	{								
+		if(instancia == null)
+		{
+			instancia = new Conexion(baseDeDatos, usuario, contraseña);
+		}
+		return instancia;
+	}
 	
 	public static Conexion getConexion()   
 	{								

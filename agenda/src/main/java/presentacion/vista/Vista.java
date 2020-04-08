@@ -39,6 +39,7 @@ public class Vista
 	private JMenuItem menuProvincia;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
+	private JMenuItem mntmConexion;
 
 	public Vista() 
 	{
@@ -140,6 +141,13 @@ public class Vista
 			// Add ABM Provincia
 			menuProvincia = new JMenuItem("Provincias");
 			menu.add(menuProvincia);
+			
+		JMenu mnConfiguracion = new JMenu("Configuracion");
+		menuBar.add(mnConfiguracion);
+			
+			//Conexion
+			mntmConexion = new JMenuItem("Conexión");
+			mnConfiguracion.add(mntmConexion);
 
 	}
 	
@@ -198,6 +206,10 @@ public class Vista
 		return menuProvincia;
 	}
 	
+	public JMenuItem getMenuConexion() {
+		return mntmConexion;
+	}
+
 	public JButton getBtnReporte() 
 	{
 		return btnReporte;
@@ -217,7 +229,6 @@ public class Vista
 	{
 		return nombreColumnas;
 	}
-
 
 	public void llenarTabla(List<PersonaDTO> personasEnTabla) {
 		this.getModelPersonas().setRowCount(0); //Para vaciar la tabla

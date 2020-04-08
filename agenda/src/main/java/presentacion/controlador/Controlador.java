@@ -19,7 +19,9 @@ import dto.PersonaDTO;
 import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 import modelo.Agenda;
+import modelo.ControladorDeConexion;
 import presentacion.reportes.ReporteAgenda;
+import presentacion.vista.VentanaConfiguracion;
 import presentacion.vista.VentanaLocalidad;
 import presentacion.vista.VentanaPaís;
 import presentacion.vista.VentanaPersona;
@@ -42,6 +44,7 @@ public class Controlador implements ActionListener
 		private VentanaTipoContacto ventanaTipoContacto;
 		private VentanaPaís ventanaPaís;
 		private VentanaProvincia ventanaProvincia;
+		private VentanaConfiguracion ventanaConfiguracion;
 		private Agenda agenda;
 		
 		public Controlador(Vista vista, Agenda agenda)
@@ -56,11 +59,12 @@ public class Controlador implements ActionListener
 			this.vista.getMenuTipoContacto().addActionListener(a->ventanaAgregarTipoContacto(a));
 			this.vista.getMenuPaís().addActionListener(a->ventanaPaís(a));
 			this.vista.getMenuProvincia().addActionListener(a->ventanaProvincia(a));
+			this.vista.getMenuConexion().addActionListener(a->ventanaConfiguracion(a));
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
 			this.ventanaPersona.getBtnEditarPersona().addActionListener(p->editarPersona(p));
-//			this.ventanaPersona.getComboPaíses().addActionListener(l->actualizarProvinciasFormularioPersona(l));
-//			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
+			this.ventanaPersona.getComboPaíses().addActionListener(l->actualizarProvinciasFormularioPersona(l));
+			this.ventanaPersona.getComboProvincias().addActionListener(l->actualizarLocalidadesFormularioPersona(l));
 			this.ventanaUbicaciones = VentanaUbicaciones.getInstance();
 			this.ventanaUbicaciones.getBtnAgregarPais().addActionListener(l->guardarPaís(l));
 			this.ventanaUbicaciones.getBtnEditarPais().addActionListener(l->editarPaís(l));
@@ -90,6 +94,8 @@ public class Controlador implements ActionListener
 			this.ventanaProvincia.getBtnEliminarProvincia().addActionListener(l->borrarProvincia(l));
 			this.ventanaProvincia.getBtnEditarProvincia().addActionListener(l->editarProvincia(l));
 			this.ventanaProvincia.getListaProvincias().addListSelectionListener(l->actualizarFormularioProvincia(l));
+			this.ventanaConfiguracion = VentanaConfiguracion.getInstance();
+			this.ventanaConfiguracion.getBtnConectar().addActionListener(l->conectarBaseDeDatos());
 			this.agenda = agenda;
 		}
 
@@ -900,6 +906,28 @@ public class Controlador implements ActionListener
 			this.ventanaPersona.llenarComboLocalidades(localidades);
 		}
 
+		//Database Configuration
+		private void ventanaConfiguracion(ActionEvent e) {
+			this.ventanaConfiguracion.mostrarVentana();
+		}
+		
+		private void conectarBaseDeDatos() {
+			String baseDeDatos = this.ventanaConfiguracion.getTextBaseDeDatos().getText();
+			String usuario = this.ventanaConfiguracion.getTextUsuario().getText();
+			String contraseña = this.ventanaConfiguracion.getTextContraseña().getText();
+			
+			if(baseDeDatos.isEmpty()) {
+				JOptionPane.showMessageDialog(this.ventanaConfiguracion, "Debe ingresar la Base de Datos.");
+			} else if(usuario.isEmpty() || contraseña.isEmpty()) {
+				JOptionPane.showMessageDialog(this.ventanaConfiguracion, "Para conectarse debe ingresar Usuario y Contraseña");
+			}
+			//verify
+			System.out.println("Deberia conectarse");
+			
+			ControladorDeConexion.conectar(baseDeDatos, usuario, contraseña);
+	
+		}
+		
 		@Override
 		public void actionPerformed(ActionEvent e) { }
 		
