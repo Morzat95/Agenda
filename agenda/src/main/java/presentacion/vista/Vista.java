@@ -39,7 +39,8 @@ public class Vista
 //	private JMenuItem menuProvincia;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
-
+	private JMenuItem mntmConexion;
+	
 	public Vista() 
 	{
 		super();
@@ -128,6 +129,12 @@ public class Vista
 			menuTipoContacto = new JMenuItem("Tipos de Contactos");
 			menu.add(menuTipoContacto);
 
+		JMenu mnConfiguracion = new JMenu("Configuracion");
+		menuBar.add(mnConfiguracion);
+				
+			//Conexion
+			mntmConexion = new JMenuItem("Conexión");
+			mnConfiguracion.add(mntmConexion);
 	}
 	
 	public void show()
@@ -176,6 +183,10 @@ public class Vista
 	public JButton getBtnReporte() 
 	{
 		return btnReporte;
+	}
+	
+	public JMenuItem getMenuConexion() {
+		return mntmConexion;
 	}
 	
 	public DefaultTableModel getModelPersonas() 
