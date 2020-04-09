@@ -27,6 +27,7 @@ public class Conexion
 //			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grupo_G14?serverTimezone=UTC","root","root");
 			
 			loadConnectionData();
+			System.out.println(String.format("Trying to connect to '%s' with user '%s' and password '%s'.", databaseName, user, password));
 			this.connection = DriverManager.getConnection(String.format("jdbc:mysql://localhost:3306/%s?serverTimezone=%s", databaseName, serverTimezone), user, password);
 			
 			this.connection.setAutoCommit(false);
