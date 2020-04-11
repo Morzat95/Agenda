@@ -67,7 +67,7 @@ public class SeedData {
 		
 	}
 	
-	private static void EnsureDatabaseTablesCreated() throws Exception {
+	public static void EnsureDatabaseTablesCreated() throws Exception {
 		
 		Connection conn = Conexion.getConexion().getSQLConexion();
 		ScriptRunner runner = new ScriptRunner(conn);

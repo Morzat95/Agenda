@@ -14,11 +14,24 @@ public class ConfigurationReader {
 	
 	private static String propFileName = "config.properties";
 	
+	private String databaseName;
+	private String serverTimezone;
+	private String user;
+	private String password;
+	
+	public static ConfigurationReader instance;
+	
 	private ConfigurationReader() {
 		
 	}
 	
-	public static void loadConfiguration() {
+	public static ConfigurationReader getInstance() {
+		if (instance == null)
+			instance = new ConfigurationReader();
+		return instance;
+	}
+	
+	public void loadConfiguration() {
 		
 		try {
 			
@@ -32,6 +45,11 @@ public class ConfigurationReader {
 				throw new FileNotFoundException(String.format("Property file '%s' not found in the classpath", propFileName));
 			
 			System.out.println("Loading properties: " + properties);
+			
+			databaseName = properties.getProperty("database");
+			serverTimezone = properties.getProperty("timezone");
+			user = properties.getProperty("user");
+			password = properties.getProperty("password");
 			
 		} catch (Exception e) {
 			
@@ -48,7 +66,7 @@ public class ConfigurationReader {
 		
 	}
 	
-	public static void saveData(String dbName, String timeZone, String usr, String pass) {
+	public void saveData(String dbName, String timeZone, String usr, String pass) {
 		
 		try {
 			
@@ -57,8 +75,15 @@ public class ConfigurationReader {
 			properties.setProperty("user", usr);
 			properties.setProperty("password", pass);
 			
+			databaseName = dbName;
+			serverTimezone = timeZone;
+			user = usr;
+			password = pass;
+			
 			outputStream = new FileOutputStream("src/main/resources/" + propFileName);
 			properties.store(outputStream, null);
+			
+			outputStream.close();
 			
 			System.out.println("Saving properties: " + properties);
 			
@@ -68,30 +93,38 @@ public class ConfigurationReader {
 			
 		} finally {
 			
-			try {
-				outputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}			
+			if (outputStream != null)
+				
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			
+			outputStream = null;
 			
 		}
 		
 	}
 	
-	public static String getDatabaseName() {
-		return properties.getProperty("database");
+	public String getDatabaseName() {
+//		return properties.getProperty("database");
+		return databaseName;
 	}
 	
-	public static String getServerTimezone() {
-		return properties.getProperty("timezone");
+	public String getServerTimezone() {
+//		return properties.getProperty("timezone");
+		return serverTimezone;
 	}
 	
-	public static String getUser() {
-		return properties.getProperty("user");
+	public String getUser() {
+//		return properties.getProperty("user");
+		return user;
 	}
 	
-	public static String getPassword() {
-		return properties.getProperty("password");
+	public String getPassword() {
+//		return properties.getProperty("password");
+		return password;
 	}
 
 }

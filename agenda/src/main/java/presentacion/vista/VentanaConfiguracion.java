@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -16,7 +17,8 @@ public class VentanaConfiguracion extends JFrame {
 	private static VentanaConfiguracion INSTANCE;
 	private JPanel contentPane;
 	private JTextField textUsuario;
-	private JTextField textContraseña;
+//	private JTextField textContraseña;
+	private JPasswordField textContraseña;
 	private JTextField textBaseDeDatos;
 	private JButton btnConectar;
 
@@ -67,7 +69,7 @@ public class VentanaConfiguracion extends JFrame {
 		lblContraseña.setBounds(111, 137, 80, 20);
 		contentPane.add(lblContraseña);
 
-		textContraseña = new JTextField();
+		textContraseña = new JPasswordField();
 		textContraseña.setColumns(10);
 		textContraseña.setBounds(201, 137, 120, 20);
 		contentPane.add(textContraseña);

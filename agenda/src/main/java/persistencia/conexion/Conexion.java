@@ -3,6 +3,9 @@ package persistencia.conexion;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 
 import modelo.ConfigurationReader;
@@ -36,6 +39,7 @@ public class Conexion
 		catch(Exception e)
 		{
 			log.error("Conexión fallida", e);
+			JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos. Verifique que el nombre, el usuario y la contraseña sean correctos.");
 		}
 	}
 	
@@ -68,11 +72,18 @@ public class Conexion
 	}
 	
 	private void loadConnectionData() {
-		ConfigurationReader.loadConfiguration();
+//		ConfigurationReader.loadConfiguration();
+		ConfigurationReader cr = ConfigurationReader.getInstance();
+		cr.loadConfiguration();
 		
-		this.databaseName = ConfigurationReader.getDatabaseName();
-		this.serverTimezone = ConfigurationReader.getServerTimezone();
-		this.user = ConfigurationReader.getUser();
-		this.password = ConfigurationReader.getPassword();
+//		this.databaseName = ConfigurationReader.getDatabaseName();
+//		this.serverTimezone = ConfigurationReader.getServerTimezone();
+//		this.user = ConfigurationReader.getUser();
+//		this.password = ConfigurationReader.getPassword();
+		
+		this.databaseName = cr.getDatabaseName();
+		this.serverTimezone = cr.getServerTimezone();
+		this.user = cr.getUser();
+		this.password = cr.getPassword();
 	}
 }

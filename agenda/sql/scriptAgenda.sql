@@ -1,7 +1,8 @@
-CREATE DATABASE IF NOT EXISTS `grupo_G14`;
-USE grupo_G14;
-DROP TABLE IF EXISTS `personas`;
-CREATE TABLE `personas`
+--CREATE DATABASE IF NOT EXISTS `grupo_G14`;
+--USE grupo_G14;
+--DROP TABLE IF EXISTS `personas`;
+CREATE TABLE IF NOT EXISTS `personas`
+--CREATE TABLE `personas`
 (
   `idPersona` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(45) NOT NULL,
@@ -13,23 +14,23 @@ CREATE TABLE `personas`
   `Favorito` boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`idPersona`)
 );
-DROP TABLE IF EXISTS `localidades`;
-CREATE TABLE `localidades`
+--DROP TABLE IF EXISTS `localidades`;
+CREATE TABLE IF NOT EXISTS `localidades`
 (
   `idLocalidad` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
   `idProvincia` int(11) NOT NULL,
   PRIMARY KEY (`idLocalidad`)
 );
-DROP TABLE IF EXISTS `tipos_de_contacto`;
-CREATE TABLE `tipos_de_contacto`
+--DROP TABLE IF EXISTS `tipos_de_contacto`;
+CREATE TABLE IF NOT EXISTS `tipos_de_contacto`
 (
   `idTipoContacto` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idTipoContacto`)
 );
-DROP TABLE IF EXISTS `domicilio`;
-CREATE TABLE `domicilio`
+--DROP TABLE IF EXISTS `domicilio`;
+CREATE TABLE IF NOT EXISTS `domicilio`
 (
   `idDomicilio` int(11) NOT NULL AUTO_INCREMENT,
   `calle` varchar(45) NOT NULL,
@@ -39,15 +40,15 @@ CREATE TABLE `domicilio`
   `idLocalidad` int(11) NOT NULL,
   PRIMARY KEY (`idDomicilio`)
 );
-DROP TABLE IF EXISTS `países`;
-CREATE TABLE `países`
+--DROP TABLE IF EXISTS `países`;
+CREATE TABLE IF NOT EXISTS `países`
 (
   `idPaís` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idPaís`)
 );
-DROP TABLE IF EXISTS `provincias`;
-CREATE TABLE `provincias`
+--DROP TABLE IF EXISTS `provincias`;
+CREATE TABLE IF NOT EXISTS `provincias`
 (
   `idProvincia` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
