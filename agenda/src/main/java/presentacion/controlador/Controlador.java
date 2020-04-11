@@ -20,7 +20,11 @@ import dto.PersonaDTO;
 import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 import modelo.Agenda;
+import modelo.ConfigurationReader;
+import modelo.SeedData;
+import persistencia.conexion.Conexion;
 import presentacion.reportes.ReporteAgenda;
+import presentacion.vista.VentanaConfiguracion;
 import presentacion.vista.VentanaPersona;
 import presentacion.vista.VentanaTipoContacto;
 import presentacion.vista.VentanaUbicaciones;
@@ -37,6 +41,7 @@ public class Controlador implements ActionListener
 		private VentanaPersona ventanaPersona;
 		private VentanaTipoContacto ventanaTipoContacto;
 		private VentanaUbicaciones ventanaUbicaciones;
+		private VentanaConfiguracion ventanaConfiguracion; 
 		private Agenda agenda;
 		
 		public Controlador(Vista vista, Agenda agenda)
@@ -48,6 +53,7 @@ public class Controlador implements ActionListener
 			this.vista.getBtnReporte().addActionListener(r->mostrarReporte(r));
 			this.vista.getMenuUbicaciones().addActionListener(a->ventanaUbicaciones(a));
 			this.vista.getMenuTipoContacto().addActionListener(a->ventanaAgregarTipoContacto(a));
+			this.vista.getMenuConexion().addActionListener(a->ventanaConfiguracion(a));
 			this.ventanaPersona = VentanaPersona.getInstance();
 			this.ventanaPersona.getBtnAgregarPersona().addActionListener(p->guardarPersona(p));
 			this.ventanaPersona.getBtnEditarPersona().addActionListener(p->editarPersona(p));
@@ -66,6 +72,8 @@ public class Controlador implements ActionListener
 			this.ventanaTipoContacto.getBtnEliminarTipoContacto().addActionListener(l->borrarTipoContacto(l));
 			this.ventanaTipoContacto.getBtnEditarTipoContacto().addActionListener(l->editarTipoContacto(l));
 			this.ventanaTipoContacto.getListaTiposContacto().addListSelectionListener(l->actualizarFormularioTipoDeContacto(l));
+			this.ventanaConfiguracion = VentanaConfiguracion.getInstance();
+			this.ventanaConfiguracion.getBtnConectar().addActionListener(l->conectarBaseDeDatos());
 			this.agenda = agenda;
 		}
 
@@ -757,6 +765,45 @@ public class Controlador implements ActionListener
 			reporte.mostrar();	
 		}
 
+		// ====================================================================================================
+		// =									Database Configuration										  =
+		// ====================================================================================================
+		
+		private void ventanaConfiguracion(ActionEvent e) {
+			this.ventanaConfiguracion.mostrarVentana();
+		}
+			
+		private void conectarBaseDeDatos() {
+			
+			String baseDeDatos = this.ventanaConfiguracion.getTextBaseDeDatos().getText();
+			String usuario = this.ventanaConfiguracion.getTextUsuario().getText();
+			String contraseña = this.ventanaConfiguracion.getTextContraseña().getText();
+				
+			if(baseDeDatos.isEmpty())
+				JOptionPane.showMessageDialog(this.ventanaConfiguracion, "Debe ingresar el nombre de la base de datos a la que desea conectarse.");
+			
+			else if (usuario.isEmpty() || contraseña.isEmpty())
+				JOptionPane.showMessageDialog(this.ventanaConfiguracion, "Debe proporcionar el usuario y la contraseña para acceder a la base de datos.");
+			
+//			ConfigurationReader.saveData(baseDeDatos, "UTC", usuario, contraseña);
+			ConfigurationReader cr = ConfigurationReader.getInstance();
+			cr.saveData(baseDeDatos, "UTC", usuario, contraseña);
+			
+			Conexion.getConexion().cerrarConexion(); // Reiniciamos la conexión con al base de datos
+			
+			this.ventanaConfiguracion.cerrar();
+			
+			try {
+				SeedData.EnsureDatabaseTablesCreated();
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "La base de datos estaba vacía y no se pudo crear el esquema.");
+			}
+			
+			inicializar();
+			
+		}
+		
 		
 		@Override
 		public void actionPerformed(ActionEvent e) { }
