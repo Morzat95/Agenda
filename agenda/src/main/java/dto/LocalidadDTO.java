@@ -36,7 +36,9 @@ public class LocalidadDTO {
 	
 	public LocalidadDTO(String nombre, ProvinciaDTO provincia) {
 		this.nombre = nombre;
-		this.provincia = provincia;
+		
+		if (provincia != null)
+			provincia.addLocalidad(this);
 	}
 	
 	public void addDomicilio(DomicilioDTO domicilio) {
@@ -73,6 +75,10 @@ public class LocalidadDTO {
 
 	public void setProvincia(ProvinciaDTO provincia) {
 		this.provincia = provincia;
+	}
+	
+	public List<DomicilioDTO> getDomicilios() {
+		return this.domicilios;
 	}
 
 	@Override
@@ -121,7 +127,7 @@ public class LocalidadDTO {
 	@Override
 	public String toString() {
 		
-		return String.format("LocalidadID: %d, LocalidadNombre: %s\n", this.id.intValue(), this.nombre);
+		return String.format("LocalidadID: %d, LocalidadNombre: %s, Provincia: %s\n", this.id.intValue(), this.nombre, this.provincia.getNombre());
 		
 	}
 	

@@ -49,7 +49,10 @@ public class PersonaDTO
 		this.email = email;
 		this.fechaCumpleanio = fechaCumpleanio;
 		this.favorito = favorito;
-		this.tipoDeContacto = tipoDeContacto;
+		
+		if (tipoDeContacto != null)
+			tipoDeContacto.addPersona(this);
+		
 		this.domicilio = domicilio;
 	}
 	

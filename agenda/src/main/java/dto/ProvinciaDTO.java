@@ -36,7 +36,9 @@ public class ProvinciaDTO {
 	
 	public ProvinciaDTO(String nombre, PaísDTO país) {
 		this.nombre = nombre;
-		this.país = país;
+		
+		if (país != null)
+			país.addProvincia(this);
 	}
 	
 	public void addLocalidad(LocalidadDTO localidad) {

@@ -35,6 +35,10 @@ public class Agenda
 		this.país = metodo_persistencia.createPaísDAO();
 		this.provincia = metodo_persistencia.createProvinciaDAO();
 	}
+
+//	====================================================================================================
+//	= 											Personas 											   =
+//	====================================================================================================
 	
 	public void agregarPersona(PersonaDTO nuevaPersona)
 	{
@@ -54,44 +58,10 @@ public class Agenda
 	{
 		return this.persona.readAll();		
 	}
-	
-	public void agregarLocalidad(LocalidadDTO nuevaLocalidad) {
-		this.localidad.insert(nuevaLocalidad);
-	}
-	
-	public void borrarLocalidad(LocalidadDTO localidad_a_eliminar) 
-	{
-		this.localidad.delete(localidad_a_eliminar);
-	}
-	
-	public void modificarLocalidad(LocalidadDTO localidad_a_modificar) 
-	{
-		this.localidad.update(localidad_a_modificar);
-	}
-	
-	public List<LocalidadDTO> obtenerLocalidades()
-	{
-		return this.localidad.readAll();		
-	}
-	
-	public void agregarTipoContacto(TipoContactoDTO nuevaLocalidad) {
-		this.tipoContacto.insert(nuevaLocalidad);
-	}
-	
-	public void borrarTipoContacto(TipoContactoDTO localidad_a_eliminar) 
-	{
-		this.tipoContacto.delete(localidad_a_eliminar);
-	}
-	
-	public void modificarTipoContacto(TipoContactoDTO localidad_a_modificar) 
-	{
-		this.tipoContacto.update(localidad_a_modificar);
-	}
-	
-	public List<TipoContactoDTO> obtenerTiposContacto()
-	{
-		return this.tipoContacto.readAll();		
-	}
+
+//	====================================================================================================
+//	= 											Domicilios 											   =
+//	====================================================================================================
 	
 	public void agregarDomicilio(DomicilioDTO nuevoDomicilio)
 	{
@@ -112,6 +82,33 @@ public class Agenda
 		return this.domicilio.readAll();		
 	}
 	
+//	====================================================================================================
+//	= 										Tipos de Contacto 										   =
+//	====================================================================================================
+	
+	public void agregarTipoContacto(TipoContactoDTO nuevaLocalidad) {
+		this.tipoContacto.insert(nuevaLocalidad);
+	}
+	
+	public void borrarTipoContacto(TipoContactoDTO localidad_a_eliminar) 
+	{
+		this.tipoContacto.delete(localidad_a_eliminar);
+	}
+	
+	public void modificarTipoContacto(TipoContactoDTO localidad_a_modificar) 
+	{
+		this.tipoContacto.update(localidad_a_modificar);
+	}
+	
+	public List<TipoContactoDTO> obtenerTiposContacto()
+	{
+		return this.tipoContacto.readAll();		
+	}
+	
+//	====================================================================================================
+//	= 											  Países											       =
+//	====================================================================================================
+	
 	public void agregarPaís(PaísDTO nuevoPaís) {
 		this.país.insert(nuevoPaís);
 	}
@@ -127,7 +124,10 @@ public class Agenda
 	public List<PaísDTO> obtenerPaíses() {
 		return this.país.readAll();
 	}
-	
+
+//	====================================================================================================
+//	= 											Provincias 											   =
+//	====================================================================================================
 	public void agregarProvincia(ProvinciaDTO nuevaProvincia) {
 		this.provincia.insert(nuevaProvincia);
 	}
@@ -143,6 +143,38 @@ public class Agenda
 	
 	public List<ProvinciaDTO> obtenerProvincias() {
 		return this.provincia.readAll();
+	}
+	
+	public List<ProvinciaDTO> obtenerProvinciasPor(PaísDTO país) {
+		return this.provincia.readBy(país);
+	}
+
+//	====================================================================================================
+//	= 											Localidades											   =
+//	====================================================================================================
+	
+	public void agregarLocalidad(LocalidadDTO nuevaLocalidad) {
+		this.localidad.insert(nuevaLocalidad);
+	}
+	
+	public void borrarLocalidad(LocalidadDTO localidad_a_eliminar) 
+	{
+		this.localidad.delete(localidad_a_eliminar);
+	}
+	
+	public void modificarLocalidad(LocalidadDTO localidad_a_modificar) 
+	{
+		this.localidad.update(localidad_a_modificar);
+	}
+	
+	public List<LocalidadDTO> obtenerLocalidades()
+	{
+		return this.localidad.readAll();		
+	}
+	
+	public List<LocalidadDTO> obtenerLocalidadesPor(ProvinciaDTO provincia)
+	{
+		return this.localidad.readBy(provincia);
 	}
 	
 }

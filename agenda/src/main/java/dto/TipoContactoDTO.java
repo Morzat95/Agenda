@@ -1,8 +1,12 @@
 package dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,12 +18,29 @@ public class TipoContactoDTO {
 	private Long id;
 	private String nombre;
 	
+	@OneToMany ( mappedBy = "tipoDeContacto" )
+	private List<PersonaDTO> personas = new ArrayList<PersonaDTO>();
+	
 	public TipoContactoDTO() {
 		
 	}
 	
 	public TipoContactoDTO(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	public void addPersona(PersonaDTO persona) {
+		if (persona != null) {
+			this.personas.add(persona);			
+			persona.setTipoDeContacto(this);
+		}
+	}
+	
+	public void removePersona(PersonaDTO persona) {
+		if (persona != null) {
+			this.personas.remove(persona);
+			persona.setTipoDeContacto(null);
+		}
 	}
 
 	public Long getIdTipoContacto() {

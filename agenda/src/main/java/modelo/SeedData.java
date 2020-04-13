@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.text.ParseException;
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-
 import javax.swing.JOptionPane;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -30,13 +27,11 @@ import dto.ProvinciaDTO;
 import dto.TipoContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.DAOAbstractFactory;
-import persistencia.dao.interfaz.DomicilioDAO;
 import persistencia.dao.interfaz.LocalidadDAO;
 import persistencia.dao.interfaz.PaísDAO;
 import persistencia.dao.interfaz.PersonaDAO;
 import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.TipoContactoDAO;
-import persistencia.dao.mysql.DAOSQLFactory;
 
 public class SeedData {
 	
@@ -72,7 +67,7 @@ public class SeedData {
 		
 	}
 	
-	private static void EnsureDatabaseTablesCreated() {
+	public static void EnsureDatabaseTablesCreated() throws Exception {
 		
 		Connection conn = Conexion.getConexion().getSQLConexion();
 		ScriptRunner runner = new ScriptRunner(conn);
@@ -353,7 +348,7 @@ public class SeedData {
 		
 		List<TipoContactoDTO> tiposDecontactos = new ArrayList<TipoContactoDTO>();
 		
-		if ( !tipoContactoDAO.hasData() ) { // Si ya hay localidades no hacemos nada
+		if ( !tipoContactoDAO.hasData() ) { // Si ya hay Tipos de Contacto no hacemos nada
 			
 			tiposDecontactos.add(new TipoContactoDTO("Familia"));
 			tiposDecontactos.add(new TipoContactoDTO("Amigos"));
@@ -372,8 +367,6 @@ public class SeedData {
 	}
 	
 	private static List<PersonaDTO> populateContactos(PersonaDAO personaDAO, List<LocalidadDTO> localidades, List<TipoContactoDTO> tiposDeContacto) {
-		
-		DomicilioDAO domicilioDAO = new DAOSQLFactory().createDomicilioDAO();
 		
 		if (personaDAO.hasData())
 			return null;

@@ -32,13 +32,15 @@ public class Vista
 	private JButton btnBorrar;
 	private JButton btnEditar;
 	private JButton btnReporte;
-	private JMenuItem menuLocalidad;
+	private JMenuItem menuUbicaciones;
+//	private JMenuItem menuLocalidad;
 	private JMenuItem menuTipoContacto;
-	private JMenuItem menuPaís;
-	private JMenuItem menuProvincia;
+//	private JMenuItem menuPaís;
+//	private JMenuItem menuProvincia;
 	private DefaultTableModel modelPersonas;
 	private  String[] nombreColumnas = {"Nombre y apellido","Telefono", "Email", "Fecha de Cumpleaños", "Tipo de Contacto", "Domicilio"};
-
+	private JMenuItem mntmConexion;
+	
 	public Vista() 
 	{
 		super();
@@ -119,23 +121,20 @@ public class Vista
 		JMenu menu = new JMenu("ABM");
 		menuBar.add(menu);
 		
-			// Add ABM Localidad
-			menuLocalidad = new JMenuItem("Localidad");
-			menu.add(menuLocalidad);
-
+			// Add Locations
+			menuUbicaciones = new JMenuItem("Ubicaciones");
+			menu.add(menuUbicaciones);
 				
 			// Add ABM Tipo de Contacto
 			menuTipoContacto = new JMenuItem("Tipos de Contactos");
 			menu.add(menuTipoContacto);
-			
-			// Add ABM País
-			menuPaís = new JMenuItem("Países");
-			menu.add(menuPaís);
-			
-			// Add ABM Provincia
-			menuProvincia = new JMenuItem("Provincias");
-			menu.add(menuProvincia);
 
+		JMenu mnConfiguracion = new JMenu("Configuracion");
+		menuBar.add(mnConfiguracion);
+				
+			//Conexion
+			mntmConexion = new JMenuItem("Conexión");
+			mnConfiguracion.add(mntmConexion);
 	}
 	
 	public void show()
@@ -173,25 +172,21 @@ public class Vista
 		return btnEditar;
 	}
 	
-	public JMenuItem getMenuLocalidad() {
-		return menuLocalidad;
+	public JMenuItem getMenuUbicaciones() {
+		return menuUbicaciones;
 	}
 	
 	public JMenuItem getMenuTipoContacto() {
 		return menuTipoContacto;
 	}
 	
-	public JMenuItem getMenuPaís() {
-		return menuPaís;
-	}
-	
-	public JMenuItem getMenuProvincia() {
-		return menuProvincia;
-	}
-	
 	public JButton getBtnReporte() 
 	{
 		return btnReporte;
+	}
+	
+	public JMenuItem getMenuConexion() {
+		return mntmConexion;
 	}
 	
 	public DefaultTableModel getModelPersonas() 

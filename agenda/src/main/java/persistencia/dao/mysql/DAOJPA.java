@@ -3,12 +3,8 @@ package persistencia.dao.mysql;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.Table;
-
-import org.hibernate.Session;
 
 import persistencia.dao.interfaz.DAO;
 import persistencia.dao.interfaz.EntityManagers;
@@ -56,7 +52,6 @@ public class DAOJPA<T> implements DAO<T> {
 
 		entityManager.getTransaction().begin();
 		entity = entityManager.merge(entity);
-		System.out.println(entity.toString());
 		entityManager.remove(entity);
 		entityManager.getTransaction().commit();
 		

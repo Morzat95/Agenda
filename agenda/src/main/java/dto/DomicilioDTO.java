@@ -37,7 +37,9 @@ public class DomicilioDTO {
 		this.altura = altura;
 		this.piso = piso;
 		this.departamento = departamento;
-		this.localidad = localidad;
+		
+		if (localidad != null)
+			localidad.addDomicilio(this);
 	}
 
 	public Long getIdDomicilio() {
@@ -87,5 +89,5 @@ public class DomicilioDTO {
 	public void setLocalidad(LocalidadDTO localidad) {
 		this.localidad = localidad;
 	}
-	
+
 }
