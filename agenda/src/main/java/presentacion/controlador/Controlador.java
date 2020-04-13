@@ -785,9 +785,7 @@ public class Controlador implements ActionListener
 			else if (usuario.isEmpty() || contraseña.isEmpty())
 				JOptionPane.showMessageDialog(this.ventanaConfiguracion, "Debe proporcionar el usuario y la contraseña para acceder a la base de datos.");
 			
-//			ConfigurationReader.saveData(baseDeDatos, "UTC", usuario, contraseña);
-			ConfigurationReader cr = ConfigurationReader.getInstance();
-			cr.saveData(baseDeDatos, "UTC", usuario, contraseña);
+			ConfigurationReader.saveData(baseDeDatos, "UTC", usuario, contraseña);
 			
 			Conexion.getConexion().cerrarConexion(); // Reiniciamos la conexión con al base de datos
 			

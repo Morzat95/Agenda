@@ -72,18 +72,11 @@ public class Conexion
 	}
 	
 	private void loadConnectionData() {
-//		ConfigurationReader.loadConfiguration();
-		ConfigurationReader cr = ConfigurationReader.getInstance();
-		cr.loadConfiguration();
+		ConfigurationReader.loadConfiguration();
 		
-//		this.databaseName = ConfigurationReader.getDatabaseName();
-//		this.serverTimezone = ConfigurationReader.getServerTimezone();
-//		this.user = ConfigurationReader.getUser();
-//		this.password = ConfigurationReader.getPassword();
-		
-		this.databaseName = cr.getDatabaseName();
-		this.serverTimezone = cr.getServerTimezone();
-		this.user = cr.getUser();
-		this.password = cr.getPassword();
+		this.databaseName = ConfigurationReader.getDatabaseName();
+		this.serverTimezone = ConfigurationReader.getServerTimezone();
+		this.user = ConfigurationReader.getUser();
+		this.password = ConfigurationReader.getPassword();
 	}
 }
