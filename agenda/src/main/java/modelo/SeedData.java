@@ -231,21 +231,29 @@ public class SeedData {
 		
 		try {
 			
+			PersonaDTO persona1 = new PersonaDTO(0, "Homero Simpson", "123456", "homer@donuts.com", dateFormat.parse("2020-03-01"), filterByName(tiposDeContacto, "Familia"), true);
 			DomicilioDTO domicilio1 = new DomicilioDTO("Avenida Siempreviva", 742, "0", "", localidades.get(random.nextInt(localidades.size())));
-			contactos.add(new PersonaDTO(0, "Homero Simpson", "123456", "homer@donuts.com", dateFormat.parse("2020-03-01"), filterByName(tiposDeContacto, "Familia"), domicilio1, true));
+			persona1.addDomicilio(domicilio1);
+			contactos.add(persona1);
 			
+			PersonaDTO persona2 = new PersonaDTO(0, "Marge Simpson", "987654", "marge@hotmail.com", dateFormat.parse("2020-03-04"), filterByName(tiposDeContacto, "Amigos"), false);
 			DomicilioDTO domicilio2 = new DomicilioDTO("Avenida Siempreviva", 742, "", "", localidades.get(random.nextInt(localidades.size())));
-			contactos.add(new PersonaDTO(0, "Marge Simpson", "987654", "marge@hotmail.com", dateFormat.parse("2020-03-04"), filterByName(tiposDeContacto, "Amigos"), domicilio2, false));
+			persona2.addDomicilio(domicilio2);
+			contactos.add(persona2);
 			
+			PersonaDTO persona3 = new PersonaDTO(0, "Bart Simpson", "666666", "elbarto@gmail.com", dateFormat.parse("2006-06-06"), filterByName(tiposDeContacto, "Familia"), true); 
 			DomicilioDTO domicilio3 = new DomicilioDTO("Calle Falsa", 123, "", "", localidades.get(random.nextInt(localidades.size())));
-			contactos.add(new PersonaDTO(0, "Bart Simpson", "666666", "elbarto@gmail.com", dateFormat.parse("2006-06-06"), filterByName(tiposDeContacto, "Familia"), domicilio3, true));
+			persona3.addDomicilio(domicilio3);
+			contactos.add(persona3);
 			
+			PersonaDTO persona4 = new PersonaDTO(0, "Lisa Simpson", "3141592653", "jazzrules@realponies", dateFormat.parse("2020-03-27"), filterByName(tiposDeContacto, "Trabajo"), true); 
 			DomicilioDTO domicilio4 = new DomicilioDTO("All Vegetables", 2718, "2", "e", localidades.get(random.nextInt(localidades.size())));
-			contactos.add(new PersonaDTO(0, "Lisa Simpson", "3141592653", "jazzrules@realponies", dateFormat.parse("2020-03-27"), filterByName(tiposDeContacto, "Trabajo"), domicilio4, true));
+			persona4.addDomicilio(domicilio4);
+			contactos.add(persona4);
 			
 			for (PersonaDTO persona : contactos) {
-				domicilioDAO.insert(persona.getDomicilio());
 				personaDAO.insert(persona);
+				domicilioDAO.insert(persona.getDomicilio());
 			}
 			
 			System.out.println("Personas cargadas con éxito.");

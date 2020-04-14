@@ -24,9 +24,9 @@ public class PersonaDAOSQL implements PersonaDAO
 	
 	private static int lastId = 1;
 	
-	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto, idDomicilio, favorito) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO personas(idPersona, nombre, telefono, email, fechaCumpleaños, idTipoDeContacto, favorito) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM personas WHERE idPersona = ?";
-	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ?, idDomicilio = ?, favorito = ? WHERE idPersona = ?";
+	private static final String update = "UPDATE personas SET nombre = ?, telefono = ?, email = ?, fechaCumpleaños = ?, idTipoDeContacto = ?, favorito = ? WHERE idPersona = ?";
 	private static final String readall = "SELECT * FROM personas ORDER BY nombre";
 	private static final String hasData = "SELECT EXISTS (SELECT 1 FROM personas)";
 	
@@ -70,8 +70,7 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(4, persona.getEmail());
 			statement.setDate(5, new Date(persona.getFechaCumpleanio().getTime()));
 			statement.setInt(6, persona.getTipoDeContacto().getIdTipoContacto());
-			statement.setInt(7, persona.getDomicilio().getIdDomicilio());
-			statement.setBoolean(8, persona.getFavorito());
+			statement.setBoolean(7, persona.getFavorito());
 			if(statement.executeUpdate() > 0)
 			{
 				conexion.commit();
@@ -125,9 +124,8 @@ public class PersonaDAOSQL implements PersonaDAO
 			statement.setString(3, persona_a_editar.getEmail());
 			statement.setDate(4, new Date(persona_a_editar.getFechaCumpleanio().getTime()));
 			statement.setInt(5, persona_a_editar.getTipoDeContacto().getIdTipoContacto());
-			statement.setInt(6, persona_a_editar.getDomicilio().getIdDomicilio());
-			statement.setBoolean(7, persona_a_editar.getFavorito());
-			statement.setInt(8, persona_a_editar.getIdPersona());
+			statement.setBoolean(6, persona_a_editar.getFavorito());
+			statement.setInt(7, persona_a_editar.getIdPersona());
 			
 			if(statement.executeUpdate() > 0)
 			{
@@ -172,7 +170,7 @@ public class PersonaDAOSQL implements PersonaDAO
 
 	private PersonaDTO getPersonaDTO(ResultSet resultSet) throws SQLException
 	{
-		int id = resultSet.getInt("idPersona");
+		int idPersona = resultSet.getInt("idPersona");
 		String nombre = resultSet.getString("Nombre");
 		String tel = resultSet.getString("Telefono");
 		String email = resultSet.getString("Email");
@@ -180,16 +178,19 @@ public class PersonaDAOSQL implements PersonaDAO
 		boolean favorito = resultSet.getBoolean("Favorito");
 		java.util.Date fechaCumpleanio = null;
 		TipoContactoDTO tipoContacto = getTipoContactoDTO(resultSet.getInt("idTipoDeContacto"));
-		DomicilioDTO domicilio = getDomicilioDTO(resultSet.getInt("idDomicilio"));
+		DomicilioDTO domicilio = getDomicilioDTOPorPersona(idPersona);
+		
 		try {
 			fechaCumpleanio = new SimpleDateFormat("yyyy-MM-dd").parse(stringFecha);
 		} catch (ParseException e) { e.printStackTrace(); }
 		
+		PersonaDTO persona = new PersonaDTO(idPersona, nombre, tel, email, fechaCumpleanio, tipoContacto, favorito);
+		persona.addDomicilio(domicilio);
 		
-		return new PersonaDTO(id, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilio, favorito);
+		return persona;
 	}
 
-	public DomicilioDTO getDomicilioDTO(int id) throws SQLException {
+	public DomicilioDTO getDomicilioDTOPorPersona(int id) throws SQLException {
 		PreparedStatement statement;
 		ResultSet resultSet = null;
 		Conexion conexion = Conexion.getConexion();	
@@ -200,7 +201,7 @@ public class PersonaDAOSQL implements PersonaDAO
 		String departamento = "";
 		int idLocalidad = 0;
 
-		String name = "SELECT * FROM domicilio WHERE idDomicilio = " + id + ";";
+		String name = "SELECT * FROM domicilio WHERE idPersona = " + id + ";";
 		try
 		{
 			statement = conexion.getSQLConexion().prepareStatement(name);

@@ -121,16 +121,17 @@ public class Controlador implements ActionListener
 		
 		private void borrarPaís(ActionEvent s)
 		{
-			int[] elementosSeleccionados = this.ventanaUbicaciones.getListaPaises().getSelectedIndices();
-			if (elementosSeleccionados.length == 0) {
+			PaísDTO paísSeleccionado = this.ventanaUbicaciones.getListaPaises().getSelectedValue();
+			
+			if (paísSeleccionado == null) {
 				JOptionPane.showMessageDialog(this.ventanaUbicaciones, "Debe seleccionar un país de la lista para poder eliminar.");
 				return;
 			}
 			
-			for (int index : elementosSeleccionados)
-			{
-				this.agenda.borrarPaís(this.paísesEnLista.get(index));
-			}
+			if (!this.personasEnTabla.stream().anyMatch(p -> p.getDomicilio().getLocalidad().getProvincia().getPaís().equals(paísSeleccionado)))
+				this.agenda.borrarPaís(paísSeleccionado);
+			else
+				JOptionPane.showMessageDialog(this.ventanaUbicaciones, String.format("No se puede eliminar el país '%s' porque al menos un domicilio pertenece a alguna de sus localidades", paísSeleccionado.getNombre()));
 			
 			this.refrescarListaPaíses();
 			this.ventanaUbicaciones.limpiarFormulario();
@@ -206,7 +207,11 @@ public class Controlador implements ActionListener
 				return;
 			}
 			
-			this.agenda.borrarProvincia(provinciaSeleccionada);
+			if (!this.personasEnTabla.stream().anyMatch(p -> p.getDomicilio().getLocalidad().getProvincia().equals(provinciaSeleccionada)))
+				this.agenda.borrarProvincia(provinciaSeleccionada);
+			else
+				JOptionPane.showMessageDialog(this.ventanaUbicaciones, String.format("No se puede eliminar la provincia '%s' porque al menos un domicilio pertenece a alguna de sus localidades", provinciaSeleccionada.getNombre()));
+			
 
 			actualizarListaProvinciasEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioProvincia();	
@@ -309,7 +314,10 @@ public class Controlador implements ActionListener
 				return;
 			}
 			
-			this.agenda.borrarLocalidad(localidadSeleccionada);
+			if (!this.personasEnTabla.stream().anyMatch(p -> p.getDomicilio().getLocalidad().equals(localidadSeleccionada)))
+				this.agenda.borrarLocalidad(localidadSeleccionada);
+			else
+				JOptionPane.showMessageDialog(this.ventanaUbicaciones, String.format("No se puede eliminar la localidad '%s' porque al menos un domicilio pertenece a esta ubicación", localidadSeleccionada.getNombre()));
 			
 			actualizarListaLocalidadesEnVentanaUbicacionesSQL();
 			this.ventanaUbicaciones.limpiarFormularioLocalidad();
@@ -477,10 +485,11 @@ public class Controlador implements ActionListener
 			}
 			
 			DomicilioDTO domicilioDTO = new DomicilioDTO(calle, altura, piso, departamento, localidad);
-			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, domicilioDTO, favorito);
+			PersonaDTO nuevaPersona = new PersonaDTO(0, nombre, tel, email, fechaCumpleanio, tipoContacto, favorito);
+			nuevaPersona.addDomicilio(domicilioDTO);
 				
-			this.agenda.agregarDomicilio(domicilioDTO);
 			this.agenda.agregarPersona(nuevaPersona);
+			this.agenda.agregarDomicilio(domicilioDTO);
 
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
@@ -568,8 +577,8 @@ public class Controlador implements ActionListener
 			persona_a_editar.getDomicilio().setDepartamento(departamento);
 			persona_a_editar.getDomicilio().setLocalidad(localidad);
 			
-			this.agenda.modificarDomicilio(persona_a_editar.getDomicilio());
 			this.agenda.editarPersona(persona_a_editar);
+			this.agenda.modificarDomicilio(persona_a_editar.getDomicilio());
 			
 			this.refrescarTabla();
 			this.ventanaPersona.cerrar();
@@ -581,7 +590,7 @@ public class Controlador implements ActionListener
 		}
 		
 		private boolean verifyAltura(String altura) {
-			return altura.matches("(0|[1-9]\\d*){1,5}");
+			return altura.length() <= 5 && altura.matches("(0|[1-9]\\d*){1,5}");
 		}
 		
 		private boolean verifyTelefono(String telefono) {
@@ -693,11 +702,22 @@ public class Controlador implements ActionListener
 
 		private void borrarTipoContacto(ActionEvent s)
 		{
-			int[] elementosSeleccionados = this.ventanaTipoContacto.getListaTiposContacto().getSelectedIndices();
-			for (int index : elementosSeleccionados)
-			{
-				this.agenda.borrarTipoContacto(this.tiposContactoEnLista.get(index));
-			}
+			TipoContactoDTO tipoDeContactoSeleccionado = this.ventanaTipoContacto.getListaTiposContacto().getSelectedValue();
+			
+			if (tipoDeContactoSeleccionado != null)
+				
+//				if (tipoDeContactoSeleccionado.getPersonas().isEmpty())
+				if (!this.personasEnTabla.stream().anyMatch(p -> p.getTipoDeContacto().equals(tipoDeContactoSeleccionado)))
+					
+					this.agenda.borrarTipoContacto(tipoDeContactoSeleccionado);
+			
+				else
+					
+					JOptionPane.showMessageDialog(this.ventanaTipoContacto, String.format("No se puede eliminar la entidad '%s' porque al menos una persona pertenece a este Tipo de Contacto.", tipoDeContactoSeleccionado.getNombre()));
+			
+			else
+				
+				return;
 			
 			this.refrescarListaTipoContacto();
 		}

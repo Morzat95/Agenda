@@ -1,13 +1,31 @@
 package dto;
 
+import java.util.List;
+
 public class TipoContactoDTO {
 	
 	private int idTipoContacto;
 	private String nombre;
 	
+	private List<PersonaDTO> personas;
+	
 	public TipoContactoDTO(int idTipoContacto, String nombre) {
 		this.idTipoContacto = idTipoContacto;
 		this.nombre = nombre;
+	}
+	
+	public void addPersona(PersonaDTO persona) {
+		if (persona != null) {
+			this.personas.add(persona);
+			persona.setTipoDeContacto(this);
+		}
+	}
+	
+	public void removePersona(PersonaDTO persona) {
+		if (persona != null) {
+			this.personas.remove(persona);
+			persona.setTipoDeContacto(null);
+		}
 	}
 
 	public int getIdTipoContacto() {
@@ -28,6 +46,15 @@ public class TipoContactoDTO {
 
 	public String toString() {
 		return nombre;
+	}
+	
+	public List<PersonaDTO> getPersonas() {
+		return this.personas;
+	}
+	
+	
+	public void setPersonas(List<PersonaDTO> personas) {
+		this.personas = personas;
 	}
 
 	@Override
